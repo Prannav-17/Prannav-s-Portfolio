@@ -1,0 +1,446 @@
+{
+  "version": 1,
+  "owner": "Prannav",
+  "never_share": [
+    "compensation, salary expectations or references",
+    "any Flipkart, ZoomInfo or Freshworks detail beyond what is written in these entries",
+    "personal details about people other than Prannav",
+    "usage numbers for Let's Match (none are published)"
+  ],
+  "fallback": "I don't have that in what's on this site. You can reach Prannav at prannavb27@iimklive.com or 99400 33571.",
+  "entries": [
+    {
+      "id": "profile-summary",
+      "category": "profile",
+      "questions": [
+        "Who is Prannav?",
+        "Tell me about Prannav",
+        "Introduce Prannav"
+      ],
+      "answer": "Prannav is a Product Manager based in Bengaluru who builds at the intersection of business, technology and AI. He has 3+ years of experience across B2B SaaS and e-commerce, currently works in strategy and planning at Flipkart, and has an MBA from IIM Kozhikode (2025).",
+      "source": "Resume; About page",
+      "visibility": "public"
+    },
+    {
+      "id": "profile-snapshot",
+      "category": "profile",
+      "questions": [
+        "Where is Prannav based?",
+        "What is his current role?",
+        "Where does he work?"
+      ],
+      "answer": "Prannav is a Manager, Strategy and Planning at Flipkart (since June 2025), working on Mobiles and Electronics and on Loyalty and Membership (Flipkart Plus / Black). He is based in Bengaluru, India.",
+      "source": "Resume",
+      "visibility": "public"
+    },
+    {
+      "id": "education",
+      "category": "profile",
+      "questions": [
+        "Where did Prannav study?",
+        "What is his education?",
+        "Which MBA did he do?"
+      ],
+      "answer": "MBA from IIM Kozhikode (2025) and a BBA from the University of Madras (2020, University Rank 10). He scored 98% in Class X and 92% in Class XII at Velammal Matriculation.",
+      "source": "Resume",
+      "visibility": "public"
+    },
+    {
+      "id": "hero",
+      "category": "profile",
+      "questions": [
+        "What does Prannav do?",
+        "What is his tagline?"
+      ],
+      "answer": "Prannav is a Product Manager building at the intersection of business, technology and AI. He enjoys turning complex problems into intuitive products that create meaningful value for end users.",
+      "source": "About page",
+      "visibility": "public"
+    },
+    {
+      "id": "exp-flipkart",
+      "category": "experience",
+      "questions": [
+        "What has Prannav done at Flipkart?",
+        "Tell me about his Flipkart role",
+        "What did he work on at Flipkart?"
+      ],
+      "answer": "At Flipkart (Manager, Strategy and Planning, June 2025 to present) Prannav took Flipkart Trust Shield from 0 to 1 with Product and Ops. He also shipped an automated hourly sell-out reporting tool in Google Apps Script that leadership uses directly, built the CY2026 plan for a 25 Mn+ user loyalty base, expanded serviceability from 4 to 66 cities, and set segment-wise pricing across INR 500+ Cr of event revenue.",
+      "source": "Resume → Flipkart",
+      "visibility": "public"
+    },
+    {
+      "id": "exp-trust-shield",
+      "category": "experience",
+      "questions": [
+        "What is Trust Shield?",
+        "Tell me about Trust Shield",
+        "What was the impact of Trust Shield?"
+      ],
+      "answer": "Flipkart Trust Shield is a buyer trust product that Prannav took from 0 to 1 with Product and Ops. He defined the buyer journey across 5 touchpoints, and the product delivered a 5% conversion uplift.",
+      "source": "Resume → Flipkart",
+      "visibility": "public"
+    },
+    {
+      "id": "exp-flipkart-reporting",
+      "category": "experience",
+      "questions": [
+        "What reporting tool did he build?",
+        "Has he built any internal tools?"
+      ],
+      "answer": "Prannav built an automated hourly sell-out reporting tool in Google Apps Script. Leadership uses it directly, and it replaced manual reporting during live sale events.",
+      "source": "Resume → Flipkart",
+      "visibility": "public"
+    },
+    {
+      "id": "exp-flipkart-loyalty",
+      "category": "experience",
+      "questions": [
+        "What is his loyalty experience?",
+        "Has he worked on pricing or unit economics?"
+      ],
+      "answer": "At Flipkart he built the CY2026 plan for a 25 Mn+ user loyalty base (Flipkart Plus / Black), modelling acquisition, retention and monetization against unit economics. He also set segment-wise pricing across INR 500+ Cr of event revenue, using demand signals to decide where to invest.",
+      "source": "Resume → Flipkart",
+      "visibility": "public"
+    },
+    {
+      "id": "exp-flipkart-serviceability",
+      "category": "experience",
+      "questions": [
+        "What is the 4 to 66 cities work?",
+        "Has he worked on supply chain or operations?"
+      ],
+      "answer": "Prannav expanded serviceability from 4 to 66 cities across Ops, Category and Supply Chain, covering 40% of all India Mobiles volume.",
+      "source": "Resume → Flipkart",
+      "visibility": "public"
+    },
+    {
+      "id": "exp-zoominfo",
+      "category": "experience",
+      "questions": [
+        "What did Prannav do at ZoomInfo?",
+        "Tell me about his ZoomInfo role"
+      ],
+      "answer": "At ZoomInfo (Solutions Consultant, US Market, January to June 2023) Prannav ran discovery with US prospects and turned recurring needs into structured feedback that shaped new feature development. He closed USD 0.22 Mn in ARR by matching product capability to customer problems, and root-caused 200+ tickets to surface the product gaps behind repeat issues and reduce backlog.",
+      "source": "Resume → ZoomInfo",
+      "visibility": "public"
+    },
+    {
+      "id": "exp-freshworks",
+      "category": "experience",
+      "questions": [
+        "What did Prannav do at Freshworks?",
+        "Tell me about his Freshworks role"
+      ],
+      "answer": "At Freshworks (Product Consultant, UK Market, January 2021 to January 2023) Prannav analyzed 500+ lost deals by loss reason and turned the patterns into product and positioning inputs, protecting USD 0.5+ Mn in revenue. He built 10+ dashboards tracking competitor movement that surfaced 5+ new entrants, generated USD 0.66+ Mn in ARR for UK customers by solutioning against their workflows, and acted as the bridge between Product Management and Presales. He was a Top Performer for three consecutive quarters.",
+      "source": "Resume → Freshworks",
+      "visibility": "public"
+    },
+    {
+      "id": "exp-internships",
+      "category": "experience",
+      "questions": [
+        "Has he done product internships?",
+        "What internships has Prannav done?"
+      ],
+      "answer": "Product Management Intern at Wayplorer (2025): mapped user pain points across the CRM and RevOps market and benchmarked 5+ competing platforms to inform positioning. Summer Intern at GlaxoSmithKline (2024): piloted a field sales app that lifted orders by 30% and shipped an in-app reminder that raised lines sold per order by 40%.",
+      "source": "Resume → Product internships",
+      "visibility": "public"
+    },
+    {
+      "id": "exp-customer-facing",
+      "category": "experience",
+      "questions": [
+        "Does he have customer-facing experience?",
+        "How has he worked with customers?"
+      ],
+      "answer": "Yes. Prannav spent 2+ years in front of B2B SaaS customers at Freshworks (UK) and ZoomInfo (US), turning what customers asked for into product and roadmap inputs.",
+      "source": "Resume; About page",
+      "visibility": "public"
+    },
+    {
+      "id": "achievements",
+      "category": "experience",
+      "questions": [
+        "What awards has Prannav won?",
+        "What are his achievements?"
+      ],
+      "answer": "He won an award among 100+ teams in a product teardown, was campus winner of Flipkart Wired (with a PPO), received a PPI from GSK during his summer internship, was Top Performer for three consecutive quarters at Freshworks, and ranked in the top 10 in all six BBA semesters, with a State Rank of 10 out of 1.3 Mn candidates in 2015.",
+      "source": "Resume → Achievements",
+      "visibility": "public"
+    },
+    {
+      "id": "leadership",
+      "category": "experience",
+      "questions": [
+        "Has he held leadership roles?",
+        "What did he do as Placements Coordinator?"
+      ],
+      "answer": "Prannav was Placements Coordinator at IIM Kozhikode, running placements for 1,200+ students across 100+ recruiters including Amazon, Bain & Co, HDFC and Microsoft. Earlier he was Head of Operations of the Students Forum in his BBA, organizing 30+ events and bringing in 15+ alumni guest lectures over 3 years for 300+ students.",
+      "source": "Resume → Positions of responsibility",
+      "visibility": "public"
+    },
+    {
+      "id": "skills",
+      "category": "skills",
+      "questions": [
+        "What are Prannav's skills?",
+        "What tools does he use?",
+        "Does he know SQL?"
+      ],
+      "answer": "Skills: product discovery and user research, 0 to 1 product launches, roadmap input and prioritization, product analytics and metrics, competitive benchmarking, pricing and unit economics, customer feedback loops, and cross-functional execution. Tools: Jira, Notion, SQL, advanced Excel, Power BI, Salesforce CRM, Freshworks CRM, Google Apps Script and PowerPoint.",
+      "source": "Resume → Skills, Tools",
+      "visibility": "public"
+    },
+    {
+      "id": "projects-overview",
+      "category": "project",
+      "questions": [
+        "What prototypes has Prannav built?",
+        "What has Prannav built?",
+        "What products has he built?",
+        "Show me his projects",
+        "Why did Prannav build these products?"
+      ],
+      "answer": "Prannav builds products himself. Let's Match is a live app that people use today, and it is currently in testing with real users giving regular feedback. Alongside it are five enterprise product prototypes: Performance AI (marketing), Helix AI (customer operations), Revora AI (billing and revenue operations), Comply (compliance) and PeopleOS (HR). The prototypes show how he thinks through a problem end to end; they are not live products, and the company shown in some of them is fictional.",
+      "source": "Projects section",
+      "visibility": "public"
+    },
+    {
+      "id": "project-letsmatch",
+      "category": "project",
+      "questions": [
+        "What is Let's Match?",
+        "What does Let's Match do?",
+        "How does Let's Match work?",
+        "Tell me about Let's Match",
+        "Has Prannav shipped anything live?",
+        "Has he built anything people actually use?",
+        "What live product has he built?"
+      ],
+      "answer": "Let's Match (lets-match.com) is a live web app that helps a group, or a couple, decide what to watch. The host creates a session and shares a QR code, link or code. Each person picks up to two vibes in under 90 seconds, then swipes 10 titles filtered to their streaming services and languages. The app shows the group's top 3, ranked by how many people liked each, and offers 10 more titles if nobody agrees. It needs no sign-up or download, works remotely, and has separate Friends and Couples pages.",
+      "source": "lets-match.com; Prannav",
+      "visibility": "public"
+    },
+    {
+      "id": "project-letsmatch-why",
+      "category": "project",
+      "questions": [
+        "Why did he build Let's Match?",
+        "What problem does Let's Match solve?"
+      ],
+      "answer": "Deciding what to watch takes longer with every extra person. Let's Match reduces that decision time by letting everyone react to the same small set of titles on their own phone, so the group's overlap shows up quickly instead of through negotiation.",
+      "source": "Prannav",
+      "visibility": "public"
+    },
+    {
+      "id": "project-letsmatch-status",
+      "category": "project",
+      "questions": [
+        "Is Let's Match live?",
+        "How many users does Let's Match have?",
+        "What stack is Let's Match built on?",
+        "How was Let's Match built?"
+      ],
+      "answer": "Let's Match is live on its own domain and is currently in the testing phase. Many users are using it and sending constant feedback, but I don't have usage numbers to share. It is built on Next.js and was built with Claude Code. Title data comes from TMDB, where-to-watch data from JustWatch, and streaming availability from the Streaming Availability API by Movie of the Night.",
+      "source": "Prannav; lets-match.com",
+      "visibility": "public"
+    },
+    {
+      "id": "project-performance-ai",
+      "category": "project",
+      "questions": [
+        "Tell me about Performance AI",
+        "What is Performance AI?",
+        "What did he build for marketing?"
+      ],
+      "answer": "Performance AI is a prototype of a marketing decision product for performance marketers. The problem: marketers see spend, leads and CTR, but what matters is cost per revenue outcome, and the funnel leaks between lead and revenue. The product gives a daily brief of decisions needed, backed by diagnosis across the full funnel, campaign, city and platform, plus a forecast of cost per revenue outcome with a what-if. Guardrails set what the AI can act on, what goes to a review queue, and what is logged. It has five views (Brief, Diagnose, Forecast, Guardrails, Settings) and is shown for a fictional lender, Meridian Capital Finance, where the outcome is a loan disbursal.",
+      "source": "Projects → Performance AI",
+      "visibility": "public"
+    },
+    {
+      "id": "project-helix",
+      "category": "project",
+      "questions": [
+        "What is Helix AI?",
+        "Tell me about Helix AI",
+        "What did he build for customer operations?"
+      ],
+      "answer": "Helix AI is a prototype of a Customer Experience OS for support teams. The problem: support leaders find SLA breaches, escalations and quality issues after the damage is done. Helix puts the work and the intelligence in one place, with Overview, Tickets, a Unified Inbox, Customers, AI Insights, Analytics, Agent Coaching, Automations, Team and Agents, and Settings, plus an Ask Helix assistant.",
+      "source": "Projects → Helix AI",
+      "visibility": "public"
+    },
+    {
+      "id": "project-revora",
+      "category": "project",
+      "questions": [
+        "What does Revora AI do?",
+        "Tell me about Revora AI",
+        "What did he build for revenue operations?"
+      ],
+      "answer": "Revora AI is a prototype of a billing and revenue operations product. The problem: revenue leaks quietly between contract, invoice, payment and collection, and finance finds it at month-end reconciliation, when recovery is hardest. Revora covers customers, subscriptions, invoicing, payments and collections, with a Revenue Leakage Monitor, AI Revenue Insights, workflows and approvals so a recommendation becomes an owned task. It has 16 modules, from Customers through Reconciliation to Settings.",
+      "source": "Projects → Revora AI",
+      "visibility": "public"
+    },
+    {
+      "id": "project-comply",
+      "category": "project",
+      "questions": [
+        "Tell me about Comply",
+        "What is Comply?",
+        "What did he build for compliance?"
+      ],
+      "answer": "Comply is a prototype of a compliance operating layer for a fictional NBFC. The problem: regulatory change, controls and evidence live in different places, so nobody can quickly say which obligation, control and owner a new regulation affects. Comply provides one traceable chain from regulation to obligation to control to finding to remediation. It sits on top of existing tools (Vanta, Okta, AWS Config, Jira, Slack) instead of replacing them, requires every exception to carry an expiry and a compensating control, and shows whether evidence is current or stale. It has six modules: Command Centre, Regulatory Register, Controls and Ownership, Exceptions and Remediation, Audit Workspace, and Settings.",
+      "source": "Projects → Comply",
+      "visibility": "public"
+    },
+    {
+      "id": "project-peopleos",
+      "category": "project",
+      "questions": [
+        "What is PeopleOS?",
+        "Tell me about PeopleOS",
+        "What did he build for HR?"
+      ],
+      "answer": "PeopleOS is a prototype of a skills-based talent intelligence product. The problem: HR systems store records, but decisions on hiring, mobility, development and succession depend on knowing who can do what. PeopleOS makes skills the thread across modules, with explainable skill matches, People Signals leaders can act on, and a Copilot for workforce questions. It has 20 views, including Employee 360, a Skills Intelligence heatmap, a Talent Marketplace, Succession and Workforce Planning.",
+      "source": "Projects → PeopleOS",
+      "visibility": "public"
+    },
+    {
+      "id": "project-fictional",
+      "category": "project",
+      "questions": [
+        "Are the prototypes real products?",
+        "Are these real products?",
+        "Are these real?",
+        "Are the prototypes live?",
+        "Is Meridian Capital Finance a real company?"
+      ],
+      "answer": "No. The five enterprise products are clickable prototypes with sample data, and Meridian Capital Finance is a fictional company used in two of them. Let's Match is the only live product.",
+      "source": "Projects",
+      "visibility": "public"
+    },
+    {
+      "id": "project-how-built",
+      "category": "project",
+      "questions": [
+        "How does Prannav build these products?",
+        "How were the prototypes built?"
+      ],
+      "answer": "The products are built with Claude Code, from a written thesis for each one, then tested by clicking through every screen and action. Let's Match is built on Next.js.",
+      "source": "Prannav",
+      "visibility": "public"
+    },
+    {
+      "id": "principles",
+      "category": "principles",
+      "questions": [
+        "What are his product principles?",
+        "How does Prannav think about product?",
+        "What is his product philosophy?"
+      ],
+      "answer": "Two principles. Build, measure, iterate: strong product decisions combine structured thinking with real-world feedback, and the best way to learn what works is to build, measure the impact and keep improving. Value over interface: great products are defined by the value they deliver to the end user, combined with a user-friendly design, not by how good the interface looks.",
+      "source": "About page",
+      "visibility": "public"
+    },
+    {
+      "id": "why-pm",
+      "category": "principles",
+      "questions": [
+        "Why product management?",
+        "Why did Prannav move into product?",
+        "What motivates him?"
+      ],
+      "answer": "His time at Freshworks and ZoomInfo put him close to customers and showed him how to translate complex technology into business value. At Flipkart he gained a broader view of consumer behaviour, product economics and business outcomes. He became curious about how problems are identified, why decisions are made and how technology becomes a product that solves them at scale. Product management brings together understanding people, connecting business and technology, and turning ideas into meaningful outcomes.",
+      "source": "About page",
+      "visibility": "public"
+    },
+    {
+      "id": "interests",
+      "category": "interests",
+      "questions": [
+        "What does Prannav do outside work?",
+        "What are his hobbies?",
+        "Does he play any sport?",
+        "Does he play sports?",
+        "Does he follow sports?",
+        "Does he follow F1?"
+      ],
+      "answer": "He follows Formula 1 closely and watches races on weekends with friends. He stays active through cricket and running.",
+      "source": "About page",
+      "visibility": "public"
+    },
+    {
+      "id": "looking-for",
+      "category": "looking_for",
+      "questions": [
+        "What roles is he looking for?",
+        "Which domains interest him?",
+        "Is he open to remote work?",
+        "What location does he prefer?"
+      ],
+      "answer": "Roles: Product Manager, Associate Product Manager, AI Product Manager, or Product Builder. Domains: B2B SaaS, AI-native products, enterprise technology, fintech and consumer technology. Level: early-to-mid-career product roles that combine business and technology experience with hands-on execution. Location: Bengaluru and Chennai, and open to remote and hybrid roles.",
+      "source": "About page",
+      "visibility": "public"
+    },
+    {
+      "id": "availability",
+      "category": "looking_for",
+      "questions": [
+        "When can he join?",
+        "What is his notice period?",
+        "Is he available?"
+      ],
+      "answer": "Prannav's notice period is 2 months.",
+      "source": "Prannav",
+      "visibility": "public"
+    },
+    {
+      "id": "compensation",
+      "category": "boundaries",
+      "questions": [
+        "What is his expected salary?",
+        "What is his current compensation?",
+        "What is his CTC?"
+      ],
+      "answer": "Please reach out to Prannav directly about compensation: prannavb27@iimklive.com or 99400 33571.",
+      "source": "Prannav",
+      "visibility": "public"
+    },
+    {
+      "id": "contact",
+      "category": "contact",
+      "questions": [
+        "How can I contact Prannav?",
+        "What is his email?",
+        "What is his phone number?",
+        "What is his LinkedIn?"
+      ],
+      "answer": "Email: prannavb27@iimklive.com. Phone: 99400 33571. LinkedIn: linkedin.com/in/prannavkb.",
+      "source": "Contact block",
+      "visibility": "public"
+    },
+    {
+      "id": "about-assistant",
+      "category": "meta",
+      "questions": [
+        "Who built this assistant?",
+        "How does this assistant work?",
+        "Are you an AI?"
+      ],
+      "answer": "I'm an AI assistant that answers questions about Prannav using only the content on this site: his resume, About page and projects. If something isn't covered, I'll say so and point you to his contact details.",
+      "source": "Site",
+      "visibility": "public"
+    },
+    {
+      "id": "references",
+      "category": "boundaries",
+      "questions": [
+        "Can I get references?",
+        "Who can vouch for him?"
+      ],
+      "answer": "I don't have reference details. Please reach out to Prannav directly: prannavb27@iimklive.com or 99400 33571.",
+      "source": "Prannav",
+      "visibility": "public"
+    }
+  ]
+}
