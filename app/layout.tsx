@@ -7,9 +7,10 @@ const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://prannav.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(base),
-  title: "Prannav | Product Manager. Ask me anything.",
-  description: "Prannav is a Product Manager building at the intersection of business, technology and AI. Ask the assistant about his work, or browse a live app and five product prototypes.",
-  openGraph: { title: "Prannav | Product Manager", description: "Ask the assistant anything about Prannav's work.", type: "website" },
+  title: "Prannav | Ask me anything",
+  description: "Prannav builds at the intersection of business, technology and AI. Ask the assistant about his work, or browse a live app and five product mockups.",
+  openGraph: { title: "Prannav | Ask me anything", description: "Ask the assistant anything about Prannav's work.", type: "website" },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
