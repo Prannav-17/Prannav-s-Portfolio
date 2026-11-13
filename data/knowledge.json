@@ -197,7 +197,7 @@
    "id": "projects-overview",
    "category": "project",
    "questions": [
-    "What mockups has Prannav built?",
+    "What prototypes has Prannav built?",
     "What has Prannav built?",
     "What products has he built?",
     "Show me his projects",
@@ -205,7 +205,7 @@
     "What kind of products has Prannav built himself?",
     "Show me what he has built"
    ],
-   "answer": "Prannav builds products himself. Let's Match is a live app that people use today, and it is currently in testing with real users giving regular feedback. Alongside it are five enterprise product mockups: Performance AI (marketing), Helix AI (customer operations), Revora AI (billing and revenue operations), Comply (compliance) and PeopleOS (HR). The mockups show how he thinks through a problem end to end; they are not live products, and the company shown in some of them is fictional.",
+   "answer": "Prannav builds products himself. Let's Match is a live app that people use today, and it is currently in testing with real users giving regular feedback. Alongside it are five enterprise product prototypes: Performance AI (marketing), Helix AI (customer operations), Revora AI (billing and revenue operations), Comply (compliance) and PeopleOS (HR). The prototypes show how he thinks through a problem end to end; they are not live products, and the company shown in some of them is fictional.",
    "source": "Projects section",
    "visibility": "public"
   },
@@ -259,7 +259,7 @@
     "What is Performance AI?",
     "What did he build for marketing?"
    ],
-   "answer": "Performance AI is a mockup of a marketing decision product for performance marketers. The problem: marketers see spend, leads and CTR, but what matters is cost per revenue outcome, and the funnel leaks between lead and revenue. The product gives a daily brief of decisions needed, backed by diagnosis across the full funnel, campaign, city and platform, plus a forecast of cost per revenue outcome with a what-if. Guardrails set what the AI can act on, what goes to a review queue, and what is logged. It has five views (Brief, Diagnose, Forecast, Guardrails, Settings) and is shown for a fictional lender, Meridian Capital Finance, where the outcome is a loan disbursal.",
+   "answer": "Performance AI is a prototype of a marketing decision product for performance marketers. The problem: marketers see spend, leads and CTR, but what matters is cost per revenue outcome, and the funnel leaks between lead and revenue. The product gives a daily brief of decisions needed, backed by diagnosis across the full funnel, campaign, city and platform, plus a forecast of cost per revenue outcome with a what-if. Guardrails set what the AI can act on, what goes to a review queue, and what is logged. It has five views (Brief, Diagnose, Forecast, Guardrails, Settings) and is shown for a fictional lender, Meridian Capital Finance, where the outcome is a loan disbursal.",
    "source": "Projects → Performance AI",
    "visibility": "public"
   },
@@ -271,7 +271,7 @@
     "Tell me about Helix AI",
     "What did he build for customer operations?"
    ],
-   "answer": "Helix AI is a mockup of a Customer Experience OS for support teams. The problem: support leaders find SLA breaches, escalations and quality issues after the damage is done. Helix puts the work and the intelligence in one place, with Overview, Tickets, a Unified Inbox, Customers, AI Insights, Analytics, Agent Coaching, Automations, Team and Agents, and Settings, plus an Ask Helix assistant.",
+   "answer": "Helix AI is a prototype of a Customer Experience OS for support teams. The problem: support leaders find SLA breaches, escalations and quality issues after the damage is done. Helix puts the work and the intelligence in one place, with Overview, Tickets, a Unified Inbox, Customers, AI Insights, Analytics, Agent Coaching, Automations, Team and Agents, and Settings, plus an Ask Helix assistant.",
    "source": "Projects → Helix AI",
    "visibility": "public"
   },
@@ -283,7 +283,7 @@
     "Tell me about Revora AI",
     "What did he build for revenue operations?"
    ],
-   "answer": "Revora AI is a mockup of a billing and revenue operations product. The problem: revenue leaks quietly between contract, invoice, payment and collection, and finance finds it at month-end reconciliation, when recovery is hardest. Revora covers customers, subscriptions, invoicing, payments and collections, with a Revenue Leakage Monitor, AI Revenue Insights, workflows and approvals so a recommendation becomes an owned task. It has 16 modules, from Customers through Reconciliation to Settings.",
+   "answer": "Revora AI is a prototype of a billing and revenue operations product. The problem: revenue leaks quietly between contract, invoice, payment and collection, and finance finds it at month-end reconciliation, when recovery is hardest. Revora covers customers, subscriptions, invoicing, payments and collections, with a Revenue Leakage Monitor, AI Revenue Insights, workflows and approvals so a recommendation becomes an owned task. It has 16 modules, from Customers through Reconciliation to Settings.",
    "source": "Projects → Revora AI",
    "visibility": "public"
   },
@@ -295,7 +295,7 @@
     "What is Comply?",
     "What did he build for compliance?"
    ],
-   "answer": "Comply is a mockup of a compliance operating layer for a fictional NBFC. The problem: regulatory change, controls and evidence live in different places, so nobody can quickly say which obligation, control and owner a new regulation affects. Comply provides one traceable chain from regulation to obligation to control to finding to remediation. It sits on top of existing tools (Vanta, Okta, AWS Config, Jira, Slack) instead of replacing them, requires every exception to carry an expiry and a compensating control, and shows whether evidence is current or stale. It has six modules: Command Centre, Regulatory Register, Controls and Ownership, Exceptions and Remediation, Audit Workspace, and Settings.",
+   "answer": "Comply is a prototype of a compliance operating layer for a fictional NBFC. The problem: regulatory change, controls and evidence live in different places, so nobody can quickly say which obligation, control and owner a new regulation affects. Comply provides one traceable chain from regulation to obligation to control to finding to remediation. It sits on top of existing tools (Vanta, Okta, AWS Config, Jira, Slack) instead of replacing them, requires every exception to carry an expiry and a compensating control, and shows whether evidence is current or stale. It has six modules: Command Centre, Regulatory Register, Controls and Ownership, Exceptions and Remediation, Audit Workspace, and Settings.",
    "source": "Projects → Comply",
    "visibility": "public"
   },
@@ -307,7 +307,7 @@
     "Tell me about PeopleOS",
     "What did he build for HR?"
    ],
-   "answer": "PeopleOS is a mockup of a skills-based talent intelligence product. The problem: HR systems store records, but decisions on hiring, mobility, development and succession depend on knowing who can do what. PeopleOS makes skills the thread across modules, with explainable skill matches, People Signals leaders can act on, and a Copilot for workforce questions. It has 20 views, including Employee 360, a Skills Intelligence heatmap, a Talent Marketplace, Succession and Workforce Planning.",
+   "answer": "PeopleOS is a prototype of a skills-based talent intelligence product. The problem: HR systems store records, but decisions on hiring, mobility, development and succession depend on knowing who can do what. PeopleOS makes skills the thread across modules, with explainable skill matches, People Signals leaders can act on, and a Copilot for workforce questions. It has 20 views, including Employee 360, a Skills Intelligence heatmap, a Talent Marketplace, Succession and Workforce Planning.",
    "source": "Projects → PeopleOS",
    "visibility": "public"
   },
@@ -315,13 +315,13 @@
    "id": "project-fictional",
    "category": "project",
    "questions": [
-    "Are the mockups real products?",
+    "Are the prototypes real products?",
     "Are these real products?",
     "Are these real?",
-    "Are the mockups live?",
+    "Are the prototypes live?",
     "Is Meridian Capital Finance a real company?"
    ],
-   "answer": "No. The five enterprise products are clickable mockups with sample data, and Meridian Capital Finance is a fictional company used in two of them. Let's Match is the only live product.",
+   "answer": "No. The five enterprise products are clickable prototypes with sample data, and Meridian Capital Finance is a fictional company used in two of them. Let's Match is the only live product.",
    "source": "Projects",
    "visibility": "public"
   },
@@ -330,7 +330,7 @@
    "category": "project",
    "questions": [
     "How does Prannav build these products?",
-    "How were the mockups built?"
+    "How were the prototypes built?"
    ],
    "answer": "The products are built with Claude Code, from a written thesis for each one, then tested by clicking through every screen and action. Let's Match is built on Next.js.",
    "source": "Prannav",

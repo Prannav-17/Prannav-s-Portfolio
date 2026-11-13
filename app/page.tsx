@@ -34,7 +34,7 @@ export default function Home() {
             <Reveal className="head">
               <div className="eyebrow">Works</div>
               <h2>He builds the products himself.</h2>
-              <p>One live app that people use today, and five enterprise product mockups that show how he thinks a problem through, end to end.</p>
+              <p>One live app that people use today, and five enterprise product prototypes that show how he thinks a problem through, end to end.</p>
             </Reveal>
             <Reveal>
               <div className="feat">
@@ -63,7 +63,7 @@ export default function Home() {
             <Reveal>
               <div className="eyebrow">About</div>
               <h2>Turning complex problems into products people actually value.</h2>
-              <p style={{ color: "#334155", fontSize: 17 }}>Prannav is based in Bengaluru. He spent two years in front of B2B SaaS customers at Freshworks and ZoomInfo, then moved into strategy and planning at Flipkart. He studied at IIM Kozhikode and builds products himself to learn what works.</p>
+              <p style={{ color: "#334155", fontSize: 17 }}>Prannav is based in Bengaluru. He spent two years in front of B2B SaaS customers at Freshworks and ZoomInfo, then moved into strategy and planning at Flipkart. He earned his MBA at <span className="iim">IIM Kozhikode</span> and builds products himself to learn what works.</p>
               <div className="two">
                 <div className="pill"><h3>Build, measure, iterate</h3><p>Strong decisions combine structured thinking with real-world feedback. The best way to learn what works is to build it, measure the impact and keep improving.</p></div>
                 <div className="pill"><h3>Value over interface</h3><p>Great products are defined by the value they deliver to the end user, with a friendly design, not by how good the interface looks.</p></div>
@@ -81,7 +81,7 @@ export default function Home() {
             <Reveal className="head">
               <div className="eyebrow">CV</div>
               <h2>Experience at a glance</h2>
-              <p>MBA, IIM Kozhikode (2025). BBA, University of Madras (2020, University Rank 10).</p>
+              <p>MBA, <span className="iim">IIM Kozhikode</span> (2025). BBA, University of Madras (2020, University Rank 10).</p>
             </Reveal>
             <div className="cta">
               <a className="btn pri" href="/cv" target="_blank" rel="noreferrer">View CV ↗</a>
@@ -113,7 +113,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <footer><div className="wrap"><span>© Prannav. Mockups use sample data and fictional companies.</span><span>The assistant logs questions anonymously (no name, IP or device details).</span></div></footer>
+      <footer><div className="wrap"><span>© Prannav. Prototypes use sample data and fictional companies.</span><span>The assistant logs questions anonymously (no name, IP or device details).</span></div></footer>
     </>
   );
 }

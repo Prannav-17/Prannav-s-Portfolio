@@ -30,7 +30,7 @@ export default async function Work({ params }: { params: Promise<{ slug: string 
           <video src={p.media} poster={p.shot} autoPlay muted loop playsInline controls={false} />
         </div>
         <div className="cta" style={{ justifyContent: "center" }}>
-          <a className="btn acc" href={p.href} target="_blank" rel="noreferrer">{p.kind === "Live app" ? "Open the live app ↗" : "Open the full mockup ↗"}</a>
+          <a className="btn acc" href={p.href} target="_blank" rel="noreferrer">{p.kind === "Live app" ? "Open the live app ↗" : "Open the full prototype ↗"}</a>
         </div>
         <div className="cols" style={{ marginTop: 34 }}>
           <div><h3>The problem</h3><p>{p.problem}</p></div>
@@ -39,7 +39,7 @@ export default async function Work({ params }: { params: Promise<{ slug: string 
         <div className="cols" style={{ marginTop: 26 }}>
           <div><h3>What is inside</h3><ul>{p.points.map((x) => <li key={x}>{x}</li>)}</ul></div>
           <div>{p.note && <><h3>Status</h3><p style={{ fontSize: 15.5, color: "#334155" }}>{p.note}</p></>}
-            {p.kind === "Mockup" && <><h3>About this mockup</h3><p style={{ fontSize: 15.5, color: "#334155" }}>A clickable mockup with sample data, built with Claude Code from a written thesis and tested screen by screen. It is not a live product.</p></>}</div>
+            {p.kind === "Prototype" && <><h3>About this prototype</h3><p style={{ fontSize: 15.5, color: "#334155" }}>A clickable prototype with sample data, built with Claude Code from a written thesis and tested screen by screen. It is not a live product.</p></>}</div>
         </div>
         <div style={{ marginTop: 44 }}>
           <h3>Ask about {p.name}</h3>

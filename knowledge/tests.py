@@ -2,7 +2,7 @@ import json,re,math
 K=json.load(open('knowledge.json'))['entries']
 # (question, expected entry id, must_include, must_not_include)
 T=[
-("What mockups has Prannav built?","projects-overview",["Let's Match","Performance AI","PeopleOS"],[]),
+("What prototypes has Prannav built?","projects-overview",["Let's Match","Performance AI","PeopleOS"],[]),
 ("Has he built anything people actually use?","project-letsmatch",["live","lets-match.com"],[]),
 ("What does Let's Match do?","project-letsmatch",["top 3","session"],[]),
 ("How many users does Let's Match have?","project-letsmatch-status",["don't have usage numbers"],["thousand","million"]),

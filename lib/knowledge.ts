@@ -40,11 +40,11 @@ export type Card = { title: string; desc: string; href: string; external?: boole
 
 const proj: Record<string, Card> = {
   "lets-match": { title: "Let's Match", desc: "Live app: decide what to watch as a group", href: "/works/lets-match", tag: "Live app" },
-  "performance-ai": { title: "Performance AI", desc: "Marketing decision product", href: "/works/performance-ai", tag: "Mockup" },
-  "helix-ai": { title: "Helix AI", desc: "Customer operations", href: "/works/helix-ai", tag: "Mockup" },
-  "revora-ai": { title: "Revora AI", desc: "Billing and revenue operations", href: "/works/revora-ai", tag: "Mockup" },
-  comply: { title: "Comply", desc: "Compliance operating layer", href: "/works/comply", tag: "Mockup" },
-  peopleos: { title: "PeopleOS", desc: "Skills-based talent intelligence", href: "/works/peopleos", tag: "Mockup" },
+  "performance-ai": { title: "Performance AI", desc: "Marketing decision product", href: "/works/performance-ai", tag: "Prototype" },
+  "helix-ai": { title: "Helix AI", desc: "Customer operations", href: "/works/helix-ai", tag: "Prototype" },
+  "revora-ai": { title: "Revora AI", desc: "Billing and revenue operations", href: "/works/revora-ai", tag: "Prototype" },
+  comply: { title: "Comply", desc: "Compliance operating layer", href: "/works/comply", tag: "Prototype" },
+  peopleos: { title: "PeopleOS", desc: "Skills-based talent intelligence", href: "/works/peopleos", tag: "Prototype" },
 };
 for (const c of Object.values(proj)) c.external = true;
 
