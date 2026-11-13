@@ -104,7 +104,7 @@ export default function Home() {
 
         <section id="contact" className="alt">
           <div className="wrap">
-            <Reveal className="head"><div className="eyebrow">Contact</div><h2>Let's talk.</h2><p>Notice period: 2 months. For anything about compensation, please reach out directly.</p></Reveal>
+            <Reveal className="head"><div className="eyebrow">Contact</div><h2>Let's talk.</h2></Reveal>
             <Reveal><div className="contact">
               <a href={`mailto:${EMAIL}`}><small>Email</small><b>{EMAIL}</b></a>
               <a href="tel:+919940033571"><small>Phone</small><b>{PHONE}</b></a>

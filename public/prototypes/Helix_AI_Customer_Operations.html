@@ -85,7 +85,7 @@ html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Sego
 .icon-btn{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-2);position:relative;transition:all .15s;border:1px solid transparent;}
 .icon-btn:hover{background:var(--bg);color:var(--text);}
 .icon-btn .dot{position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid #fff;}
-.content{flex:1;overflow-y:auto;}
+.content{flex:1;overflow-y:auto;background:#fff;}
 .content-inner{max-width:1360px;margin:0 auto;padding:24px 28px 64px;}
 
 /* ============ PAGE HEADER ============ */
@@ -131,6 +131,10 @@ html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Sego
 .kpi:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);border-color:#DADCE2;}
 .kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
 .kpi-label{font-size:11.5px;color:var(--text-2);font-weight:500;}
+.kpi-green{border:1.5px solid var(--green);}
+.kpi-red{border:1.5px solid var(--red);}
+.kpi-green:hover{border-color:var(--green);}
+.kpi-red:hover{border-color:var(--red);}
 .kpi-ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:var(--pri-tint);color:var(--pri);}
 .kpi-ic svg{width:14px;height:14px;}
 .kpi-val{font-size:23px;font-weight:700;letter-spacing:-.02em;line-height:1.1;}
@@ -767,11 +771,12 @@ renders.overview=function(){
   // KPIs
   h+=`<div class="kpi-grid">`;
   DATA.kpis.forEach((k,i)=>{
-    const col=k.good?'#16A34A':k.warn?'#F59E0B':'#635BFF';
+    const col='#000';
+    const tone=k.warn?'red':'green';
     const deltaCls=k.dir==='up'?(k.good?'up':'up'):k.dir==='down'?'down':'flat';
     const dcls=k.dir==='up'?'up':k.dir==='down'?'down':'flat';
     const darrow=k.dir==='up'?IC.arrowUp:k.dir==='down'?IC.arrowDown:'';
-    h+=`<div class="kpi" onclick="navigate('analytics')">
+    h+=`<div class="kpi kpi-${tone}" onclick="navigate('analytics')">
       <div class="kpi-top"><span class="kpi-label">${k.label}</span><span class="kpi-ic">${svgIcon(IC[k.icon],14)}</span></div>
       <div class="kpi-val">${k.val}</div>
       <div class="kpi-foot">${k.delta!==null?`<span class="delta ${dcls}">${darrow?svgIcon(darrow,11):''}${k.delta}%</span>`:`<span class="kpi-note">${k.note}</span>`}${k.delta!==null?`<span class="kpi-note">${k.note}</span>`:''}</div>
