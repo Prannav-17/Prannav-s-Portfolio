@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "Running click-through tests before push..."
+sh tests/run-all.sh || { echo "Tests failed. Push cancelled."; exit 1; }
