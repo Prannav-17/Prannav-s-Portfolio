@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helix AI — Customer Experience OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#F7F8FA;--surface:#FFFFFF;--surface-2:#FBFBFD;
+  --side:#111827;--side-2:#1B2436;--side-active:#242F45;--side-hair:rgba(255,255,255,.07);
+  --pri:#635BFF;--pri-hover:#514BE0;--pri-soft:#EEEDFF;--pri-tint:#F5F4FF;--pri-ring:rgba(99,91,255,.14);
+  --teal:#14B8A6;--teal-soft:#D5F5F0;
+  --green:#16A34A;--green-soft:#DCFCE7;--amber:#F59E0B;--amber-soft:#FEF3C7;--red:#EF4444;--red-soft:#FEE2E2;
+  --text:#111827;--text-2:#6B7280;--text-3:#9CA3AF;
+  --border:#E5E7EB;--border-2:#F0F1F3;
+  --radius:12px;--radius-sm:8px;--radius-xs:6px;
+  --shadow-sm:0 1px 2px rgba(16,24,40,.05);
+  --shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04);
+  --shadow-md:0 4px 12px rgba(16,24,40,.08);
+  --shadow-lg:0 12px 32px rgba(16,24,40,.12);
+}
+html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.45;}
+.shell{display:flex;height:100vh;overflow:hidden;}
+::selection{background:var(--pri-ring);}
+
+/* ============ SIDEBAR ============ */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:244px;background:var(--side);display:flex;flex-direction:column;transition:width .18s ease,box-shadow .18s ease;z-index:40;overflow:hidden;}
+.hide-collapse{white-space:nowrap;transition:opacity .13s ease;}
+.shell.rail-collapsed .sidebar{width:64px;}
+.shell.rail-collapsed .sidebar:hover{width:244px;box-shadow:var(--shadow-lg);}
+.shell.rail-collapsed .sidebar:not(:hover) .hide-collapse{display:none;}
+.shell.rail-collapsed .sidebar:not(:hover) .nav-item{justify-content:center;padding:9px 0;}
+.shell.rail-collapsed .sidebar:not(:hover) .nav-item.active::before{display:none;}
+.shell.rail-collapsed .sidebar:not(:hover) .ws-card{justify-content:center;padding:10px 0;}
+.shell.rail-collapsed .sidebar:not(:hover) .brand{justify-content:center;}
+.shell.rail-collapsed .sidebar:not(:hover) .profile{justify-content:center;padding-left:0;padding-right:0;}
+.shell.rail-collapsed .sidebar:not(:hover) .nav-group-title{text-align:center;padding-left:0;padding-right:0;overflow:hidden;}
+.brand{display:flex;align-items:center;gap:10px;padding:16px 18px 14px;}
+.brand-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#635BFF,#8B84FF);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(99,91,255,.4);}
+.brand-mark svg{width:17px;height:17px;color:#fff;}
+.brand-name{font-size:15px;font-weight:700;color:#fff;letter-spacing:-.01em;}
+.ws-wrap{padding:0 12px 10px;}
+.ws-card{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-sm);background:var(--side-2);cursor:pointer;transition:background .15s;border:1px solid transparent;}
+.ws-card:hover{background:var(--side-active);}
+.ws-logo{width:26px;height:26px;border-radius:6px;background:#fff;color:var(--side);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;}
+.ws-name{font-size:13px;font-weight:600;color:#fff;line-height:1.1;}
+.ws-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:1px;}
+.ws-chev{margin-left:auto;color:rgba(255,255,255,.4);}
+.nav-scroll{flex:1;overflow-y:auto;padding:4px 12px;}
+.nav-scroll::-webkit-scrollbar{width:0;}
+.nav-group{margin-bottom:14px;}
+.nav-group-title{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.34);padding:4px 10px 6px;letter-spacing:.06em;text-transform:uppercase;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;color:rgba(255,255,255,.62);font-size:13px;font-weight:500;transition:all .13s;margin-bottom:1px;position:relative;}
+.nav-item:hover{background:var(--side-2);color:rgba(255,255,255,.92);}
+.nav-item.active{background:var(--side-active);color:#fff;}
+.nav-item.active::before{content:'';position:absolute;left:-12px;top:50%;transform:translateY(-50%);width:3px;height:18px;background:var(--pri);border-radius:0 3px 3px 0;}
+.nav-item svg{width:17px;height:17px;flex-shrink:0;opacity:.85;}
+.nav-item .nav-badge{margin-left:auto;font-size:10.5px;font-weight:600;background:var(--pri);color:#fff;border-radius:99px;padding:1px 7px;min-width:18px;text-align:center;}
+.nav-item .nav-badge.amber{background:var(--amber);}
+.profile{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--side-hair);cursor:pointer;transition:background .15s;}
+.profile:hover{background:var(--side-2);}
+.avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:11px;color:#fff;background:linear-gradient(135deg,#635BFF,#14B8A6);}
+.profile-name{font-size:12.5px;font-weight:600;color:#fff;line-height:1.1;}
+.profile-role{font-size:11px;color:rgba(255,255,255,.45);margin-top:1px;}
+
+/* ============ MAIN ============ */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;margin-left:244px;transition:margin-left .18s ease;}
+.shell.rail-collapsed .main{margin-left:64px;}
+.topbar{display:flex;align-items:center;gap:14px;padding:0 24px;height:58px;background:rgba(255,255,255,.82);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);flex-shrink:0;z-index:20;}
+.hamburger{width:32px;height:32px;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-2);transition:background .15s;}
+.hamburger:hover{background:var(--bg);}
+.crumb{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text-3);}
+.crumb b{color:var(--text);font-weight:600;}
+.topbar-spacer{flex:1;}
+.search-bar{display:flex;align-items:center;gap:9px;padding:0 12px;height:36px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2);color:var(--text-3);cursor:pointer;min-width:300px;font-size:13px;transition:all .15s;}
+.search-bar:hover{border-color:#D1D5DB;background:#fff;}
+.search-bar kbd{margin-left:auto;font-size:10.5px;background:#fff;border:1px solid var(--border);padding:1px 6px;border-radius:4px;font-family:inherit;color:var(--text-2);box-shadow:var(--shadow-sm);}
+.ask-btn{display:flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:var(--radius-sm);background:var(--pri);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:inherit;transition:all .15s;box-shadow:0 1px 2px rgba(99,91,255,.3);}
+.ask-btn:hover{background:var(--pri-hover);box-shadow:0 2px 8px rgba(99,91,255,.35);}
+.ask-btn svg{width:15px;height:15px;}
+.icon-btn{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-2);position:relative;transition:all .15s;border:1px solid transparent;}
+.icon-btn:hover{background:var(--bg);color:var(--text);}
+.icon-btn .dot{position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid #fff;}
+.content{flex:1;overflow-y:auto;}
+.content-inner{max-width:1360px;margin:0 auto;padding:24px 28px 64px;}
+
+/* ============ PAGE HEADER ============ */
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px;}
+.page-title{font-size:21px;font-weight:700;letter-spacing:-.02em;color:var(--text);}
+.page-sub{font-size:13.5px;color:var(--text-2);margin-top:3px;}
+.page-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+
+/* ============ CONTROLS ============ */
+.ctrl{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-size:13px;font-weight:500;color:var(--text-2);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;}
+.ctrl:hover{border-color:#D1D5DB;color:var(--text);}
+.ctrl svg{width:14px;height:14px;}
+.ctrl.active{background:var(--pri-tint);border-color:var(--pri);color:var(--pri);}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);overflow:hidden;}
+.seg button{height:32px;padding:0 13px;border:none;background:none;font-family:inherit;font-size:12.5px;font-weight:500;color:var(--text-2);cursor:pointer;transition:all .12s;}
+.seg button+button{border-left:1px solid var(--border);}
+.seg button.active{background:var(--pri);color:#fff;}
+
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:34px;padding:0 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s;white-space:nowrap;}
+.btn svg{width:15px;height:15px;}
+.btn-pri{background:var(--pri);color:#fff;box-shadow:0 1px 2px rgba(99,91,255,.3);}
+.btn-pri:hover{background:var(--pri-hover);}
+.btn-ghost{background:var(--surface);color:var(--text-2);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:#D1D5DB;color:var(--text);background:var(--surface-2);}
+.btn-soft{background:var(--pri-soft);color:var(--pri);}
+.btn-soft:hover{background:#E4E2FF;}
+.btn-sm{height:30px;padding:0 11px;font-size:12.5px;}
+.btn-danger{background:var(--red);color:#fff;}.btn-danger:hover{background:#DC2626;}
+
+/* ============ CARD ============ */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid var(--border-2);}
+.card-head h3{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.01em;}
+.card-head .sub{font-size:12px;color:var(--text-3);margin-top:1px;font-weight:400;}
+.card-body{padding:18px;}
+.card-link{font-size:12.5px;font-weight:600;color:var(--pri);cursor:pointer;display:inline-flex;align-items:center;gap:3px;}
+.card-link:hover{text-decoration:underline;}
+
+/* ============ KPI ============ */
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:20px;}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;box-shadow:var(--shadow-sm);}
+.kpi:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);border-color:#DADCE2;}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
+.kpi-label{font-size:11.5px;color:var(--text-2);font-weight:500;}
+.kpi-ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:var(--pri-tint);color:var(--pri);}
+.kpi-ic svg{width:14px;height:14px;}
+.kpi-val{font-size:23px;font-weight:700;letter-spacing:-.02em;line-height:1.1;}
+.kpi-foot{display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:6px;}
+.delta{display:inline-flex;align-items:center;gap:2px;font-size:11.5px;font-weight:600;padding:1px 6px;border-radius:5px;}
+.delta.up{color:var(--green);background:var(--green-soft);}
+.delta.down{color:var(--red);background:var(--red-soft);}
+.delta.flat{color:var(--text-2);background:var(--bg);}
+.delta svg{width:11px;height:11px;}
+.kpi-note{font-size:11px;color:var(--text-3);}
+.spark{display:block;}
+
+/* ============ AI BRIEFING ============ */
+.briefing{background:linear-gradient(180deg,var(--pri-tint),#fff 60%);border:1px solid #E4E2FF;border-radius:var(--radius);margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow-sm);}
+.briefing-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #ECEBFF;}
+.brief-spark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#635BFF,#8B84FF);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 10px rgba(99,91,255,.35);}
+.brief-spark svg{width:19px;height:19px;color:#fff;}
+.briefing-head h2{font-size:15.5px;font-weight:700;letter-spacing:-.01em;}
+.briefing-head p{font-size:12.5px;color:var(--text-2);margin-top:1px;}
+.live-pill{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--teal);background:var(--teal-soft);padding:4px 10px;border-radius:99px;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 1.8s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.insight-list{padding:14px 16px;display:flex;flex-direction:column;gap:12px;}
+.insight{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px;transition:all .18s;position:relative;}
+.insight:hover{box-shadow:var(--shadow-md);border-color:#DADCE2;}
+.insight.sev-critical{border-left:3px solid var(--red);}
+.insight.sev-high{border-left:3px solid var(--amber);}
+.insight.sev-medium{border-left:3px solid var(--pri);}
+.insight-top{display:flex;align-items:center;gap:9px;margin-bottom:9px;flex-wrap:wrap;}
+.insight-cat{font-size:11px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:.04em;}
+.insight-title{font-size:14.5px;font-weight:600;letter-spacing:-.01em;margin-bottom:6px;}
+.insight-body{font-size:13px;color:var(--text-2);line-height:1.55;}
+.ai-expl{background:var(--surface-2);border:1px solid var(--border-2);border-radius:var(--radius-sm);padding:10px 12px;margin:10px 0;font-size:12.5px;color:var(--text-2);line-height:1.55;}
+.ai-expl .lbl{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--pri);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.ai-expl .lbl svg{width:12px;height:12px;}
+.rec-action{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--text);margin:10px 0;}
+.rec-action svg{width:15px;height:15px;color:var(--teal);flex-shrink:0;margin-top:1px;}
+.insight-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:11px;padding-top:11px;border-top:1px solid var(--border-2);}
+.meta-chip{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--text-2);}
+.meta-chip b{color:var(--text);font-weight:600;}
+.conf{display:flex;align-items:center;gap:6px;}
+.conf-bar{width:46px;height:5px;border-radius:3px;background:var(--border);overflow:hidden;}
+.conf-fill{height:100%;background:linear-gradient(90deg,var(--pri),var(--teal));border-radius:3px;}
+.insight-actions{display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;}
+
+/* ============ BADGES ============ */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600;white-space:nowrap;line-height:1.5;}
+.badge .bdot{width:5px;height:5px;border-radius:50%;}
+.badge.green{background:var(--green-soft);color:var(--green);}
+.badge.red{background:var(--red-soft);color:var(--red);}
+.badge.amber{background:var(--amber-soft);color:#B45309;}
+.badge.indigo{background:var(--pri-soft);color:var(--pri);}
+.badge.teal{background:var(--teal-soft);color:#0F766E;}
+.badge.gray{background:#F3F4F6;color:var(--text-2);}
+.sev{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:6px;font-size:11px;font-weight:600;}
+.sev.critical{background:var(--red-soft);color:var(--red);}
+.sev.high{background:var(--amber-soft);color:#B45309;}
+.sev.medium{background:var(--pri-soft);color:var(--pri);}
+.sev.low{background:#F3F4F6;color:var(--text-2);}
+
+/* ============ TABLE ============ */
+.tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.tbl th{text-align:left;font-weight:600;color:var(--text-2);padding:10px 16px;border-bottom:1px solid var(--border);font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;background:var(--surface-2);}
+.tbl td{padding:12px 16px;border-bottom:1px solid var(--border-2);vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tbody tr{transition:background .12s;}
+.tbl tbody tr.clickable{cursor:pointer;}
+.tbl tbody tr.clickable:hover{background:var(--pri-tint);}
+.cell-main{font-weight:600;color:var(--text);}
+.cell-sub{font-size:11.5px;color:var(--text-3);margin-top:1px;}
+.u-cell{display:flex;align-items:center;gap:9px;}
+.u-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:10.5px;color:#fff;}
+.mini-bar{height:6px;border-radius:3px;background:var(--border-2);overflow:hidden;width:100%;max-width:120px;}
+.mini-bar span{display:block;height:100%;border-radius:3px;}
+
+/* ============ FEED ============ */
+.feed-item{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--border-2);}
+.feed-item:last-child{border-bottom:none;}
+.feed-ic{width:30px;height:30px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.feed-ic svg{width:15px;height:15px;}
+.feed-ic.red{background:var(--red-soft);color:var(--red);}
+.feed-ic.indigo{background:var(--pri-soft);color:var(--pri);}
+.feed-ic.green{background:var(--green-soft);color:var(--green);}
+.feed-ic.amber{background:var(--amber-soft);color:#B45309;}
+.feed-ic.teal{background:var(--teal-soft);color:#0F766E;}
+.feed-txt{font-size:13px;color:var(--text);line-height:1.4;}
+.feed-txt b{font-weight:600;}
+.feed-time{font-size:11.5px;color:var(--text-3);margin-top:2px;}
+
+/* ============ CHART ============ */
+.legend{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2);font-weight:500;}
+.legend-swatch{width:9px;height:9px;border-radius:3px;}
+.dist-row{display:flex;align-items:center;gap:12px;margin-bottom:13px;}
+.dist-row:last-child{margin-bottom:0;}
+.dist-label{width:92px;font-size:12.5px;color:var(--text-2);font-weight:500;flex-shrink:0;display:flex;align-items:center;gap:7px;}
+.dist-track{flex:1;height:8px;border-radius:4px;background:var(--border-2);overflow:hidden;}
+.dist-fill{height:100%;border-radius:4px;transition:width .5s ease;}
+.dist-val{width:62px;text-align:right;font-size:12.5px;font-weight:600;color:var(--text);flex-shrink:0;}
+
+/* ============ GRID HELPERS ============ */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.grid-2-1{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+.row{display:flex;gap:16px;}
+.mb-16{margin-bottom:16px;}.mb-20{margin-bottom:20px;}.mt-16{margin-top:16px;}
+.section-title{font-size:16px;font-weight:700;letter-spacing:-.01em;margin:4px 0 14px;}
+
+/* ============ DRAWER ============ */
+.scrim{position:fixed;inset:0;background:rgba(17,24,39,.32);backdrop-filter:blur(1px);z-index:90;opacity:0;visibility:hidden;transition:all .22s;}
+.scrim.show{opacity:1;visibility:visible;}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:540px;max-width:94vw;background:var(--surface);box-shadow:var(--shadow-lg);z-index:100;transform:translateX(100%);transition:transform .26s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.drawer.open{transform:translateX(0);}
+.drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 22px;border-bottom:1px solid var(--border);}
+.drawer-head h3{font-size:16px;font-weight:700;letter-spacing:-.01em;}
+.drawer-head .sub{font-size:12.5px;color:var(--text-3);margin-top:2px;}
+.x-btn{width:30px;height:30px;border-radius:var(--radius-xs);border:none;background:none;cursor:pointer;color:var(--text-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;}
+.x-btn:hover{background:var(--bg);}
+.drawer-body{flex:1;overflow-y:auto;padding:22px;}
+.dl-row{margin-bottom:16px;}
+.dl-label{font-size:10.5px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.dl-val{font-size:13.5px;color:var(--text);line-height:1.5;}
+
+/* ============ COMMAND PALETTE ============ */
+.cmdk-scrim{position:fixed;inset:0;background:rgba(17,24,39,.4);backdrop-filter:blur(3px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding-top:12vh;}
+.cmdk-scrim.show{display:flex;}
+.cmdk{width:600px;max-width:92vw;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-lg);overflow:hidden;animation:cmdkIn .18s ease;}
+@keyframes cmdkIn{from{opacity:0;transform:translateY(-8px) scale(.98);}to{opacity:1;transform:none;}}
+.cmdk-input-wrap{display:flex;align-items:center;gap:11px;padding:16px 18px;border-bottom:1px solid var(--border);}
+.cmdk-input-wrap svg{width:18px;height:18px;color:var(--text-3);}
+.cmdk-input{flex:1;border:none;outline:none;font-family:inherit;font-size:15px;color:var(--text);background:none;}
+.cmdk-results{max-height:min(380px,54vh);overflow-y:auto;padding:8px;}
+.cmdk-group-label{font-size:10.5px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;padding:8px 10px 4px;}
+.cmdk-item{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-sm);cursor:pointer;font-size:13.5px;}
+.cmdk-item.sel,.cmdk-item:hover{background:var(--pri-tint);}
+.cmdk-item svg{width:16px;height:16px;color:var(--text-2);}
+.cmdk-item .ci-sub{font-size:11.5px;color:var(--text-3);margin-left:auto;}
+.cmdk-empty{padding:28px;text-align:center;color:var(--text-3);font-size:13px;}
+
+/* ============ TOAST ============ */
+.toast-wrap{position:fixed;bottom:22px;right:22px;z-index:300;display:flex;flex-direction:column;gap:10px;}
+.toast{display:flex;align-items:center;gap:11px;background:var(--side);color:#fff;padding:12px 16px;border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);font-size:13px;font-weight:500;min-width:260px;animation:toastIn .25s ease;}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:none;}}
+.toast svg{width:17px;height:17px;flex-shrink:0;}
+.toast .t-ic.green{color:#4ADE80;}.toast .t-ic.indigo{color:#A5A0FF;}.toast .t-ic.amber{color:#FCD34D;}
+
+/* ============ MODAL ============ */
+.modal-scrim{position:fixed;inset:0;background:rgba(17,24,39,.4);backdrop-filter:blur(3px);z-index:200;display:none;align-items:center;justify-content:center;padding:24px;}
+.modal-scrim.show{display:flex;}
+.modal{width:480px;max-width:94vw;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-lg);animation:cmdkIn .18s ease;max-height:86vh;overflow-y:auto;}
+.modal-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-head h3{font-size:15px;font-weight:700;}
+.modal-body{padding:20px;}
+.modal-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
+.field{margin-bottom:15px;}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:5px;}
+.input,select.input,textarea.input{width:100%;height:36px;padding:0 11px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:13px;color:var(--text);background:var(--surface);outline:none;transition:all .15s;}
+textarea.input{height:auto;padding:9px 11px;resize:vertical;min-height:76px;line-height:1.5;}
+.input:focus{border-color:var(--pri);box-shadow:0 0 0 3px var(--pri-ring);}
+
+/* ============ TABS ============ */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:20px;}
+.tab{padding:9px 15px;font-size:13px;font-weight:500;color:var(--text-2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .14s;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--pri);border-bottom-color:var(--pri);font-weight:600;}
+
+/* ============ TOGGLE ============ */
+.switch{width:38px;height:22px;border-radius:99px;background:var(--border);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.switch.on{background:var(--pri);}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:var(--shadow-sm);}
+.switch.on::after{transform:translateX(16px);}
+
+/* ============ MISC ============ */
+.empty-state{text-align:center;padding:52px 20px;color:var(--text-3);}
+.empty-state svg{width:34px;height:34px;margin-bottom:10px;opacity:.5;}
+.stub{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:72px 24px;text-align:center;}
+.stub .stub-ic{width:52px;height:52px;border-radius:14px;background:var(--pri-tint);color:var(--pri);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+.stub .stub-ic svg{width:26px;height:26px;}
+.stub h3{font-size:17px;font-weight:700;margin-bottom:6px;}
+.stub p{font-size:13.5px;color:var(--text-2);max-width:380px;}
+.text-2{color:var(--text-2);}.text-3{color:var(--text-3);}.fw6{font-weight:600;}
+.flex{display:flex;}.items-center{align-items:center;}.gap-8{gap:8px;}.gap-12{gap:12px;}.justify-between{justify-content:space-between;}
+@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(3,1fr);}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 4c6 2 6 14 12 16M18 4C12 6 12 18 6 20"/></svg>
+      </div>
+      <span class="brand-name hide-collapse">Helix AI</span>
+    </div>
+    <div class="ws-wrap hide-collapse">
+      <div class="ws-card">
+        <div class="ws-logo">A</div>
+        <div>
+          <div class="ws-name">Acme Commerce</div>
+          <div class="ws-sub">Support workspace</div>
+        </div>
+        <svg class="ws-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 9l4 4 4-4"/></svg>
+      </div>
+    </div>
+    <div class="nav-scroll" id="navScroll"></div>
+    <div class="profile">
+      <div class="avatar">JD</div>
+      <div class="hide-collapse">
+        <div class="profile-name">John Doe</div>
+        <div class="profile-role">Administrator</div>
+      </div>
+      <svg class="hide-collapse" style="margin-left:auto;color:rgba(255,255,255,.4)" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 9l4 4 4-4"/></svg>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="hamburger" onclick="toggleSidebar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </div>
+      <div class="crumb" id="crumb"><span>Workspace</span></div>
+      <div class="topbar-spacer"></div>
+      <div class="search-bar" onclick="openCmdk()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <span>Search tickets, customers, agents...</span>
+        <kbd>⌘K</kbd>
+      </div>
+      <button class="ask-btn" onclick="navigate('insights','assistant')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l1.9 4.6L18.5 9.5 13.9 11.4 12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/></svg>
+        Ask Helix
+      </button>
+      <div class="icon-btn" onclick="toast('No new notifications','indigo')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+        <span class="dot"></span>
+      </div>
+      <div class="icon-btn" style="padding:0" onclick="toast('Profile menu','indigo')">
+        <div class="avatar" style="width:30px;height:30px">JD</div>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<!-- DRAWER -->
+<div class="scrim" id="scrim" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div><h3 id="drawerTitle">Detail</h3><div class="sub" id="drawerSub"></div></div>
+    <button class="x-btn" onclick="closeDrawer()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</div>
+
+<!-- COMMAND PALETTE -->
+<div class="cmdk-scrim" id="cmdkScrim" onclick="if(event.target===this)closeCmdk()">
+  <div class="cmdk">
+    <div class="cmdk-input-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input class="cmdk-input" id="cmdkInput" placeholder="Search tickets, customers, agents, or jump to a module..." oninput="renderCmdk()" onkeydown="cmdkKey(event)">
+    </div>
+    <div class="cmdk-results" id="cmdkResults"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-scrim" id="modalScrim" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal"></div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ============================================================
+// HELIX AI — Customer Experience OS  ·  prototype logic
+// ============================================================
+
+// ---------- ICONS ----------
+const IC = {
+  overview:'<path d="M3 13h8V3H3zM13 21h8V3h-8zM3 21h8v-6H3z"/>',
+  tickets:'<path d="M3 9a2 2 0 012-2h14a2 2 0 012 2v2a2 2 0 000 4v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 000-4z"/><path d="M9 7v12"/>',
+  inbox:'<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.4 5.5L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.4-6.5A2 2 0 0016.8 4H7.2a2 2 0 00-1.8 1.5z"/>',
+  customers:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8"/>',
+  insights:'<path d="M12 3l1.9 4.6L18.5 9.5 13.9 11.4 12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/>',
+  analytics:'<path d="M3 3v18h18"/><path d="M7 15l3-4 3 2 4-6"/>',
+  coaching:'<path d="M12 20h9"/><path d="M12 4a4 4 0 014 4c0 3-4 4-4 4"/><circle cx="7" cy="8" r="3"/><path d="M2 20c0-3 2-5 5-5s5 2 5 5"/>',
+  automations:'<path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/>',
+  team:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.9"/>',
+  settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/>',
+  bolt:'<path d="M13 2L3 14h8l-1 8 10-12h-8z"/>',
+  check:'<path d="M20 6L9 17l-5-5"/>',
+  arrowUp:'<path d="M12 19V5M5 12l7-7 7 7"/>',
+  arrowDown:'<path d="M12 5v14M5 12l7 7 7-7"/>',
+  alert:'<path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L14.7 3.9a2 2 0 00-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1"/>',
+  trend:'<path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/>',
+  sparkle:'<path d="M12 3l1.9 4.6L18.5 9.5 13.9 11.4 12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/>',
+};
+
+// ---------- NAV ----------
+const NAV = [
+  {group:'Workspace', items:[
+    {id:'overview', label:'Overview', icon:'overview'},
+    {id:'tickets', label:'Tickets', icon:'tickets', badge:'1.3k'},
+    {id:'inbox', label:'Unified Inbox', icon:'inbox', badge:'18', badgeClass:'amber'},
+    {id:'customers', label:'Customers', icon:'customers'},
+  ]},
+  {group:'Intelligence', items:[
+    {id:'insights', label:'AI Insights', icon:'insights', badge:'6'},
+    {id:'analytics', label:'Analytics', icon:'analytics'},
+    {id:'coaching', label:'Agent Coaching', icon:'coaching'},
+    {id:'automations', label:'Automations', icon:'automations'},
+  ]},
+  {group:'Administration', items:[
+    {id:'team', label:'Team & Agents', icon:'team'},
+    {id:'settings', label:'Settings', icon:'settings'},
+  ]},
+];
+const MOD_TITLE = {overview:'Command Centre',tickets:'Tickets',inbox:'Unified Inbox',customers:'Customers',insights:'AI Insights',analytics:'Analytics',coaching:'Agent Coaching',automations:'Automations',team:'Team & Agents',settings:'Settings'};
+const MOD_GROUP = {overview:'Workspace',tickets:'Workspace',inbox:'Workspace',customers:'Workspace',insights:'Intelligence',analytics:'Intelligence',coaching:'Intelligence',automations:'Intelligence',team:'Administration',settings:'Administration'};
+
+// ---------- SHARED DATA ----------
+const AV_COLORS = ['#635BFF','#14B8A6','#F59E0B','#EC4899','#3B82F6','#8B5CF6','#10B981','#F43F5E'];
+function avColor(name){let s=0;for(let i=0;i<name.length;i++)s+=name.charCodeAt(i);return AV_COLORS[s%AV_COLORS.length];}
+function inits(n){return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
+
+const DATA = {
+  teams:[
+    {id:'T1',name:'Payments Support',lead:'Priya Nair',agents:6,workload:214,csat:88.5,sla:91},
+    {id:'T2',name:'Orders & Delivery',lead:'Arjun Rao',agents:7,workload:286,csat:92.1,sla:95},
+    {id:'T3',name:'Returns & Refunds',lead:'Meera Iyer',agents:6,workload:342,csat:84.3,sla:82},
+    {id:'T4',name:'Technical Support',lead:'Vikram Shah',agents:6,workload:198,csat:90.7,sla:93},
+  ],
+  agents:[
+    {id:'A1',name:'Rahul Sharma',team:'T3',role:'Support Agent',assigned:64,resolved:58,csat:82.4,frt:'2m 10s',res:'5h 42m',sla:86,quality:74,coaching:'Recommended',status:'Active'},
+    {id:'A2',name:'Ananya Gupta',team:'T2',role:'Support Agent',assigned:71,resolved:69,csat:94.8,frt:'3m 05s',res:'4h 18m',sla:97,quality:93,coaching:'On track',status:'Active'},
+    {id:'A3',name:'Karthik Menon',team:'T1',role:'Support Agent',assigned:58,resolved:52,csat:89.1,frt:'4m 22s',res:'6h 02m',sla:90,quality:85,coaching:'On track',status:'Active'},
+    {id:'A4',name:'Sneha Reddy',team:'T4',role:'Team Lead',assigned:49,resolved:47,csat:95.6,frt:'2m 48s',res:'3h 55m',sla:98,quality:95,coaching:'On track',status:'Active'},
+    {id:'A5',name:'Imran Khan',team:'T3',role:'Support Agent',assigned:66,resolved:55,csat:79.8,frt:'1m 52s',res:'6h 31m',sla:81,quality:71,coaching:'Needs attention',status:'Active'},
+    {id:'A6',name:'Divya Nair',team:'T2',role:'Support Agent',assigned:62,resolved:60,csat:91.3,frt:'3m 40s',res:'4h 47m',sla:94,quality:88,coaching:'On track',status:'Active'},
+    {id:'A7',name:'Rohan Das',team:'T1',role:'Support Agent',assigned:54,resolved:48,csat:86.5,frt:'4m 01s',res:'5h 20m',sla:88,quality:82,coaching:'On track',status:'Active'},
+    {id:'A8',name:'Fatima Sheikh',team:'T4',role:'Support Agent',assigned:57,resolved:54,csat:92.9,frt:'3m 12s',res:'4h 09m',sla:95,quality:90,coaching:'On track',status:'Active'},
+  ],
+  insights:[
+    {id:'IN-01',cat:'Emerging Issues',sev:'critical',title:'Payment failures up 34% in the last 6 hours',detected:'18 min ago',conf:92,impact:186,impactLabel:'customers affected',
+      body:'186 customers have reported failed transactions in the last 6 hours, primarily on UPI payments. Failure volume is accelerating.',
+      expl:'72% of these tickets originate from Android users on app version 12.4. The issue is concentrated around the payment confirmation stage, where the gateway callback appears to time out.',
+      action:'Escalate to Payments Engineering and publish a proactive customer notification.',
+      tickets:['TK-4821','TK-4822','TK-4830','TK-4834'],team:'T1',verified:true},
+    {id:'IN-02',cat:'Agent Performance',sev:'high',title:'Response quality declining on the evening shift',detected:'1 hour ago',conf:85,impact:5,impactLabel:'agents flagged',
+      body:'CSAT for the 6 PM–10 PM shift has dropped from 93% to 81% over the past week.',
+      expl:'Most negative feedback relates to incomplete resolution explanations. In 8 of 12 negatively-rated interactions, agents resolved the issue without acknowledging customer frustration first.',
+      action:'Review 5 flagged conversations and initiate targeted coaching on empathy and expectation-setting.',
+      tickets:['TK-4790','TK-4795'],team:'T3',verified:true},
+    {id:'IN-03',cat:'SLA & Operational Risks',sev:'high',title:'143 tickets at elevated SLA-breach risk',detected:'2 hours ago',conf:88,impact:143,impactLabel:'tickets at risk',
+      body:'143 tickets are projected to breach their SLA within the next 4 hours at current handling pace.',
+      expl:'Most at-risk tickets are assigned to the Returns & Refunds team, where ticket inflow is 27% above its 7-day average while staffing is unchanged.',
+      action:'Redistribute workload to available agents in Orders & Delivery, which has spare capacity.',
+      tickets:['TK-4801','TK-4803','TK-4811'],team:'T3',verified:true},
+    {id:'IN-04',cat:'Customer Experience Trends',sev:'medium',title:'Returns complaints up 42% over 7 days',detected:'5 hours ago',conf:79,impact:97,impactLabel:'customers affected',
+      body:'Returns-related complaints have risen 42% week-over-week, driven mainly by refund timing.',
+      expl:'64% originate from delayed refund processing and 23% from incorrect refund-status notifications. The pattern is concentrated in two logistics regions.',
+      action:'Investigate the refund processing integration, notify affected customers and prioritise tickets older than 48 hours.',
+      tickets:['TK-4801','TK-4805'],team:'T3',verified:false},
+    {id:'IN-05',cat:'Revenue & Retention Risks',sev:'medium',title:'9 high-value customers showing churn signals',detected:'7 hours ago',conf:76,impact:9,impactLabel:'at-risk accounts',
+      body:'9 customers in the top LTV decile have logged 3+ unresolved interactions in 14 days with declining sentiment.',
+      expl:'Each has an open issue older than 72 hours. Sentiment trend is negative across their last three contacts, a pattern historically preceding downgrade or churn.',
+      action:'Assign a senior agent to each account and open a proactive outreach thread.',
+      tickets:['TK-4760','TK-4772'],team:'T2',verified:false},
+    {id:'IN-06',cat:'Process Inefficiencies',sev:'low',title:'Knowledge gap driving repeat contacts on delivery',detected:'Yesterday',conf:81,impact:58,impactLabel:'repeat contacts',
+      body:'Delivery-tracking questions show a 31% repeat-contact rate, well above the 12% baseline.',
+      expl:'No knowledge-base article covers the new partner-courier tracking flow, so agents answer inconsistently and customers return.',
+      action:'Publish a canonical delivery-tracking article and attach it as a saved response.',
+      tickets:[],team:'T2',verified:true},
+  ],
+  activity:[
+    {ic:'red',icon:'alert',txt:'<b>TK-4821</b> escalated to Payments Engineering',time:'12 min ago'},
+    {ic:'indigo',icon:'sparkle',txt:'Helix detected an <b>emerging payment issue</b> (186 customers)',time:'18 min ago'},
+    {ic:'teal',icon:'user',txt:'<b>Imran Khan</b> reassigned from Returns to Payments overflow',time:'40 min ago'},
+    {ic:'amber',icon:'alert',txt:'<b>TK-4756</b> breached its SLA (Returns & Refunds)',time:'1 hour ago'},
+    {ic:'green',icon:'check',txt:'Coaching session completed for <b>Ananya Gupta</b>',time:'2 hours ago'},
+    {ic:'indigo',icon:'bolt',txt:'Automation <b>SLA Protection</b> escalated 7 tickets',time:'3 hours ago'},
+  ],
+  kpis:[
+    {label:'Total Tickets',val:'12,486',delta:8.2,dir:'up',note:'vs previous period',icon:'tickets',spark:[42,45,43,48,47,52,50,55,58,56,61,64],good:true},
+    {label:'Open Tickets',val:'1,284',delta:null,dir:'flat',note:'142 near SLA breach',icon:'inbox',spark:[70,68,72,69,74,71,73,70,72,75,73,71],warn:true},
+    {label:'Avg First Response',val:'4m 32s',delta:12,dir:'up',note:'improvement',icon:'bolt',spark:[62,60,58,57,55,53,52,50,48,47,46,44],good:true,invert:true},
+    {label:'Avg Resolution',val:'6h 18m',delta:8,dir:'up',note:'improvement',icon:'check',spark:[70,69,68,66,65,64,63,61,60,59,58,56],good:true,invert:true},
+    {label:'CSAT',val:'91.4%',delta:2.1,dir:'down',note:'percentage points',icon:'trend',spark:[94,94,93,93,92,93,92,91,92,91,91,91],warn:true},
+    {label:'AI Resolution Rate',val:'38.6%',delta:5.4,dir:'up',note:'percentage points',icon:'sparkle',spark:[28,29,30,31,31,33,34,34,36,36,38,39],good:true},
+  ],
+  trends:{
+    '24h':{labels:['00','03','06','09','12','15','18','21'],incoming:[42,31,28,68,92,86,74,58],resolved:[38,34,30,60,80,88,79,64],backlog:[120,117,115,123,135,133,128,122]},
+    '7d':{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],incoming:[520,560,610,590,640,430,380],resolved:[500,540,580,600,620,470,410],backlog:[140,160,190,180,200,160,130]},
+    '30d':{labels:['W1','W2','W3','W4'],incoming:[3600,3850,4100,3936],resolved:[3500,3700,3980,4010],backlog:[210,260,300,240]},
+  },
+  distChannel:[{k:'Email',v:4810,c:'#635BFF'},{k:'WhatsApp',v:3120,c:'#14B8A6'},{k:'Live Chat',v:2460,c:'#3B82F6'},{k:'Phone',v:1340,c:'#F59E0B'},{k:'Web Form',v:756,c:'#8B5CF6'}],
+  distPriority:[{k:'Critical',v:640,c:'#EF4444'},{k:'High',v:2180,c:'#F59E0B'},{k:'Medium',v:5420,c:'#635BFF'},{k:'Low',v:4246,c:'#9CA3AF'}],
+  distCategory:[{k:'Payments',v:2890,c:'#635BFF'},{k:'Orders',v:3240,c:'#14B8A6'},{k:'Returns',v:2760,c:'#F59E0B'},{k:'Delivery',v:2140,c:'#3B82F6'},{k:'Product',v:1456,c:'#EC4899'}],
+};
+
+// ---------- CUSTOMERS & TICKETS ----------
+DATA.customers=[
+  {id:'C1',name:'Aarav Patel',email:'aarav.patel@novatech.in',segment:'Enterprise',ltv:'₹4.82L',tickets:14,csat:88,last:'2h ago',risk:'Low',sentiment:'Neutral'},
+  {id:'C2',name:'Priya Menon',email:'priya.menon@gmail.com',segment:'Pro',ltv:'₹1.24L',tickets:7,csat:72,last:'40m ago',risk:'Medium',sentiment:'Negative'},
+  {id:'C3',name:'Rohan Verma',email:'rohan.v@outlook.com',segment:'Standard',ltv:'₹42.0K',tickets:3,csat:95,last:'1d ago',risk:'Low',sentiment:'Positive'},
+  {id:'C4',name:'Sara Khan',email:'sara.khan@brightwave.co',segment:'Enterprise',ltv:'₹6.10L',tickets:21,csat:69,last:'18m ago',risk:'High',sentiment:'Negative'},
+  {id:'C5',name:'Vikram Singh',email:'vikram.singh@gmail.com',segment:'Pro',ltv:'₹98.4K',tickets:9,csat:84,last:'5h ago',risk:'Low',sentiment:'Neutral'},
+  {id:'C6',name:'Neha Joshi',email:'neha.joshi@gmail.com',segment:'Standard',ltv:'₹28.2K',tickets:2,csat:91,last:'3h ago',risk:'Low',sentiment:'Positive'},
+  {id:'C7',name:'Arjun Nair',email:'arjun.nair@zephyr.io',segment:'Enterprise',ltv:'₹5.34L',tickets:17,csat:66,last:'9m ago',risk:'High',sentiment:'Negative'},
+  {id:'C8',name:'Divya Rao',email:'divya.rao@gmail.com',segment:'Pro',ltv:'₹1.51L',tickets:11,csat:87,last:'1h ago',risk:'Medium',sentiment:'Neutral'},
+];
+const T=(id,subject,cust,cat,ch,pri,ag,status,sla,sent,flags)=>({id,subject,customer:cust,category:cat,channel:ch,priority:pri,agent:ag,status,sla,sentiment:sent,aiFlag:(flags||'').includes('ai'),escalated:(flags||'').includes('esc'),updated:''});
+DATA.tickets=[
+  T('TK-4821','UPI payment failed but amount debited','C4','Payments','WhatsApp','Critical','A3','Escalated',-12,'Negative','ai esc'),
+  T('TK-4822','Payment stuck on confirmation screen','C7','Payments','Live Chat','Critical','A3','Open',8,'Negative','ai'),
+  T('TK-4830','Double charged for single order','C2','Payments','Email','High','A7','In Progress',34,'Negative','ai'),
+  T('TK-4834','UPI collect request not received','C5','Payments','Phone','High','A3','Open',52,'Neutral','ai'),
+  T('TK-4801','Refund not received after 7 days','C4','Returns','Email','High','A1','Open',-45,'Negative','ai esc'),
+  T('TK-4803','Return pickup repeatedly rescheduled','C8','Returns','WhatsApp','High','A5','Open',18,'Negative','ai'),
+  T('TK-4805','Wrong refund amount credited','C2','Returns','Email','Medium','A1','Pending',120,'Negative',''),
+  T('TK-4811','Refund status shows completed but no credit','C7','Returns','Live Chat','High','A5','Open',25,'Negative','ai'),
+  T('TK-4790','Agent closed ticket without resolving','C4','Orders','Email','Medium','A5','Open',90,'Negative','ai'),
+  T('TK-4795','Incomplete explanation on delivery delay','C2','Delivery','Live Chat','Medium','A1','Pending',75,'Negative','ai'),
+  T('TK-4760','Order undelivered, no update for 4 days','C7','Delivery','Phone','High','A6','Escalated',-30,'Negative','esc'),
+  T('TK-4772','Repeated contact, issue still open','C4','Orders','Email','High','A2','In Progress',40,'Negative',''),
+  T('TK-4756','SLA breached on refund escalation','C8','Returns','Email','High','A5','Open',-180,'Negative','esc'),
+  T('TK-4902','Where is my order? Tracking frozen','C1','Delivery','WhatsApp','Medium','A6','Open',140,'Neutral',''),
+  T('TK-4903','Product arrived damaged','C3','Product','Email','Medium','A8','Open',200,'Neutral',''),
+  T('TK-4905','How do I change delivery address?','C6','Delivery','Live Chat','Low','A6','Resolved',null,'Positive',''),
+  T('TK-4907','Cancel my order please','C5','Orders','WhatsApp','Low','A2','Pending',320,'Neutral',''),
+  T('TK-4910','Invoice GST details incorrect','C1','Orders','Email','Low','A2','Open',480,'Neutral',''),
+  T('TK-4912','App crashes on checkout','C8','Product','Phone','High','A4','In Progress',60,'Negative','ai'),
+  T('TK-4915','Coupon code not applying','C3','Payments','Live Chat','Low','A7','Resolved',null,'Positive',''),
+  T('TK-4918','Unable to track return shipment','C2','Returns','WhatsApp','Medium','A5','Open',95,'Neutral',''),
+  T('TK-4920','Request for bulk order support','C1','Orders','Email','Medium',null,'Open',260,'Neutral',''),
+  T('TK-4921','Delivery partner unreachable','C7','Delivery','Phone','High','A6','Open',22,'Negative','ai'),
+  T('TK-4924','Account email change request','C6','Product','Web Form','Low',null,'Open',600,'Neutral',''),
+];
+function custById(id){return DATA.customers.find(c=>c.id===id);}
+function ticketById(id){return DATA.tickets.find(t=>t.id===id);}
+
+// ---------- STATE / PERSISTENCE ----------
+const LSKEY = 'helix_state_v1';
+let STATE = loadState();
+function loadState(){try{return JSON.parse(localStorage.getItem(LSKEY))||{}}catch(e){return{}}}
+function saveState(){try{localStorage.setItem(LSKEY,JSON.stringify(STATE))}catch(e){}}
+function sset(k,v){STATE[k]=v;saveState();}
+function sget(k,d){return STATE[k]!==undefined?STATE[k]:d;}
+
+// ---------- HELPERS ----------
+function svgIcon(path,size=18,sw=2){return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;}
+function agentById(id){return DATA.agents.find(a=>a.id===id);}
+function teamById(id){return DATA.teams.find(t=>t.id===id);}
+function teamName(id){const t=teamById(id);return t?t.name:id;}
+function insightById(id){return DATA.insights.find(i=>i.id===id);}
+function fmt(n){return n.toLocaleString('en-US');}
+function sevBadge(s){return `<span class="sev ${s}">${s[0].toUpperCase()+s.slice(1)}</span>`;}
+function avatar(name,size=28){return `<div class="u-av" style="width:${size}px;height:${size}px;background:${avColor(name)}">${inits(name)}</div>`;}
+
+// sparkline SVG
+function sparkline(data,color,w=96,h=30){
+  const min=Math.min(...data),max=Math.max(...data),rng=(max-min)||1;
+  const pts=data.map((v,i)=>[i/(data.length-1)*w, h-4-((v-min)/rng)*(h-8)]);
+  const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area=line+` L${w} ${h} L0 ${h} Z`;
+  const gid='sg'+Math.random().toString(36).slice(2,7);
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".22"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs><path d="${area}" fill="url(#${gid})"/><path d="${line}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
+// multi-series line chart
+function lineChart(cfg){
+  const w=cfg.w||720,h=cfg.h||240,pl=38,pr=14,pt=14,pb=26;
+  const iw=w-pl-pr,ih=h-pt-pb;
+  const all=cfg.series.flatMap(s=>s.data);
+  let max=Math.max(...all),min=Math.min(0,...all);
+  max=Math.ceil(max/ (max>1000?500:max>100?50:10))*(max>1000?500:max>100?50:10)||10;
+  const n=cfg.labels.length;
+  const x=i=>pl+(n===1?iw/2:i/(n-1)*iw);
+  const y=v=>pt+ih-((v-min)/(max-min||1))*ih;
+  let grid='';
+  const gl=4;
+  for(let g=0;g<=gl;g++){const gy=pt+ih-(g/gl)*ih;const gv=min+(g/gl)*(max-min);
+    grid+=`<line x1="${pl}" y1="${gy.toFixed(1)}" x2="${w-pr}" y2="${gy.toFixed(1)}" stroke="#F0F1F3" stroke-width="1"/>`;
+    grid+=`<text x="${pl-8}" y="${gy+3.5}" text-anchor="end" font-size="10" fill="#9CA3AF">${gv>=1000?(gv/1000).toFixed(1)+'k':Math.round(gv)}</text>`;}
+  let xlabels='';
+  cfg.labels.forEach((l,i)=>{xlabels+=`<text x="${x(i)}" y="${h-8}" text-anchor="middle" font-size="10.5" fill="#9CA3AF">${l}</text>`;});
+  let paths='';
+  cfg.series.forEach(s=>{
+    const pts=s.data.map((v,i)=>[x(i),y(v)]);
+    const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    if(s.area){const gid='lg'+Math.random().toString(36).slice(2,7);
+      paths+=`<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${s.color}" stop-opacity=".16"/><stop offset="1" stop-color="${s.color}" stop-opacity="0"/></linearGradient></defs>`;
+      paths+=`<path d="${d} L${x(n-1)} ${pt+ih} L${x(0)} ${pt+ih} Z" fill="url(#${gid})"/>`;}
+    paths+=`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
+    paths+=pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.6" fill="#fff" stroke="${s.color}" stroke-width="1.8"/>`).join('');
+  });
+  return `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet">${grid}${paths}${xlabels}</svg>`;
+}
+
+// donut chart
+function donut(data,size=150){
+  const total=data.reduce((a,b)=>a+b.v,0);const r=size/2,ir=r*0.62;let a0=-Math.PI/2;
+  let arcs='';
+  data.forEach(d=>{const frac=d.v/total;const a1=a0+frac*Math.PI*2;
+    const x0=r+r*Math.cos(a0),y0=r+r*Math.sin(a0),x1=r+r*Math.cos(a1),y1=r+r*Math.sin(a1);
+    const xi0=r+ir*Math.cos(a1),yi0=r+ir*Math.sin(a1),xi1=r+ir*Math.cos(a0),yi1=r+ir*Math.sin(a0);
+    const large=frac>0.5?1:0;
+    arcs+=`<path d="M${x0} ${y0} A${r} ${r} 0 ${large} 1 ${x1} ${y1} L${xi0} ${yi0} A${ir} ${ir} 0 ${large} 0 ${xi1} ${yi1} Z" fill="${d.c}"/>`;
+    a0=a1;});
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${arcs}<text x="${r}" y="${r-2}" text-anchor="middle" font-size="20" font-weight="700" fill="#111827">${total>=1000?(total/1000).toFixed(1)+'k':total}</text><text x="${r}" y="${r+15}" text-anchor="middle" font-size="10.5" fill="#9CA3AF">total</text></svg>`;
+}
+
+function distBars(data){
+  const max=Math.max(...data.map(d=>d.v));
+  return data.map(d=>`<div class="dist-row"><div class="dist-label"><span style="width:8px;height:8px;border-radius:3px;background:${d.c};display:inline-block"></span>${d.k}</div><div class="dist-track"><div class="dist-fill" style="width:${(d.v/max*100).toFixed(0)}%;background:${d.c}"></div></div><div class="dist-val">${fmt(d.v)}</div></div>`).join('');
+}
+
+// ---------- NAV RENDER ----------
+let currentMod='overview';
+function renderNav(){
+  let h='';
+  NAV.forEach(g=>{
+    h+=`<div class="nav-group"><div class="nav-group-title hide-collapse">${g.group}</div>`;
+    g.items.forEach(it=>{
+      h+=`<div class="nav-item ${it.id===currentMod?'active':''}" data-mod="${it.id}" onclick="navigate('${it.id}')" title="${it.label}">
+        ${svgIcon(IC[it.icon],17)}<span class="hide-collapse">${it.label}</span>
+        ${it.badge?`<span class="nav-badge ${it.badgeClass||''} hide-collapse">${it.badge}</span>`:''}</div>`;
+    });
+    h+='</div>';
+  });
+  document.getElementById('navScroll').innerHTML=h;
+}
+function toggleSidebar(){const sh=document.querySelector('.shell');sh.classList.toggle('rail-collapsed');sset('rail_collapsed',sh.classList.contains('rail-collapsed'));}
+
+function navigate(mod,sub){
+  currentMod=mod;
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.mod===mod));
+  document.getElementById('crumb').innerHTML=`<span>${MOD_GROUP[mod]}</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg><b>${MOD_TITLE[mod]}</b>`;
+  closeDrawer();
+  const ct=document.getElementById('content');ct.scrollTop=0;ct.style.overflow='';
+  (renders[mod]||renderStub)(sub);
+}
+
+// ---------- DRAWER ----------
+function openDrawer(title,sub,html){
+  document.getElementById('drawerTitle').textContent=title;
+  document.getElementById('drawerSub').textContent=sub||'';
+  document.getElementById('drawerBody').innerHTML=html;
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('scrim').classList.add('show');
+}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('scrim').classList.remove('show');}
+
+// ---------- MODAL ----------
+function openModal(html){document.getElementById('modal').innerHTML=html;document.getElementById('modalScrim').classList.add('show');}
+function closeModal(){document.getElementById('modalScrim').classList.remove('show');}
+
+// ---------- TOAST ----------
+function toast(msg,kind='green'){
+  const icons={green:IC.check,indigo:IC.sparkle,amber:IC.alert};
+  const el=document.createElement('div');el.className='toast';
+  el.innerHTML=`<span class="t-ic ${kind}">${svgIcon(icons[kind]||IC.check,17)}</span>${msg}`;
+  document.getElementById('toastWrap').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(20px)';el.style.transition='all .25s';setTimeout(()=>el.remove(),250);},2600);
+}
+
+// ---------- COMMAND PALETTE ----------
+let cmdkSel=0,cmdkItems=[];
+function openCmdk(){document.getElementById('cmdkScrim').classList.add('show');const i=document.getElementById('cmdkInput');i.value='';renderCmdk();setTimeout(()=>i.focus(),30);}
+function closeCmdk(){document.getElementById('cmdkScrim').classList.remove('show');}
+function renderCmdk(){
+  const q=document.getElementById('cmdkInput').value.toLowerCase();
+  const groups=[];
+  const mods=Object.keys(MOD_TITLE).filter(m=>MOD_TITLE[m].toLowerCase().includes(q)||m.includes(q)).map(m=>({type:'mod',id:m,label:MOD_TITLE[m],sub:'Module',icon:NAV.flatMap(g=>g.items).find(i=>i.id===m)?.icon||'overview'}));
+  if(mods.length)groups.push({label:'Modules',items:mods.slice(0,5)});
+  if(q){
+    const tk=(DATA.tickets||[]).filter(t=>(t.id+' '+t.subject+' '+t.customer).toLowerCase().includes(q)).slice(0,4).map(t=>({type:'ticket',id:t.id,label:t.subject,sub:t.id,icon:'tickets'}));
+    if(tk.length)groups.push({label:'Tickets',items:tk});
+    const ag=DATA.agents.filter(a=>a.name.toLowerCase().includes(q)).slice(0,4).map(a=>({type:'agent',id:a.id,label:a.name,sub:teamName(a.team),icon:'user'}));
+    if(ag.length)groups.push({label:'Agents',items:ag});
+    const cs=(DATA.customers||[]).filter(c=>c.name.toLowerCase().includes(q)).slice(0,4).map(c=>({type:'customer',id:c.id,label:c.name,sub:c.segment,icon:'customers'}));
+    if(cs.length)groups.push({label:'Customers',items:cs});
+  }
+  cmdkItems=groups.flatMap(g=>g.items);cmdkSel=0;
+  let h='';
+  if(!cmdkItems.length){h=`<div class="cmdk-empty">No matches for "${document.getElementById('cmdkInput').value}"</div>`;}
+  else{let idx=0;groups.forEach(g=>{h+=`<div class="cmdk-group-label">${g.label}</div>`;g.items.forEach(it=>{const i=idx++;h+=`<div class="cmdk-item ${i===0?'sel':''}" data-i="${i}" onmouseover="cmdkHover(${i})" onclick="cmdkGo(${i})">${svgIcon(IC[it.icon]||IC.overview,16)}<span>${it.label}</span><span class="ci-sub">${it.sub}</span></div>`;});});}
+  document.getElementById('cmdkResults').innerHTML=h;
+}
+function cmdkHover(i){cmdkSel=i;document.querySelectorAll('.cmdk-item').forEach(el=>el.classList.toggle('sel',+el.dataset.i===i));}
+function cmdkKey(e){
+  if(e.key==='ArrowDown'){e.preventDefault();cmdkSel=Math.min(cmdkSel+1,cmdkItems.length-1);}
+  else if(e.key==='ArrowUp'){e.preventDefault();cmdkSel=Math.max(cmdkSel-1,0);}
+  else if(e.key==='Enter'){e.preventDefault();if(cmdkItems.length)cmdkGo(cmdkSel);return;}
+  else if(e.key==='Escape'){closeCmdk();return;}
+  document.querySelectorAll('.cmdk-item').forEach(el=>el.classList.toggle('sel',+el.dataset.i===cmdkSel));
+  const sel=document.querySelector('.cmdk-item.sel');if(sel)sel.scrollIntoView({block:'nearest'});
+}
+function cmdkGo(i){const it=cmdkItems[i];if(!it)return;closeCmdk();
+  if(it.type==='mod')navigate(it.id);
+  else if(it.type==='ticket'){navigate('tickets');setTimeout(()=>openTicket&&openTicket(it.id),60);}
+  else if(it.type==='agent'){navigate('coaching');setTimeout(()=>openAgent&&openAgent(it.id),60);}
+  else if(it.type==='customer'){navigate('customers');setTimeout(()=>openCustomer&&openCustomer(it.id),60);}
+}
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openCmdk();}
+  if(e.key==='Escape'){closeCmdk();closeModal();closeDrawer();}
+});
+
+// ============================================================
+// RENDERS
+// ============================================================
+const renders={};
+
+function renderStub(){
+  document.getElementById('content').innerHTML=`<div class="content-inner"><div class="stub"><div class="stub-ic">${svgIcon(IC[NAV.flatMap(g=>g.items).find(i=>i.id===currentMod)?.icon]||IC.overview,26)}</div><h3>${MOD_TITLE[currentMod]}</h3><p>This module is part of the full build and is being assembled next. Navigation, data and design are shared across every module.</p></div></div>`;
+}
+
+// ---------- COMMAND CENTRE ----------
+renders.overview=function(){
+  const dr=sget('ov_range','7d');
+  let h=`<div class="content-inner">`;
+  h+=`<div class="page-head"><div><div class="page-title">Command Centre</div><div class="page-sub">Your support operation, continuously monitored by Helix AI.</div></div>
+    <div class="page-actions">
+      <button class="ctrl">${svgIcon('<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',14)} Last 7 days ${svgIcon('<path d="M6 9l6 6 6-6"/>',14)}</button>
+      <button class="ctrl">${svgIcon(IC.team,14)} All teams</button>
+      <button class="ctrl">${svgIcon(IC.inbox,14)} All channels</button>
+      <button class="btn btn-ghost btn-sm" onclick="toast('Report exported (demo)','green')">${svgIcon('<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>',14)} Export</button>
+    </div></div>`;
+
+  // KPIs
+  h+=`<div class="kpi-grid">`;
+  DATA.kpis.forEach((k,i)=>{
+    const col=k.good?'#16A34A':k.warn?'#F59E0B':'#635BFF';
+    const deltaCls=k.dir==='up'?(k.good?'up':'up'):k.dir==='down'?'down':'flat';
+    const dcls=k.dir==='up'?'up':k.dir==='down'?'down':'flat';
+    const darrow=k.dir==='up'?IC.arrowUp:k.dir==='down'?IC.arrowDown:'';
+    h+=`<div class="kpi" onclick="navigate('analytics')">
+      <div class="kpi-top"><span class="kpi-label">${k.label}</span><span class="kpi-ic">${svgIcon(IC[k.icon],14)}</span></div>
+      <div class="kpi-val">${k.val}</div>
+      <div class="kpi-foot">${k.delta!==null?`<span class="delta ${dcls}">${darrow?svgIcon(darrow,11):''}${k.delta}%</span>`:`<span class="kpi-note">${k.note}</span>`}${k.delta!==null?`<span class="kpi-note">${k.note}</span>`:''}</div>
+      <div style="margin-top:8px">${sparkline(k.spark,col)}</div>
+    </div>`;
+  });
+  h+=`</div>`;
+
+  // AI Briefing
+  h+=renderBriefing();
+
+  // Trends + distribution
+  const t=DATA.trends[dr];
+  h+=`<div class="grid-2-1 mb-20">`;
+  h+=`<div class="card"><div class="card-head"><div><h3>Operational trends</h3><div class="sub">Incoming vs resolved vs backlog</div></div>
+    <div class="seg">${['24h','7d','30d'].map(r=>`<button class="${r===dr?'active':''}" onclick="sset('ov_range','${r}');renders.overview()">${r==='24h'?'24h':r==='7d'?'7 days':'30 days'}</button>`).join('')}</div></div>
+    <div class="card-body">
+      <div class="legend mb-16"><span class="legend-item"><span class="legend-swatch" style="background:#635BFF"></span>Incoming</span><span class="legend-item"><span class="legend-swatch" style="background:#14B8A6"></span>Resolved</span><span class="legend-item"><span class="legend-swatch" style="background:#F59E0B"></span>Backlog</span></div>
+      ${lineChart({labels:t.labels,h:238,series:[{data:t.incoming,color:'#635BFF',area:true},{data:t.resolved,color:'#14B8A6'},{data:t.backlog,color:'#F59E0B'}]})}
+    </div></div>`;
+  h+=`<div class="card"><div class="card-head"><h3>Tickets by channel</h3></div><div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:16px">
+    ${donut(DATA.distChannel.map(d=>({v:d.v,c:d.c})),148)}
+    <div style="width:100%">${DATA.distChannel.map(d=>`<div class="flex items-center justify-between" style="padding:4px 0;font-size:12.5px"><span class="legend-item"><span class="legend-swatch" style="background:${d.c}"></span>${d.k}</span><b>${fmt(d.v)}</b></div>`).join('')}</div>
+  </div></div>`;
+  h+=`</div>`;
+
+  // Priority + Category distribution
+  h+=`<div class="grid-2 mb-20">
+    <div class="card"><div class="card-head"><h3>By priority</h3></div><div class="card-body">${distBars(DATA.distPriority)}</div></div>
+    <div class="card"><div class="card-head"><h3>By category</h3></div><div class="card-body">${distBars(DATA.distCategory)}</div></div>
+  </div>`;
+
+  // Team performance + recent activity
+  h+=`<div class="grid-2-1">`;
+  h+=`<div class="card"><div class="card-head"><div><h3>Team performance snapshot</h3><div class="sub">Current period, by agent</div></div><span class="card-link" onclick="navigate('coaching')">View coaching ${svgIcon('<path d="M9 6l6 6-6 6"/>',12)}</span></div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Agent</th><th>Assigned</th><th>Resolved</th><th>CSAT</th><th>Avg Resolution</th><th>SLA</th></tr></thead><tbody>`;
+  DATA.agents.slice(0,6).forEach(a=>{
+    const slaCol=a.sla>=95?'#16A34A':a.sla>=88?'#F59E0B':'#EF4444';
+    h+=`<tr class="clickable" onclick="navigate('coaching');setTimeout(()=>openAgent('${a.id}'),60)">
+      <td><div class="u-cell">${avatar(a.name)}<div><div class="cell-main">${a.name}</div><div class="cell-sub">${teamName(a.team)}</div></div></div></td>
+      <td>${a.assigned}</td><td>${a.resolved}</td>
+      <td><b>${a.csat}%</b></td><td class="text-2">${a.res}</td>
+      <td><div class="flex items-center gap-8"><div class="mini-bar"><span style="width:${a.sla}%;background:${slaCol}"></span></div><span style="font-size:12px;font-weight:600;color:${slaCol}">${a.sla}%</span></div></td></tr>`;
+  });
+  h+=`</tbody></table></div></div>`;
+  h+=`<div class="card"><div class="card-head"><h3>Recent activity</h3></div><div class="card-body" style="padding-top:6px">`;
+  DATA.activity.forEach(a=>{h+=`<div class="feed-item"><div class="feed-ic ${a.ic}">${svgIcon(IC[a.icon],15)}</div><div><div class="feed-txt">${a.txt}</div><div class="feed-time">${a.time}</div></div></div>`;});
+  h+=`</div></div>`;
+  h+=`</div>`;
+
+  h+=`</div>`;
+  document.getElementById('content').innerHTML=h;
+};
+
+function renderBriefing(){
+  const dismissed=sget('dismissed_insights',[]);
+  const active=DATA.insights.filter(i=>i.verified!==false&&!dismissed.includes(i.id)).slice(0,3);
+  let h=`<div class="briefing"><div class="briefing-head">
+    <div class="brief-spark">${svgIcon(IC.sparkle,19,2)}</div>
+    <div><h2>What needs your attention today?</h2><p>Helix reviewed 12,486 tickets and surfaced ${active.length} priorities for you.</p></div>
+    <span class="live-pill"><span class="live-dot"></span>Live monitoring</span>
+  </div><div class="insight-list">`;
+  active.forEach(i=>{h+=insightCard(i);});
+  h+=`</div></div>`;
+  return h;
+}
+
+function insightCard(i){
+  const actions=i.id==='IN-01'?[['Investigate issue','pri',`openInsight('${i.id}')`],['Create escalation','soft',`escalateInsight('${i.id}')`],['Dismiss','ghost',`dismissInsight('${i.id}')`]]
+    :i.id==='IN-02'?[['Review conversations','pri',`openInsight('${i.id}')`],['Coach agents','soft',`navigate('coaching')`],['Dismiss','ghost',`dismissInsight('${i.id}')`]]
+    :[['View affected tickets','pri',`openInsight('${i.id}')`],['Rebalance workload','soft',`toast('Workload rebalanced across teams','green')`],['Dismiss','ghost',`dismissInsight('${i.id}')`]];
+  return `<div class="insight sev-${i.sev}" id="card-${i.id}">
+    <div class="insight-top"><span class="insight-cat">${i.cat}</span>${sevBadge(i.sev)}${i.verified?'<span class="badge teal"><span class="bdot" style="background:#0F766E"></span>Verified</span>':'<span class="badge gray">Hypothesis</span>'}<span class="meta-chip" style="margin-left:auto">${svgIcon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',13)} ${i.detected}</span></div>
+    <div class="insight-title">${i.title}</div>
+    <div class="insight-body">${i.body}</div>
+    <div class="ai-expl"><span class="lbl">${svgIcon(IC.sparkle,12)} Helix analysis</span><br>${i.expl}</div>
+    <div class="rec-action">${svgIcon(IC.check,15)}<span><b>Recommended:</b> ${i.action}</span></div>
+    <div class="insight-meta">
+      <span class="meta-chip">${svgIcon(IC.user,13)} <b>${fmt(i.impact)}</b> ${i.impactLabel}</span>
+      <span class="meta-chip conf">AI confidence <span class="conf-bar"><span class="conf-fill" style="width:${i.conf}%"></span></span><b>${i.conf}%</b></span>
+    </div>
+    <div class="insight-actions">${actions.map(a=>`<button class="btn btn-${a[1]==='pri'?'pri':a[1]==='soft'?'soft':'ghost'} btn-sm" onclick="${a[2]}">${a[0]}</button>`).join('')}</div>
+  </div>`;
+}
+
+function dismissInsight(id){const d=sget('dismissed_insights',[]);if(!d.includes(id))d.push(id);sset('dismissed_insights',d);
+  const el=document.getElementById('card-'+id);if(el){el.style.opacity='0';el.style.transform='scale(.97)';el.style.transition='all .25s';setTimeout(()=>renders.overview(),260);}toast('Insight dismissed','indigo');}
+function escalateInsight(id){toast('Escalation created and routed to Payments Engineering','green');}
+function openInsight(id){navigate('insights');setTimeout(()=>window.showInsightDetail&&window.showInsightDetail(id),60);}
+
+// placeholder cross-module openers (defined fully in later modules)
+window.openTicket=window.openTicket||function(id){navigate('tickets');};
+window.openAgent=window.openAgent||function(id){toast('Agent profile loads with the Coaching module','indigo');};
+window.openCustomer=window.openCustomer||function(id){toast('Customer profile loads with the Customers module','indigo');};
+window.showInsightDetail=window.showInsightDetail||function(id){const i=insightById(id);if(i)openDrawer(i.title,i.cat,`<div class="ai-expl"><span class="lbl">${svgIcon(IC.sparkle,12)} Helix analysis</span><br>${i.expl}</div><div class="rec-action">${svgIcon(IC.check,15)}<span><b>Recommended:</b> ${i.action}</span></div><p class="text-2" style="font-size:12.5px;margin-top:14px">Full investigation workspace opens with the AI Insights module.</p>`);};
+
+// ============================================================
+// TICKETS
+// ============================================================
+const PRI_RANK={Critical:0,High:1,Medium:2,Low:3};
+const TK_VIEWS=[
+  {id:'all',label:'All Tickets',pred:()=>true},
+  {id:'mine',label:'My Tickets',pred:t=>t.agent==='A3'},
+  {id:'unassigned',label:'Unassigned',pred:t=>!t.agent},
+  {id:'high',label:'High Priority',pred:t=>t.priority==='Critical'||t.priority==='High'},
+  {id:'risk',label:'SLA at Risk',pred:t=>t.sla!==null&&t.sla<60&&t.status!=='Resolved'},
+  {id:'escalated',label:'Escalated',pred:t=>t.status==='Escalated'||t.escalated},
+  {id:'ai',label:'AI Flagged',pred:t=>t.aiFlag},
+];
+function statusBadge(s){const m={Open:'indigo',Pending:'amber','In Progress':'teal',Escalated:'red',Resolved:'green'};return `<span class="badge ${m[s]||'gray'}"><span class="bdot" style="background:currentColor"></span>${s}</span>`;}
+function priBadge(p){const m={Critical:'critical',High:'high',Medium:'medium',Low:'low'};return `<span class="sev ${m[p]}">${p}</span>`;}
+const CH_ICON={Email:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/>',WhatsApp:'<path d="M21 11.5a8.5 8.5 0 01-12.5 7.5L3 21l2-5.5A8.5 8.5 0 1121 11.5z"/>','Live Chat':'<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>',Phone:'<path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.6A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.6a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.5-1.1a2 2 0 012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z"/>','Web Form':'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',Phone2:''};
+function chIcon(ch,size=14){return svgIcon(CH_ICON[ch]||CH_ICON.Email,size);}
+function slaCell(t){
+  if(t.status==='Resolved'||t.sla===null)return '<span class="text-3">—</span>';
+  const m=t.sla;const breached=m<0;const abs=Math.abs(m);
+  const txt=abs>=60?`${Math.floor(abs/60)}h ${abs%60}m`:`${abs}m`;
+  const cls=breached?'red':m<30?'amber':m<90?'amber':'green';
+  return `<span class="badge ${cls}">${breached?'Breached '+txt:txt+' left'}</span>`;
+}
+let tkSel=new Set();
+renders.tickets=function(){
+  const view=sget('tk_view','all'), q=(sget('tk_q','')||'').toLowerCase();
+  const fStatus=sget('tk_status',''),fPri=sget('tk_pri',''),fChan=sget('tk_chan',''),fCat=sget('tk_cat',''),fAgent=sget('tk_agent','');
+  const sort=sget('tk_sort','sla'), page=sget('tk_page',0);
+  const vpred=(TK_VIEWS.find(v=>v.id===view)||TK_VIEWS[0]).pred;
+  let rows=DATA.tickets.filter(vpred).filter(t=>{
+    if(q&&!(t.id+' '+t.subject+' '+custById(t.customer).name).toLowerCase().includes(q))return false;
+    if(fStatus&&t.status!==fStatus)return false;
+    if(fPri&&t.priority!==fPri)return false;
+    if(fChan&&t.channel!==fChan)return false;
+    if(fCat&&t.category!==fCat)return false;
+    if(fAgent&&(fAgent==='none'?t.agent:t.agent!==fAgent))return false;
+    return true;
+  });
+  if(sort==='sla')rows.sort((a,b)=>(a.sla===null?1e9:a.sla)-(b.sla===null?1e9:b.sla));
+  else if(sort==='pri')rows.sort((a,b)=>PRI_RANK[a.priority]-PRI_RANK[b.priority]);
+  else if(sort==='id')rows.sort((a,b)=>b.id.localeCompare(a.id));
+  const per=8,total=rows.length,pages=Math.max(1,Math.ceil(total/per));
+  const pg=Math.min(page,pages-1);const pageRows=rows.slice(pg*per,pg*per+per);
+
+  let h=`<div class="content-inner">`;
+  h+=`<div class="page-head"><div><div class="page-title">Tickets</div><div class="page-sub">${fmt(DATA.tickets.length)} tickets · ${rows.filter(t=>t.status!=='Resolved').length} open in this view</div></div>
+    <div class="page-actions"><button class="btn btn-ghost btn-sm" onclick="toast('Export started (demo)','green')">${svgIcon('<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>',14)} Export</button><button class="btn btn-pri btn-sm" onclick="toast('New ticket form (demo)','indigo')">${svgIcon('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',14)} New ticket</button></div></div>`;
+  // saved views
+  h+=`<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">`;
+  TK_VIEWS.forEach(v=>{const cnt=DATA.tickets.filter(v.pred).length;h+=`<button class="ctrl ${v.id===view?'active':''}" onclick="sset('tk_view','${v.id}');sset('tk_page',0);tkSel.clear();renders.tickets()">${v.label}<span style="opacity:.6;font-weight:700">${cnt}</span></button>`;});
+  h+=`</div>`;
+  // filter bar
+  const sel=(key,cur,opts,ph)=>`<select class="input" style="width:auto;min-width:120px;height:34px" onchange="sset('${key}',this.value);sset('tk_page',0);renders.tickets()"><option value="">${ph}</option>${opts.map(o=>`<option ${o[0]===cur?'selected':''} value="${o[0]}">${o[1]}</option>`).join('')}</select>`;
+  h+=`<div class="card" style="margin-bottom:14px"><div style="display:flex;gap:9px;flex-wrap:wrap;padding:12px 14px;align-items:center">
+    <div class="search-bar" style="min-width:230px;cursor:text;background:#fff" onclick="this.querySelector('input').focus()">${svgIcon('<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',15)}<input value="${sget('tk_q','')}" oninput="sset('tk_q',this.value);sset('tk_page',0);renders.tickets()" placeholder="Search tickets..." style="border:none;outline:none;font-family:inherit;font-size:13px;background:none;width:100%"></div>
+    ${sel('tk_status',fStatus,[['Open','Open'],['Pending','Pending'],['In Progress','In Progress'],['Escalated','Escalated'],['Resolved','Resolved']],'Status')}
+    ${sel('tk_pri',fPri,[['Critical','Critical'],['High','High'],['Medium','Medium'],['Low','Low']],'Priority')}
+    ${sel('tk_chan',fChan,[['Email','Email'],['WhatsApp','WhatsApp'],['Live Chat','Live Chat'],['Phone','Phone'],['Web Form','Web Form']],'Channel')}
+    ${sel('tk_cat',fCat,[['Payments','Payments'],['Orders','Orders'],['Returns','Returns'],['Delivery','Delivery'],['Product','Product']],'Category')}
+    ${sel('tk_agent',fAgent,[['none','Unassigned'],...DATA.agents.map(a=>[a.id,a.name])],'Agent')}
+    ${(fStatus||fPri||fChan||fCat||fAgent||q)?`<button class="ctrl" onclick="['tk_q','tk_status','tk_pri','tk_chan','tk_cat','tk_agent'].forEach(k=>sset(k,''));renders.tickets()">Clear</button>`:''}
+  </div></div>`;
+  // bulk bar
+  if(tkSel.size){h+=`<div class="card" style="margin-bottom:12px;border-color:var(--pri)"><div style="display:flex;align-items:center;gap:12px;padding:10px 16px"><b style="color:var(--pri)">${tkSel.size} selected</b>
+    <button class="btn btn-soft btn-sm" onclick="bulkTicket('assign')">Assign</button>
+    <button class="btn btn-soft btn-sm" onclick="bulkTicket('priority')">Set priority</button>
+    <button class="btn btn-soft btn-sm" onclick="bulkTicket('status')">Change status</button>
+    <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="tkSel.clear();renders.tickets()">Clear</button></div></div>`;}
+  // table
+  const allSel=pageRows.length&&pageRows.every(t=>tkSel.has(t.id));
+  h+=`<div class="card"><div style="overflow-x:auto"><table class="tbl"><thead><tr>
+    <th style="width:36px"><input type="checkbox" ${allSel?'checked':''} onchange="toggleAllTk(${allSel})"></th>
+    <th class="sortable" style="cursor:pointer" onclick="sset('tk_sort','id');renders.tickets()">Ticket</th><th>Customer</th><th>Subject</th><th>Category</th><th>Channel</th>
+    <th class="sortable" style="cursor:pointer" onclick="sset('tk_sort','pri');renders.tickets()">Priority</th><th>Agent</th><th>Status</th>
+    <th class="sortable" style="cursor:pointer" onclick="sset('tk_sort','sla');renders.tickets()">SLA</th></tr></thead><tbody>`;
+  pageRows.forEach(t=>{const c=custById(t.customer);const a=t.agent?agentById(t.agent):null;
+    h+=`<tr class="clickable" onclick="openTicket('${t.id}')">
+      <td onclick="event.stopPropagation()"><input type="checkbox" ${tkSel.has(t.id)?'checked':''} onchange="toggleTk('${t.id}')"></td>
+      <td><span class="cell-main" style="font-size:12.5px">${t.id}</span>${t.aiFlag?` <span title="AI flagged" style="color:var(--pri)">${svgIcon(IC.sparkle,11)}</span>`:''}</td>
+      <td><div class="u-cell">${avatar(c.name,26)}<div><div class="cell-main" style="font-size:12.5px">${c.name}</div><div class="cell-sub">${c.segment}</div></div></div></td>
+      <td style="max-width:230px"><div class="cell-main" style="font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.subject}</div></td>
+      <td><span class="badge gray">${t.category}</span></td>
+      <td><span class="flex items-center gap-8" style="color:var(--text-2)">${chIcon(t.channel)} <span style="font-size:12px">${t.channel}</span></span></td>
+      <td>${priBadge(t.priority)}</td>
+      <td>${a?`<div class="u-cell">${avatar(a.name,24)}<span style="font-size:12px">${a.name.split(' ')[0]}</span></div>`:'<span class="text-3">Unassigned</span>'}</td>
+      <td>${statusBadge(t.status)}</td>
+      <td>${slaCell(t)}</td></tr>`;});
+  if(!pageRows.length)h+=`<tr><td colspan="10"><div class="empty-state">${svgIcon(IC.tickets,34)}<div>No tickets match this view</div></div></td></tr>`;
+  h+=`</tbody></table></div>`;
+  // pagination
+  h+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--border-2)">
+    <span class="text-3" style="font-size:12.5px">Showing ${total?pg*per+1:0}–${Math.min(pg*per+per,total)} of ${total}</span>
+    <div class="flex gap-8"><button class="ctrl" ${pg===0?'disabled style=opacity:.4':''} onclick="sset('tk_page',${pg-1});renders.tickets()">Prev</button>
+    <span class="text-2" style="font-size:12.5px;align-self:center">Page ${pg+1} of ${pages}</span>
+    <button class="ctrl" ${pg>=pages-1?'disabled style=opacity:.4':''} onclick="sset('tk_page',${pg+1});renders.tickets()">Next</button></div></div>`;
+  h+=`</div></div>`;
+  document.getElementById('content').innerHTML=h;
+};
+function toggleTk(id){if(tkSel.has(id))tkSel.delete(id);else tkSel.add(id);renders.tickets();}
+function toggleAllTk(allSel){const view=sget('tk_view','all');const vpred=(TK_VIEWS.find(v=>v.id===view)||TK_VIEWS[0]).pred;const q=(sget('tk_q','')||'').toLowerCase();let rows=DATA.tickets.filter(vpred).filter(t=>!q||(t.id+' '+t.subject+' '+custById(t.customer).name).toLowerCase().includes(q));const per=8,pg=Math.min(sget('tk_page',0),Math.max(0,Math.ceil(rows.length/per)-1));const pageRows=rows.slice(pg*per,pg*per+per);pageRows.forEach(t=>{if(allSel)tkSel.delete(t.id);else tkSel.add(t.id);});renders.tickets();}
+function bulkTicket(kind){const n=tkSel.size;const msg={assign:`${n} tickets reassigned`,priority:`Priority updated on ${n} tickets`,status:`Status changed on ${n} tickets`}[kind];tkSel.clear();renders.tickets();toast(msg,'green');}
+
+// ---------- TICKET DETAIL (3-column) ----------
+function genConversation(t){
+  const c=custById(t.customer);const a=t.agent?agentById(t.agent):null;
+  const conv=[{who:'customer',name:c.name,time:'Today 09:14',ch:t.channel,text:openingMsg(t)}];
+  if(a){conv.push({who:'agent',name:a.name,time:'Today 09:22',text:`Hi ${c.name.split(' ')[0]}, thanks for reaching out — I'm looking into this now and will update you shortly.`});
+    conv.push({who:'customer',name:c.name,time:'Today 09:40',ch:t.channel,text:followupMsg(t)});
+    if(t.status!=='Open')conv.push({who:'note',name:a.name,time:'Today 09:45',text:internalNote(t)});}
+  return conv;
+}
+function openingMsg(t){const map={Payments:`I tried to pay for my order but the payment failed — however the amount has been debited from my account. Order reference is ${t.id.replace('TK','ORD')}. Please help, this is urgent.`,Returns:`I raised a return over a week ago and still haven't received my refund. The status hasn't moved at all. Can someone please look into ${t.id}?`,Delivery:`My order still hasn't arrived and the tracking hasn't updated in days. I need this resolved today.`,Orders:`There's an issue with my order and the previous response didn't actually solve it. I'm quite frustrated at this point.`,Product:`I'm facing a problem with the product/app — "${t.subject}". It's blocking me from completing my purchase.`};return map[t.category]||t.subject;}
+function followupMsg(t){return t.sentiment==='Negative'?`This has been going on too long and it's affecting my experience. I'd like a clear timeline, please.`:`Thanks — could you let me know roughly how long this will take?`;}
+function internalNote(t){return `Internal: Confirmed the issue on our side. ${t.category==='Payments'?'Gateway callback timeout suspected — flagged to Payments Eng.':t.category==='Returns'?'Refund stuck in processing queue, raised with finance.':'Following up with the responsible team.'} Keeping customer updated.`;}
+
+window.openTicket=function(id){
+  const t=ticketById(id);if(!t){navigate('tickets');return;}
+  const c=custById(t.customer);const a=t.agent?agentById(t.agent):null;const conv=genConversation(t);
+  document.getElementById('crumb').innerHTML=`<span>Workspace</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg><span class="card-link" onclick="navigate('tickets')">Tickets</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg><b>${t.id}</b>`;
+  let h=`<div style="max-width:1500px;margin:0 auto;padding:18px 24px 40px">`;
+  h+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+    <button class="ctrl" onclick="navigate('tickets')">${svgIcon('<path d="M19 12H5M12 19l-7-7 7-7"/>',14)} Back</button>
+    <div><div style="font-size:17px;font-weight:700;letter-spacing:-.01em">${t.subject}</div><div class="flex items-center gap-8" style="margin-top:3px">${priBadge(t.priority)}${statusBadge(t.status)}<span class="text-3" style="font-size:12px">${t.id} · opened today</span></div></div>
+    <div style="margin-left:auto" class="flex gap-8">${t.aiFlag?`<span class="badge indigo">${svgIcon(IC.sparkle,11)} AI flagged</span>`:''}<button class="btn btn-ghost btn-sm" onclick="toast('Ticket escalated','amber')">Escalate</button><button class="btn btn-pri btn-sm" onclick="resolveTicket('${t.id}')">Resolve</button></div></div>`;
+  h+=`<div style="display:grid;grid-template-columns:300px 1fr 340px;gap:16px;align-items:start">`;
+  // LEFT: customer context
+  h+=`<div class="card"><div class="card-body">
+    <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding-bottom:14px;border-bottom:1px solid var(--border-2)">
+      ${avatar(c.name,56)}<div style="font-weight:700;margin-top:10px;font-size:15px">${c.name}</div><div class="text-3" style="font-size:12px">${c.email}</div>
+      <div class="flex gap-8" style="margin-top:8px"><span class="badge ${c.segment==='Enterprise'?'indigo':c.segment==='Pro'?'teal':'gray'}">${c.segment}</span><span class="badge ${c.risk==='High'?'red':c.risk==='Medium'?'amber':'green'}">${c.risk} risk</span></div>
+    </div>
+    <div style="padding-top:14px">
+      ${[['Customer ID',c.id],['Lifetime value',c.ltv],['Total tickets',c.tickets],['Current sentiment',c.sentiment],['Previous interactions',c.tickets+' contacts']].map(r=>`<div class="flex justify-between" style="padding:7px 0;font-size:12.5px"><span class="text-2">${r[0]}</span><b>${r[1]}</b></div>`).join('')}
+    </div>
+    <div style="margin-top:8px"><div class="dl-label">Recent tickets</div>${DATA.tickets.filter(x=>x.customer===c.id&&x.id!==t.id).slice(0,3).map(x=>`<div class="card-link" style="display:block;padding:6px 0;font-size:12.5px;color:var(--text)" onclick="openTicket('${x.id}')">${x.id} · <span class="text-2">${x.subject.slice(0,26)}…</span></div>`).join('')||'<div class="text-3" style="font-size:12px">None</div>'}</div>
+    <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:12px" onclick="openCustomer('${c.id}')">View full profile</button>
+  </div></div>`;
+  // CENTER: conversation
+  h+=`<div class="card" style="display:flex;flex-direction:column;min-height:560px">
+    <div class="card-head"><div class="flex items-center gap-8">${chIcon(t.channel,15)}<h3>Conversation · ${t.channel}</h3></div><span class="text-3" style="font-size:12px">${conv.length} messages</span></div>
+    <div class="card-body" style="flex:1;overflow-y:auto;max-height:420px">`;
+  conv.forEach(m=>{
+    if(m.who==='note'){h+=`<div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:10px 12px;margin:10px 0;font-size:12.5px;color:#92400E"><b>Internal note · ${m.name}</b> · ${m.time}<div style="margin-top:4px">${m.text}</div></div>`;return;}
+    const isC=m.who==='customer';
+    h+=`<div style="display:flex;gap:10px;margin-bottom:16px;${isC?'':'flex-direction:row-reverse'}">
+      ${avatar(m.name,30)}
+      <div style="max-width:76%">
+        <div class="flex items-center gap-8" style="${isC?'':'justify-content:flex-end'};margin-bottom:3px"><b style="font-size:12.5px">${m.name}</b><span class="text-3" style="font-size:11px">${m.time}</span></div>
+        <div style="background:${isC?'var(--surface-2)':'var(--pri)'};color:${isC?'var(--text)':'#fff'};border:1px solid ${isC?'var(--border)':'var(--pri)'};border-radius:12px;padding:10px 13px;font-size:13px;line-height:1.5">${m.text}</div>
+      </div></div>`;});
+  h+=`</div>
+    <div style="border-top:1px solid var(--border);padding:12px 16px">
+      <div class="flex gap-8" style="margin-bottom:8px"><button class="tab active" style="padding:5px 10px;border:none;background:var(--pri-tint);border-radius:6px;color:var(--pri);font-weight:600;font-size:12.5px">Reply</button><button class="tab" style="padding:5px 10px;font-size:12.5px" onclick="toast('Internal note mode','indigo')">Internal note</button></div>
+      <textarea class="input" id="composer" placeholder="Write a reply to ${c.name.split(' ')[0]}..." style="min-height:72px"></textarea>
+      <div class="flex items-center gap-8" style="margin-top:10px"><button class="btn btn-ghost btn-sm" onclick="insertSuggested()">${svgIcon(IC.sparkle,13)} Insert AI response</button><button class="btn btn-ghost btn-sm" onclick="toast('Saved responses','indigo')">Saved responses</button><button class="btn btn-ghost btn-sm" onclick="toast('Attachment (demo)','indigo')">Attach</button><button class="btn btn-pri btn-sm" style="margin-left:auto" onclick="sendReply()">Send</button></div>
+    </div></div>`;
+  // RIGHT: AI panel
+  h+=`<div style="display:flex;flex-direction:column;gap:14px">${ticketAIPanel(t,c)}</div>`;
+  h+=`</div></div>`;
+  document.getElementById('content').innerHTML=h;
+  document.getElementById('content').scrollTop=0;
+  currentMod='tickets';document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.mod==='tickets'));
+};
+function aiBox(title,body){return `<div class="card"><div class="card-head" style="padding:12px 15px"><div class="flex items-center gap-8"><span style="color:var(--pri)">${svgIcon(IC.sparkle,14)}</span><h3 style="font-size:13px">${title}</h3></div></div><div class="card-body" style="padding:13px 15px;font-size:12.5px;line-height:1.55">${body}</div></div>`;}
+function ticketAIPanel(t,c){
+  const churn=c.risk==='High'?68:c.risk==='Medium'?34:12;const breach=t.sla!==null&&t.sla<0?92:t.sla!==null&&t.sla<30?64:18;const repeat=t.sentiment==='Negative'?44:19;
+  let h=aiBox('AI ticket summary',`<b>Issue:</b> ${c.name.split(' ')[0]} reports "${t.subject.toLowerCase()}". <br><b>Actual problem:</b> ${t.category==='Payments'?'funds debited without order confirmation — a reconciliation gap.':t.category==='Returns'?'refund initiated in-system but not credited to the customer.':t.category==='Delivery'?'shipment stalled with no tracking update.':'unresolved follow-up from an earlier interaction.'}<br><b>Tried so far:</b> ${t.agent?'agent acknowledged and is investigating.':'not yet picked up by an agent.'}`);
+  h+=aiBox('Sentiment analysis',`<div class="flex items-center justify-between"><span class="badge ${t.sentiment==='Negative'?'red':t.sentiment==='Positive'?'green':'gray'}">${t.sentiment}</span><span class="text-3" style="font-size:11px">trend ${t.sentiment==='Negative'?'↓ worsening':'→ stable'}</span></div><div style="margin-top:10px"><div class="flex justify-between" style="font-size:12px;margin-bottom:4px"><span class="text-2">Escalation risk</span><b>${t.sentiment==='Negative'?'High':'Low'}</b></div><div class="mini-bar" style="max-width:none"><span style="width:${t.sentiment==='Negative'?80:25}%;background:${t.sentiment==='Negative'?'var(--red)':'var(--green)'}"></span></div></div>`);
+  const sug=suggestedResponse(t,c);
+  h+=aiBox('Suggested response',`<div style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:8px;padding:10px;font-style:italic;color:var(--text-2)">"${sug}"</div><div class="text-3" style="font-size:11px;margin-top:8px">Why: matches the customer's ${t.sentiment.toLowerCase()} tone and leads with acknowledgement before the fix.</div><button class="btn btn-soft btn-sm" style="width:100%;margin-top:10px" onclick="insertSuggested()">Use this response</button>`);
+  h+=aiBox('Knowledge recommendations',`${[t.category==='Payments'?'Resolving debited-but-failed UPI payments':t.category==='Returns'?'Refund timelines and escalation path':'Tracking a delayed shipment','Issuing a goodwill credit','Escalation criteria for '+t.category].map(k=>`<div class="flex items-center gap-8" style="padding:6px 0;border-bottom:1px solid var(--border-2)">${svgIcon('<path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>',13)}<span class="card-link" style="color:var(--text);font-weight:500" onclick="toast('Opened KB article','indigo')">${k}</span></div>`).join('')}`);
+  h+=aiBox('Resolution guidance',`<b>Recommended next action:</b> ${t.category==='Payments'?'Verify the debit against the gateway log; if unmatched, trigger auto-refund and confirm to customer.':t.category==='Returns'?'Push the refund manually and share the reference + ETA.':'Contact the delivery partner and give the customer a firm update.'}<div style="margin-top:8px"><span class="text-2">Similar resolved: </span><span class="card-link" onclick="toast('Opened similar ticket','indigo')">TK-4689</span>, <span class="card-link" onclick="toast('Opened similar ticket','indigo')">TK-4702</span></div>`);
+  h+=aiBox('Ticket risk',`${[['SLA breach probability',breach],['Customer churn risk',churn],['Repeat contact probability',repeat]].map(r=>`<div style="margin-bottom:10px"><div class="flex justify-between" style="font-size:12px;margin-bottom:3px"><span class="text-2">${r[0]}</span><b style="color:${r[1]>60?'var(--red)':r[1]>30?'var(--amber)':'var(--green)'}">${r[1]}%</b></div><div class="mini-bar" style="max-width:none"><span style="width:${r[1]}%;background:${r[1]>60?'var(--red)':r[1]>30?'var(--amber)':'var(--green)'}"></span></div></div>`).join('')}`);
+  return h;
+}
+function suggestedResponse(t,c){const f=c.name.split(' ')[0];return t.category==='Payments'?`Hi ${f}, I completely understand how worrying a debited-but-failed payment is. I've located the transaction and can confirm no order was placed, so I'm issuing a full refund now — you'll see it within 3–5 business days, reference below. I'll stay on this until it's settled.`:t.category==='Returns'?`Hi ${f}, I'm sorry the refund has taken this long — that's not the experience we want. I've pushed it through manually just now and you'll receive it within 48 hours. Here's your reference, and I'll personally confirm once it lands.`:`Hi ${f}, thanks for your patience. I've taken ownership of this and here's exactly what happens next, with a clear timeline so you're not left guessing.`;}
+function insertSuggested(){const t=null;const comp=document.getElementById('composer');if(comp){const tid=document.querySelector('.crumb b')?.textContent;const tk=ticketById(tid);comp.value=suggestedResponse(tk,custById(tk.customer));comp.focus();toast('AI response inserted','indigo');}}
+function sendReply(){const comp=document.getElementById('composer');if(comp&&comp.value.trim()){comp.value='';toast('Reply sent to customer','green');}else toast('Write a reply first','amber');}
+function resolveTicket(id){const t=ticketById(id);if(t){t.status='Resolved';t.sla=null;}toast('Ticket marked resolved','green');navigate('tickets');}
+
+// ============================================================
+// AI INSIGHTS
+// ============================================================
+const INSIGHT_CATS=['All','Emerging Issues','Customer Experience Trends','Agent Performance','SLA & Operational Risks','Revenue & Retention Risks','Process Inefficiencies'];
+const INV_TREND={'IN-01':[8,12,18,34,56,92],'IN-02':[93,92,90,87,84,81],'IN-03':[60,78,95,110,128,143],'IN-04':[12,18,24,31,38,42],'IN-05':[2,3,5,6,8,9],'IN-06':[12,16,20,24,28,31]};
+renders.insights=function(sub){
+  const tab=sub||sget('ins_tab','feed');
+  sset('ins_tab',tab);
+  let h=`<div class="content-inner">`;
+  h+=`<div class="page-head"><div><div class="page-title">AI Insights</div><div class="page-sub">Helix continuously monitors your operation and surfaces what matters — no manual digging.</div></div></div>`;
+  h+=`<div class="tabs"><div class="tab ${tab==='feed'?'active':''}" onclick="renders.insights('feed')">Insight feed</div><div class="tab ${tab==='assistant'?'active':''}" onclick="renders.insights('assistant')">Ask Helix</div></div>`;
+  if(tab==='assistant'){h+=renderAssistant();h+=`</div>`;document.getElementById('content').innerHTML=h;setTimeout(()=>{const s=document.getElementById('askScroll');if(s)s.scrollTop=s.scrollHeight;},30);return;}
+  const cat=sget('ins_cat','All');const dismissed=sget('dismissed_insights',[]);
+  h+=`<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px">`;
+  INSIGHT_CATS.forEach(c=>{const n=c==='All'?DATA.insights.length:DATA.insights.filter(i=>i.cat===c).length;if(c!=='All'&&!n)return;h+=`<button class="ctrl ${c===cat?'active':''}" onclick="sset('ins_cat','${c}');renders.insights('feed')">${c}${c!=='All'?` <span style="opacity:.6;font-weight:700">${n}</span>`:''}</button>`;});
+  h+=`</div>`;
+  let list=DATA.insights.filter(i=>cat==='All'||i.cat===cat);
+  // sort by severity then confidence
+  const sv={critical:0,high:1,medium:2,low:3};list=[...list].sort((a,b)=>sv[a.sev]-sv[b.sev]||b.conf-a.conf);
+  h+=`<div style="display:flex;flex-direction:column;gap:13px">`;
+  list.forEach(i=>{h+=insightFeedCard(i,dismissed.includes(i.id));});
+  h+=`</div></div>`;
+  document.getElementById('content').innerHTML=h;
+};
+function insightFeedCard(i,dismissed){
+  return `<div class="insight sev-${i.sev}" style="cursor:pointer;${dismissed?'opacity:.5':''}" onclick="showInsightDetail('${i.id}')">
+    <div class="insight-top"><span class="insight-cat">${i.cat}</span>${sevBadge(i.sev)}${i.verified?'<span class="badge teal"><span class="bdot" style="background:#0F766E"></span>Verified finding</span>':'<span class="badge gray">Hypothesis</span>'}<span class="meta-chip" style="margin-left:auto">${svgIcon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',13)} ${i.detected}</span></div>
+    <div class="insight-title">${i.title}</div>
+    <div class="insight-body">${i.body}</div>
+    <div class="insight-meta">
+      <span class="meta-chip">${svgIcon(IC.user,13)} <b>${fmt(i.impact)}</b> ${i.impactLabel}</span>
+      <span class="meta-chip">${svgIcon(IC.tickets,13)} <b>${i.tickets.length}</b> linked tickets</span>
+      <span class="meta-chip conf">AI confidence <span class="conf-bar"><span class="conf-fill" style="width:${i.conf}%"></span></span><b>${i.conf}%</b></span>
+      <span class="card-link" style="margin-left:auto">Investigate ${svgIcon('<path d="M9 6l6 6-6 6"/>',12)}</span>
+    </div></div>`;
+}
+
+window.showInsightDetail=function(id){
+  const i=insightById(id);if(!i){navigate('insights');return;}
+  currentMod='insights';document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.mod==='insights'));
+  document.getElementById('crumb').innerHTML=`<span>Intelligence</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg><span class="card-link" onclick="navigate('insights')">AI Insights</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg><b>${i.id}</b>`;
+  const tr=INV_TREND[id]||[10,20,30,40,50,60];
+  const hyp=invHypotheses(i);const interv=invInterventions(i);
+  let h=`<div style="max-width:1200px;margin:0 auto;padding:18px 24px 48px">`;
+  h+=`<button class="ctrl" style="margin-bottom:16px" onclick="navigate('insights')">${svgIcon('<path d="M19 12H5M12 19l-7-7 7-7"/>',14)} Back to insights</button>`;
+  h+=`<div style="display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start">`;
+  // MAIN
+  h+=`<div>`;
+  h+=`<div class="flex items-center gap-8" style="margin-bottom:8px">${sevBadge(i.sev)}<span class="insight-cat">${i.cat}</span>${i.verified?'<span class="badge teal">Verified finding</span>':'<span class="badge gray">Working hypothesis</span>'}</div>`;
+  h+=`<div style="font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px">${i.title}</div>`;
+  h+=`<div class="page-sub" style="margin-bottom:20px">Detected ${i.detected} · Helix reviewed ${fmt(i.impact)} ${i.impactLabel} across ${i.tickets.length} tickets</div>`;
+  const sec=(t,b)=>`<div class="card" style="margin-bottom:16px"><div class="card-head"><h3>${t}</h3></div><div class="card-body" style="font-size:13.5px;line-height:1.6;color:var(--text)">${b}</div></div>`;
+  h+=sec('Executive summary',`${i.body} ${i.expl} Helix recommends: <b>${i.action}</b>`);
+  // what / why / who
+  h+=`<div class="grid-3" style="margin-bottom:16px">
+    <div class="card"><div class="card-body"><div class="dl-label">What happened</div><div style="font-size:13px;line-height:1.55;margin-top:4px">${i.body}</div></div></div>
+    <div class="card"><div class="card-body"><div class="dl-label">Why it happened</div><div style="font-size:13px;line-height:1.55;margin-top:4px">${i.expl}</div></div></div>
+    <div class="card"><div class="card-body"><div class="dl-label">Who is affected</div><div style="font-size:13px;line-height:1.55;margin-top:4px"><b>${fmt(i.impact)}</b> ${i.impactLabel}, concentrated in ${teamName(i.team)}.</div></div></div>
+  </div>`;
+  // trend
+  h+=`<div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Trend</h3><div class="sub">Last 6 intervals</div></div><div class="card-body">${lineChart({labels:['T-5','T-4','T-3','T-2','T-1','Now'],h:200,series:[{data:tr,color:i.sev==='critical'?'#EF4444':i.sev==='high'?'#F59E0B':'#635BFF',area:true}]})}</div></div>`;
+  // evidence
+  h+=`<div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Supporting ticket evidence</h3><div class="sub">${i.tickets.length} linked tickets</div></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Ticket</th><th>Customer</th><th>Subject</th><th>Priority</th><th>Status</th></tr></thead><tbody>`;
+  if(i.tickets.length){i.tickets.forEach(tid=>{const t=ticketById(tid);if(t){const c=custById(t.customer);h+=`<tr class="clickable" onclick="openTicket('${t.id}')"><td class="cell-main" style="font-size:12.5px">${t.id}</td><td>${c.name}</td><td style="font-size:12.5px">${t.subject}</td><td>${priBadge(t.priority)}</td><td>${statusBadge(t.status)}</td></tr>`;}});}
+  else h+=`<tr><td colspan="5"><div class="empty-state" style="padding:24px">No individual tickets — this is an aggregate pattern.</div></td></tr>`;
+  h+=`</tbody></table></div></div>`;
+  // hypotheses
+  h+=`<div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Root cause hypotheses</h3><div class="sub">Ranked by likelihood — not yet confirmed as causation</div></div><div class="card-body">`;
+  hyp.forEach(hp=>{h+=`<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-2)"><div style="flex:1"><div class="fw6" style="font-size:13px">${hp.t}</div><div class="text-2" style="font-size:12.5px;margin-top:2px">${hp.d}</div></div><div style="text-align:right"><div class="text-3" style="font-size:11px">likelihood</div><b style="color:${hp.p>60?'var(--amber)':'var(--text-2)'}">${hp.p}%</b></div></div>`;});
+  h+=`</div></div>`;
+  // interventions
+  h+=`<div class="card"><div class="card-head"><h3>Recommended interventions</h3></div><div class="card-body">`;
+  interv.forEach((iv,idx)=>{h+=`<div style="display:flex;gap:11px;align-items:flex-start;padding:9px 0"><div style="width:22px;height:22px;border-radius:50%;background:var(--pri-tint);color:var(--pri);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${idx+1}</div><div style="flex:1;font-size:13px;line-height:1.5">${iv}</div></div>`;});
+  h+=`</div></div>`;
+  h+=`</div>`;
+  // SIDE
+  h+=`<div style="position:sticky;top:16px;display:flex;flex-direction:column;gap:14px">
+    <div class="card"><div class="card-body">
+      ${[['Severity',sevBadge(i.sev)],['AI confidence',`<div class="conf"><span class="conf-bar"><span class="conf-fill" style="width:${i.conf}%"></span></span><b>${i.conf}%</b></div>`],['Status',i.verified?'<span class="badge teal">Verified</span>':'<span class="badge gray">Hypothesis</span>'],['Affected',`<b>${fmt(i.impact)}</b>`],['Owner team',teamName(i.team)],['Detected',i.detected]].map(r=>`<div class="flex justify-between items-center" style="padding:8px 0;border-bottom:1px solid var(--border-2);font-size:12.5px"><span class="text-2">${r[0]}</span><span>${r[1]}</span></div>`).join('')}
+    </div></div>
+    <div class="card"><div class="card-body">
+      <div class="dl-label" style="margin-bottom:10px">Take action</div>
+      <button class="btn btn-pri btn-sm" style="width:100%;margin-bottom:8px" onclick="toast('Escalation created','green')">Create escalation</button>
+      <button class="btn btn-soft btn-sm" style="width:100%;margin-bottom:8px" onclick="navigate('coaching')">Open coaching</button>
+      <button class="btn btn-ghost btn-sm" style="width:100%;margin-bottom:8px" onclick="navigate('automations')">Create automation</button>
+      <button class="btn btn-ghost btn-sm" style="width:100%" onclick="dismissInsight('${i.id}');navigate('insights')">Dismiss insight</button>
+    </div></div>
+    <div class="card"><div class="card-body"><div class="dl-label" style="margin-bottom:8px">Actions taken</div><div class="feed-item" style="padding-top:0"><div class="feed-ic indigo">${svgIcon(IC.sparkle,15)}</div><div><div class="feed-txt">Insight auto-generated by Helix</div><div class="feed-time">${i.detected}</div></div></div><div class="text-3" style="font-size:12px;margin-top:6px">No manual actions yet.</div></div></div>
+  </div>`;
+  h+=`</div></div>`;
+  document.getElementById('content').innerHTML=h;
+  document.getElementById('content').scrollTop=0;
+};
+function invHypotheses(i){
+  const m={'IN-01':[{t:'Gateway callback timeout on app v12.4',d:'Payment confirmation stage times out before the callback resolves.',p:72},{t:'UPI PSP-side intermittent outage',d:'Correlated failures across a single PSP in the window.',p:21},{t:'Client retry loop double-submitting',d:'Android retry behaviour creating duplicate attempts.',p:7}],
+    'IN-02':[{t:'Fatigue / staffing on evening shift',d:'Thinner evening staffing raises handling pressure.',p:58},{t:'Harder ticket mix in evening',d:'More complex returns cases land after 6 PM.',p:30},{t:'New agents concentrated in shift',d:'Less-tenured agents weighted to evenings.',p:12}],
+    'IN-03':[{t:'Inflow spike vs flat staffing in Returns',d:'27% above 7-day average with unchanged headcount.',p:64},{t:'Upstream refund delay creating back-pressure',d:'Linked to the refund processing issue.',p:28},{t:'Mis-prioritised queue',d:'High-priority tickets not surfaced early enough.',p:8}]};
+  return m[i.id]||[{t:'Primary driver identified in analysis',d:i.expl,p:i.conf},{t:'Secondary contributing factor',d:'Partially correlated signal under review.',p:Math.max(10,100-i.conf-10)},{t:'Residual / unexplained',d:'Remaining variance not yet attributed.',p:10}];
+}
+function invInterventions(i){
+  const a=i.action;const extra={'IN-01':['Roll back or hotfix the v12.4 payment confirmation flow.','Auto-refund confirmed debited-but-failed transactions.','Publish a status banner in-app for affected users.'],
+    'IN-02':['Review the 5 flagged evening conversations together.','Run a 30-min empathy & expectation-setting micro-coaching.','Add an acknowledgement prompt to the agent copilot.'],
+    'IN-03':['Shift 3 agents from Orders & Delivery to Returns for 4 hours.','Auto-prioritise tickets within 60 min of SLA.','Enable the SLA Protection automation for this team.']};
+  return extra[i.id]||[a,'Notify the owning team and assign a directly-responsible individual.','Set a follow-up checkpoint in 24 hours to confirm the trend reversed.'];
+}
+
+// ---------- ASK HELIX ----------
+const ASK_PROMPTS=['Why did CSAT decline this week?','Which agents need immediate coaching?','What are the top 3 reasons for complaints?','Which customer segments are most at risk?','What changed in the last 7 days?','Which issues affect the most customers?'];
+function askAnswer(q){
+  q=q.toLowerCase();
+  if(q.includes('csat')||q.includes('decline'))return{a:`CSAT fell 2.1 pts this week, driven mainly by the <b>6 PM–10 PM shift</b> (93% → 81%) and <b>delayed refunds</b> in Returns & Refunds. Most negative feedback cites incomplete resolution explanations.`,ev:['Evening-shift CSAT drop (IN-02)','Returns complaints up 42% (IN-04)'],act:'Run targeted coaching on the evening shift and fix the refund processing delay.',tickets:['TK-4790','TK-4801']};
+  if(q.includes('coach')||q.includes('agent'))return{a:`Two agents need immediate attention: <b>Rahul Sharma</b> (CSAT 82.4%, quality 74) and <b>Imran Khan</b> (CSAT 79.8%, quality 71). Both show strong response speed but weak resolution-explanation quality on returns.`,ev:['Agent quality scores below 75','8 of 12 low-rated chats lacked acknowledgement'],act:'Open coaching sessions for Rahul and Imran focused on empathy.',tickets:[]};
+  if(q.includes('complaint')||q.includes('top'))return{a:`Top 3 complaint drivers right now: <b>1) Delayed refunds</b> (Returns), <b>2) UPI payment failures</b> (Payments), <b>3) Stalled deliveries</b> with no tracking updates.`,ev:['Returns +42%','Payments +34% in 6h','Delivery tracking gap'],act:'Prioritise the refund integration fix — it has the widest customer impact.',tickets:['TK-4801','TK-4821']};
+  if(q.includes('segment')||q.includes('risk')||q.includes('churn'))return{a:`<b>Enterprise, high-LTV</b> customers are most at risk: 9 accounts in the top LTV decile have 3+ unresolved interactions in 14 days with declining sentiment — a pattern that historically precedes downgrade.`,ev:['9 high-value churn signals (IN-05)'],act:'Assign a senior agent to each at-risk account and open proactive outreach.',tickets:['TK-4760','TK-4772']};
+  if(q.includes('7 day')||q.includes('changed')||q.includes('week'))return{a:`Over the last 7 days: first response time improved 12% and AI resolution rose 5.4 pts, but <b>CSAT slipped 2.1 pts</b> and <b>Returns backlog grew</b>. Net: efficiency up, experience slightly down, concentrated in Returns.`,ev:['FRT -12%','AI resolution +5.4pts','CSAT -2.1pts'],act:'Protect CSAT by rebalancing Returns workload.',tickets:[]};
+  if(q.includes('most customer')||q.includes('affect'))return{a:`The widest-reaching open issue is the <b>UPI payment failure</b> (186 customers in 6 hours), followed by <b>returns refund delays</b> (97 customers over 7 days).`,ev:['Payment failures (IN-01)','Returns complaints (IN-04)'],act:'Escalate the payment issue to engineering immediately.',tickets:['TK-4821','TK-4822']};
+  return{a:`I can answer questions about CSAT, agent coaching, complaint drivers, at-risk segments, weekly changes and the issues affecting the most customers. Try one of the suggested prompts.`,ev:[],act:null,tickets:[]};
+}
+let askHistory=[];
+function renderAssistant(){
+  let h=`<div style="display:grid;grid-template-columns:1fr 260px;gap:18px;align-items:start">`;
+  h+=`<div class="card" style="display:flex;flex-direction:column;height:560px">
+    <div class="card-head"><div class="flex items-center gap-8"><div class="brief-spark" style="width:28px;height:28px">${svgIcon(IC.sparkle,15)}</div><div><h3>Ask Helix</h3><div class="sub">Conversational access to your support intelligence</div></div></div></div>
+    <div class="card-body" id="askScroll" style="flex:1;overflow-y:auto">`;
+  if(!askHistory.length){h+=`<div class="empty-state" style="padding:40px 20px"><div class="brief-spark" style="width:40px;height:40px;margin:0 auto 12px">${svgIcon(IC.sparkle,20)}</div><div style="font-weight:600;color:var(--text)">Ask anything about your support operation</div><div style="font-size:12.5px;margin-top:4px">Helix answers from live ticket, agent and customer data.</div></div>`;}
+  askHistory.forEach(m=>{
+    if(m.role==='user'){h+=`<div style="display:flex;justify-content:flex-end;margin-bottom:14px"><div style="background:var(--pri);color:#fff;border-radius:12px;padding:9px 13px;font-size:13px;max-width:78%">${m.text}</div></div>`;}
+    else{h+=`<div style="display:flex;gap:10px;margin-bottom:16px"><div class="brief-spark" style="width:28px;height:28px;flex-shrink:0">${svgIcon(IC.sparkle,15)}</div><div style="max-width:82%"><div style="background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:11px 13px;font-size:13px;line-height:1.55">${m.a}${m.ev&&m.ev.length?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-2)"><div class="dl-label">Supporting evidence</div>${m.ev.map(e=>`<div style="font-size:12px;color:var(--text-2);padding:2px 0">• ${e}</div>`).join('')}</div>`:''}${m.act?`<div class="rec-action" style="margin:10px 0 0">${svgIcon(IC.check,15)}<span><b>Recommended:</b> ${m.act}</span></div>`:''}${m.tickets&&m.tickets.length?`<div style="margin-top:8px">${m.tickets.map(t=>`<span class="badge indigo" style="cursor:pointer;margin-right:4px" onclick="openTicket('${t}')">${t}</span>`).join('')}</div>`:''}</div></div></div>`;}
+  });
+  h+=`</div>
+    <div style="border-top:1px solid var(--border);padding:12px 16px">
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px">${ASK_PROMPTS.slice(0,3).map(p=>`<button class="ctrl" style="font-size:12px" onclick="askSend(\`${p}\`)">${p}</button>`).join('')}</div>
+      <div class="flex gap-8"><input class="input" id="askInput" placeholder="Ask Helix about your support data..." onkeydown="if(event.key==='Enter')askSend(this.value)"><button class="btn btn-pri" onclick="askSend(document.getElementById('askInput').value)">Send</button></div>
+    </div></div>`;
+  // side suggested prompts + history
+  h+=`<div style="display:flex;flex-direction:column;gap:14px">
+    <div class="card"><div class="card-head" style="padding:12px 15px"><h3 style="font-size:13px">Suggested prompts</h3></div><div class="card-body" style="padding:8px">${ASK_PROMPTS.map(p=>`<div class="cmdk-item" style="font-size:12.5px" onclick="askSend(\`${p}\`)">${svgIcon(IC.sparkle,14)}<span>${p}</span></div>`).join('')}</div></div>
+  </div>`;
+  h+=`</div>`;
+  return h;
+}
+function askSend(q){q=(q||'').trim();if(!q)return;const ans=askAnswer(q);askHistory.push({role:'user',text:q});askHistory.push({role:'helix',...ans});renders.insights('assistant');}
+
+// ============================================================
+// AGENT COACHING
+// ============================================================
+const QDIMS=['Empathy','Accuracy','Communication clarity','Resolution effectiveness','Policy compliance','Ownership','Professionalism'];
+function qualityDims(a){const base=a.quality;const off=[a.csat<85?-14:4,6,a.csat<85?-10:2,a.sla<88?-8:3,8,a.csat<83?-12:0,5];return QDIMS.map((d,i)=>({d,v:Math.max(40,Math.min(99,base+off[i]))}));}
+function coachBadge(s){const m={'On track':'green','Recommended':'amber','Needs attention':'red'};return `<span class="badge ${m[s]||'gray'}">${s}</span>`;}
+renders.coaching=function(){
+  const active=DATA.agents.length;const avgCsat=(DATA.agents.reduce((s,a)=>s+a.csat,0)/active).toFixed(1);
+  const needAttn=DATA.agents.filter(a=>a.coaching==='Needs attention').length;const opps=DATA.agents.filter(a=>a.coaching!=='On track').length;
+  let h=`<div class="content-inner">`;
+  h+=`<div class="page-head"><div><div class="page-title">Agent Coaching</div><div class="page-sub">Understand why performance moves — and act on it. Not just a leaderboard.</div></div></div>`;
+  // overview KPIs
+  const cards=[['Total agents',active,'team'],['Active now',active,'user'],['Avg CSAT',avgCsat+'%','trend'],['Avg resolution','4h 58m','check'],['Coaching opportunities',opps,'coaching'],['Need attention',needAttn,'alert']];
+  h+=`<div class="kpi-grid" style="grid-template-columns:repeat(6,1fr)">`;
+  cards.forEach(c=>{h+=`<div class="kpi" style="cursor:default"><div class="kpi-top"><span class="kpi-label">${c[0]}</span><span class="kpi-ic">${svgIcon(IC[c[2]],14)}</span></div><div class="kpi-val" style="font-size:24px">${c[1]}</div></div>`;});
+  h+=`</div>`;
+  // leaderboard
+  h+=`<div class="card"><div class="card-head"><div><h3>Agent leaderboard</h3><div class="sub">Click an agent to open their coaching workspace</div></div></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Agent</th><th>Tickets</th><th>Resolution rate</th><th>CSAT</th><th>First response</th><th>SLA</th><th>AI quality</th><th>Coaching</th></tr></thead><tbody>`;
+  [...DATA.agents].sort((a,b)=>b.quality-a.quality).forEach(a=>{
+    const rr=Math.round(a.resolved/a.assigned*100);const qc=a.quality>=88?'var(--green)':a.quality>=78?'var(--amber)':'var(--red)';
+    h+=`<tr class="clickable" onclick="openAgent('${a.id}')">
+      <td><div class="u-cell">${avatar(a.name)}<div><div class="cell-main" style="font-size:12.5px">${a.name}</div><div class="cell-sub">${teamName(a.team)} · ${a.role}</div></div></div></td>
+      <td>${a.assigned}</td><td>${rr}%</td><td><b>${a.csat}%</b></td><td class="text-2">${a.frt}</td>
+      <td><div class="flex items-center gap-8"><div class="mini-bar"><span style="width:${a.sla}%;background:${a.sla>=95?'var(--green)':a.sla>=88?'var(--amber)':'var(--red)'}"></span></div><span style="font-size:12px;font-weight:600">${a.sla}%</span></div></td>
+      <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:30px;height:30px;border-radius:7px;background:${qc}1a;color:${qc};display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:12px">${a.quality}</span></span></td>
+      <td>${coachBadge(a.coaching)}</td></tr>`;});
+  h+=`</tbody></table></div></div>`;
+  h+=`</div>`;
+  document.getElementById('content').innerHTML=h;
+};
+
+window.openAgent=function(id){
+  const a=agentById(id);if(!a){navigate('coaching');return;}
+  currentMod='coaching';document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.mod==='coaching'));
+  document.getElementById('crumb').innerHTML=`<span>Intelligence</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg><span class="card-link" onclick="navigate('coaching')">Agent Coaching</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg><b>${a.name}</b>`;
+  const dims=qualityDims(a);const rr=Math.round(a.resolved/a.assigned*100);
+  const flagged=DATA.tickets.filter(t=>t.agent===a.id&&t.sentiment==='Negative').slice(0,3);
+  const sessions=sget('coach_'+a.id,[]);
+  let h=`<div style="max-width:1200px;margin:0 auto;padding:18px 24px 48px">`;
+  h+=`<button class="ctrl" style="margin-bottom:16px" onclick="navigate('coaching')">${svgIcon('<path d="M19 12H5M12 19l-7-7 7-7"/>',14)} Back to leaderboard</button>`;
+  // header
+  h+=`<div class="card" style="margin-bottom:16px"><div class="card-body flex items-center gap-12">${avatar(a.name,56)}<div><div style="font-size:18px;font-weight:700">${a.name}</div><div class="text-2" style="font-size:13px">${a.role} · ${teamName(a.team)}</div></div><div style="margin-left:auto" class="flex items-center gap-12">${coachBadge(a.coaching)}<button class="btn btn-pri btn-sm" onclick="openCoachModal('${a.id}')">${svgIcon('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',14)} New coaching session</button></div></div></div>`;
+  h+=`<div style="display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start">`;
+  // MAIN
+  h+=`<div>`;
+  // performance summary
+  h+=`<div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Performance summary</h3></div><div class="card-body"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+    ${[['Tickets handled',a.assigned],['Resolution rate',rr+'%'],['CSAT',a.csat+'%'],['First response',a.frt],['Avg resolution',a.res],['SLA adherence',a.sla+'%'],['AI quality',a.quality+'/100'],['Reopen rate','4.2%']].map(k=>`<div><div class="text-3" style="font-size:11px;text-transform:uppercase;letter-spacing:.04em">${k[0]}</div><div style="font-size:19px;font-weight:700;margin-top:3px">${k[1]}</div></div>`).join('')}
+  </div></div></div>`;
+  // trends
+  h+=`<div class="grid-2 mb-16">
+    <div class="card"><div class="card-head"><h3 style="font-size:13px">CSAT trend</h3></div><div class="card-body">${lineChart({labels:['W1','W2','W3','W4','W5','W6'],h:160,series:[{data:a.csat<85?[90,88,86,84,83,a.csat]:[a.csat-3,a.csat-2,a.csat-1,a.csat,a.csat+1,a.csat],color:a.csat<85?'#F59E0B':'#16A34A',area:true}]})}</div></div>
+    <div class="card"><div class="card-head"><h3 style="font-size:13px">Productivity (tickets/day)</h3></div><div class="card-body">${lineChart({labels:['Mon','Tue','Wed','Thu','Fri'],h:160,series:[{data:[9,11,10,13,12],color:'#635BFF',area:true}]})}</div></div>
+  </div>`;
+  // AI quality evaluation
+  h+=`<div class="card" style="margin-bottom:16px"><div class="card-head"><div class="flex items-center gap-8"><span style="color:var(--pri)">${svgIcon(IC.sparkle,15)}</span><div><h3>AI quality evaluation</h3><div class="sub">Scored across 7 dimensions from conversation analysis</div></div></div><div style="font-size:26px;font-weight:700;color:${a.quality>=88?'var(--green)':a.quality>=78?'var(--amber)':'var(--red)'}">${a.quality}<span style="font-size:14px;color:var(--text-3)">/100</span></div></div><div class="card-body">`;
+  dims.forEach(d=>{const col=d.v>=85?'var(--green)':d.v>=72?'var(--amber)':'var(--red)';h+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:11px"><div style="width:160px;font-size:12.5px;color:var(--text-2)">${d.d}</div><div class="dist-track" style="flex:1"><div class="dist-fill" style="width:${d.v}%;background:${col}"></div></div><div style="width:34px;text-align:right;font-weight:600;font-size:12.5px;color:${col}">${d.v}</div></div>`;});
+  h+=`</div></div>`;
+  // coaching recommendation
+  const lowest=[...dims].sort((x,y)=>x.v-y.v)[0];
+  h+=`<div class="card" style="margin-bottom:16px;border-color:#E4E2FF"><div class="card-head" style="background:var(--pri-tint)"><div class="flex items-center gap-8"><span style="color:var(--pri)">${svgIcon(IC.sparkle,15)}</span><h3>AI coaching recommendation</h3></div></div><div class="card-body">
+    <div class="ai-expl" style="margin-top:0"><span class="lbl">${svgIcon(IC.sparkle,12)} Observation</span><br>${a.name.split(' ')[0]} has ${a.frt<'3m'?'a strong first response time':'solid ticket throughput'} but ${lowest.v<75?`a lower-than-average <b>${lowest.d.toLowerCase()}</b> score (${lowest.v}/100)`:'room to lift resolution quality'}.</div>
+    <div class="rec-action"><span style="color:var(--amber)">${svgIcon('<circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/>',15)}</span><span><b>Root cause:</b> In ${flagged.length||8} of recent negatively-rated interactions, the agent provided a solution without first acknowledging the customer's frustration.</span></div>
+    <div class="rec-action">${svgIcon(IC.check,15)}<span><b>Recommended:</b> Improve ${lowest.d.toLowerCase()} and expectation-setting${a.team==='T3'?' in refund-related conversations':''}.</span></div>
+    <div class="dl-label" style="margin-top:14px">Flagged conversations</div>
+    ${flagged.length?flagged.map(t=>`<div class="flex items-center justify-between" style="padding:7px 0;border-bottom:1px solid var(--border-2)"><span class="card-link" style="color:var(--text);font-weight:500" onclick="openTicket('${t.id}')">${t.id} · ${t.subject}</span><span class="badge red">Negative</span></div>`).join(''):'<div class="text-3" style="font-size:12px">No flagged conversations this period.</div>'}
+  </div></div>`;
+  h+=`</div>`;
+  // SIDE: coaching history + workflow
+  h+=`<div style="position:sticky;top:16px;display:flex;flex-direction:column;gap:14px">
+    <div class="card"><div class="card-head"><h3 style="font-size:13px">Coaching history</h3></div><div class="card-body">`;
+  if(sessions.length){sessions.forEach(s=>{h+=`<div style="padding:10px 0;border-bottom:1px solid var(--border-2)"><div class="flex items-center justify-between"><b style="font-size:12.5px">${s.focus}</b><span class="badge ${s.done?'green':'amber'}">${s.done?'Completed':'In progress'}</span></div><div class="text-2" style="font-size:12px;margin-top:3px">Goal: ${s.goal}</div><div class="text-3" style="font-size:11px;margin-top:2px">Due ${s.due}</div>${!s.done?`<button class="btn btn-ghost btn-sm" style="margin-top:7px" onclick="completeSession('${a.id}',${s.ts})">Mark complete</button>`:''}</div>`;});}
+  else h+=`<div class="text-3" style="font-size:12.5px">No sessions yet. Create one to start tracking improvement.</div>`;
+  h+=`</div></div>
+    <div class="card"><div class="card-body"><div class="dl-label" style="margin-bottom:8px">Quick actions</div>
+      <button class="btn btn-pri btn-sm" style="width:100%;margin-bottom:8px" onclick="openCoachModal('${a.id}')">Create coaching session</button>
+      <button class="btn btn-ghost btn-sm" style="width:100%;margin-bottom:8px" onclick="toast('Private feedback saved','green')">Add private feedback</button>
+      <button class="btn btn-ghost btn-sm" style="width:100%" onclick="toast('Assigned learning module','indigo')">Assign exercise</button>
+    </div></div>
+  </div>`;
+  h+=`</div></div>`;
+  document.getElementById('content').innerHTML=h;
+  document.getElementById('content').scrollTop=0;
+};
+function openCoachModal(id){const a=agentById(id);
+  openModal(`<div class="modal-head"><h3>New coaching session · ${a.name}</h3><button class="x-btn" onclick="closeModal()">${svgIcon('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',16)}</button></div>
+  <div class="modal-body">
+    <div class="field"><label>Focus area</label><select class="input" id="cf"><option>Empathy & acknowledgement</option><option>Resolution explanation quality</option><option>Expectation-setting</option><option>Policy compliance</option><option>Response speed</option></select></div>
+    <div class="field"><label>Learning exercise</label><select class="input" id="ce"><option>Review 5 flagged conversations together</option><option>Shadow a top performer for 2 shifts</option><option>Complete the empathy micro-module</option><option>Role-play refund scenarios</option></select></div>
+    <div class="field"><label>Measurable goal</label><input class="input" id="cg" value="Raise CSAT to 90% within 3 weeks"></div>
+    <div class="field"><label>Due date</label><input class="input" id="cd" value="${new Date(Date.now()+18*864e5).toISOString().slice(0,10)}" type="date"></div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-pri" onclick="saveCoach('${id}')">Create session</button></div>`);
+}
+function saveCoach(id){const focus=document.getElementById('cf').value,ex=document.getElementById('ce').value,goal=document.getElementById('cg').value,due=document.getElementById('cd').value;
+  const list=sget('coach_'+id,[]);list.push({focus,ex,goal,due,done:false,ts:Date.now()});sset('coach_'+id,list);closeModal();openAgent(id);toast('Coaching session created','green');}
+function completeSession(id,ts){const list=sget('coach_'+id,[]);const s=list.find(x=>x.ts===ts);if(s)s.done=true;sset('coach_'+id,list);openAgent(id);toast('Session marked complete','green');}
+
+// ============================================================
+// SETTINGS + RBAC
+// ============================================================
+const SETTINGS_NAV=[['general','General'],['users','Users & Permissions'],['integrations','Integrations'],['channels','Channels'],['ai','AI Configuration'],['notifications','Notifications'],['security','Security & Compliance'],['billing','Billing']];
+const RBAC_ROLES=['Super Admin','Support Manager','Team Lead','Support Agent','Analyst'];
+const RBAC_PERMS=['View all tickets','Manage team & agents','View analytics','Run coaching','Approve exceptions','Configure automations','Manage integrations','Manage billing','Admin users & roles'];
+const RBAC_BASE={'View all tickets':[1,1,0,0,1],'Manage team & agents':[1,1,1,0,0],'View analytics':[1,1,1,0,1],'Run coaching':[1,1,1,0,0],'Approve exceptions':[1,1,0,0,0],'Configure automations':[1,1,0,0,0],'Manage integrations':[1,0,0,0,0],'Manage billing':[1,0,0,0,0],'Admin users & roles':[1,0,0,0,0]};
+function rbacGet(){const v=sget('rbac',null);return v||RBAC_BASE;}
+renders.settings=function(sub){
+  const tab=sub||sget('set_tab','general');sset('set_tab',tab);
+  let h=`<div class="content-inner">`;
+  h+=`<div class="page-head"><div><div class="page-title">Settings</div><div class="page-sub">Configure Helix AI for Acme Commerce.</div></div></div>`;
+  h+=`<div style="display:grid;grid-template-columns:220px 1fr;gap:22px;align-items:start">`;
+  // secondary nav
+  h+=`<div class="card" style="padding:8px"><div style="display:flex;flex-direction:column;gap:1px">`;
+  SETTINGS_NAV.forEach(n=>{h+=`<div class="cmdk-item ${n[0]===tab?'sel':''}" style="font-size:13px;${n[0]===tab?'font-weight:600;color:var(--pri)':''}" onclick="renders.settings('${n[0]}')"><span>${n[1]}</span></div>`;});
+  h+=`</div></div>`;
+  h+=`<div>${settingsPanel(tab)}</div>`;
+  h+=`</div></div>`;
+  document.getElementById('content').innerHTML=h;
+};
+function settingsPanel(tab){
+  if(tab==='general')return `
+    <div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Organisation</h3></div><div class="card-body"><div class="grid-2">
+      ${[['Organisation name','Acme Commerce'],['Workspace name','Support'],['Primary time zone','Asia/Kolkata (GMT+5:30)'],['Default language','English (IN)'],['Industry','E-commerce / Retail'],['Business hours','Mon–Sat, 9:00–21:00']].map(f=>`<div class="field"><label>${f[0]}</label><input class="input" value="${f[1]}"></div>`).join('')}
+    </div><button class="btn btn-pri btn-sm" onclick="toast('Settings saved','green')">Save changes</button></div></div>`;
+  if(tab==='users')return settingsUsers();
+  if(tab==='integrations')return settingsIntegrations();
+  if(tab==='channels')return settingsChannels();
+  if(tab==='ai')return settingsAI();
+  if(tab==='notifications')return settingsNotifications();
+  if(tab==='security')return settingsSecurity();
+  if(tab==='billing')return settingsBilling();
+  return '';
+}
+function settingsUsers(){
+  const rbac=rbacGet();
+  const users=[['John Doe','Administrator','Super Admin'],...DATA.agents.slice(0,5).map(a=>[a.name,a.role,a.role==='Team Lead'?'Team Lead':'Support Agent'])];
+  let h=`<div class="card" style="margin-bottom:16px"><div class="card-head"><div><h3>Users</h3><div class="sub">${users.length} members</div></div><button class="btn btn-pri btn-sm" onclick="toast('Invite sent (demo)','green')">+ Invite user</button></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Name</th><th>Title</th><th>Role</th><th></th></tr></thead><tbody>`;
+  users.forEach(u=>{h+=`<tr><td><div class="u-cell">${avatar(u[0])}<span class="cell-main" style="font-size:12.5px">${u[0]}</span></div></td><td class="text-2">${u[1]}</td><td><span class="badge ${u[2]==='Super Admin'?'indigo':u[2]==='Team Lead'?'teal':'gray'}">${u[2]}</span></td><td style="text-align:right"><button class="ctrl" onclick="toast('Edit user (demo)','indigo')">Edit</button></td></tr>`;});
+  h+=`</tbody></table></div></div>`;
+  // RBAC matrix
+  h+=`<div class="card"><div class="card-head"><div><h3>Role-based access control</h3><div class="sub">Toggle permissions per role — changes persist</div></div><button class="btn btn-ghost btn-sm" onclick="sset('rbac',null);renders.settings('users');toast('Reset to defaults','indigo')">Reset</button></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Permission</th>${RBAC_ROLES.map(r=>`<th style="text-align:center">${r}</th>`).join('')}</tr></thead><tbody>`;
+  RBAC_PERMS.forEach(perm=>{h+=`<tr><td class="cell-main" style="font-size:12.5px">${perm}</td>`;RBAC_ROLES.forEach((r,ri)=>{const on=rbac[perm][ri];h+=`<td style="text-align:center"><span onclick="toggleRbac('${perm}',${ri})" style="cursor:pointer;display:inline-flex;width:22px;height:22px;border-radius:6px;align-items:center;justify-content:center;background:${on?'var(--green-soft)':'#F3F4F6'};color:${on?'var(--green)':'var(--text-3)'}">${on?svgIcon(IC.check,13):svgIcon('<line x1="5" y1="12" x2="19" y2="12"/>',13)}</span></td>`;});h+=`</tr>`;});
+  h+=`</tbody></table></div></div>`;
+  return h;
+}
+function toggleRbac(perm,ri){const rbac=JSON.parse(JSON.stringify(rbacGet()));rbac[perm][ri]=rbac[perm][ri]?0:1;sset('rbac',rbac);renders.settings('users');}
+function settingsIntegrations(){
+  const ints=[['Gmail','Email','1'],['Outlook','Email','0'],['WhatsApp Business','Messaging','1'],['Slack','Comms','1'],['Microsoft Teams','Comms','0'],['Salesforce','CRM','1'],['HubSpot','CRM','0'],['Zoho CRM','CRM','0'],['Shopify','Commerce','1'],['WooCommerce','Commerce','0'],['Jira','Engineering','1'],['Linear','Engineering','0'],['Google Sheets','Data','1'],['Snowflake','Data','0']];
+  let h=`<div class="card"><div class="card-head"><div><h3>Integrations</h3><div class="sub">Helix reads signals from your existing tools — no migration required</div></div></div><div class="card-body"><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">`;
+  ints.forEach(ig=>{const on=sget('int_'+ig[0],ig[2]==='1');h+=`<div style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;display:flex;align-items:center;gap:12px">
+    <div style="width:34px;height:34px;border-radius:8px;background:var(--pri-tint);color:var(--pri);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">${ig[0][0]}</div>
+    <div style="flex:1"><div class="cell-main" style="font-size:13px">${ig[0]}</div><div class="cell-sub">${ig[1]}</div></div>
+    ${on?`<span class="badge green">Connected</span>`:`<button class="btn btn-ghost btn-sm" onclick="sset('int_${ig[0]}',true);renders.settings('integrations');toast('${ig[0]} connected','green')">Connect</button>`}</div>`;});
+  h+=`</div></div></div>`;
+  return h;
+}
+function settingsChannels(){
+  const chs=[['Email','support@acme.com','1'],['WhatsApp Business','+91 98765 43210','1'],['Website Live Chat','acme.com/help','1'],['Phone Support','1800-ACME-NOW','1'],['Social Media','@acmehelp','0']];
+  let h=`<div class="card"><div class="card-head"><h3>Channels</h3></div><div class="card-body" style="padding:0"><table class="tbl"><tbody>`;
+  chs.forEach(c=>{const on=sget('chan_'+c[0],c[2]==='1');h+=`<tr><td><div class="flex items-center gap-12">${chIcon(c[0].includes('WhatsApp')?'WhatsApp':c[0].includes('Live')?'Live Chat':c[0].includes('Phone')?'Phone':c[0].includes('Social')?'Web Form':'Email',16)}<div><div class="cell-main" style="font-size:13px">${c[0]}</div><div class="cell-sub">${c[1]}</div></div></div></td><td style="text-align:right"><div class="flex items-center gap-12" style="justify-content:flex-end"><span class="badge ${on?'green':'gray'}">${on?'Active':'Inactive'}</span><div class="switch ${on?'on':''}" onclick="sset('chan_${c[0]}',${!on});renders.settings('channels')"></div></div></td></tr>`;});
+  h+=`</tbody></table></div></div>`;
+  return h;
+}
+function settingsAI(){
+  const auto=sget('ai_autonomy','approval');
+  let h=`<div class="card" style="margin-bottom:16px"><div class="card-head"><div class="flex items-center gap-8"><span style="color:var(--pri)">${svgIcon(IC.sparkle,15)}</span><h3>AI Assistant</h3></div></div><div class="card-body">
+    ${toggleRow('Enable Helix AI','Powers insights, summaries and the copilot','ai_enabled',true)}
+    <div class="grid-2" style="margin-top:14px"><div class="field"><label>Default model</label><select class="input"><option>Helix-Pro (balanced)</option><option>Helix-Max (highest quality)</option><option>Helix-Lite (fastest)</option></select></div><div class="field"><label>Response tone</label><select class="input"><option>Professional & warm</option><option>Concise</option><option>Formal</option></select></div></div>
+  </div></div>`;
+  h+=`<div class="card" style="margin-bottom:16px"><div class="card-head"><h3>AI Autonomy</h3><div class="sub">How much Helix can act on its own</div></div><div class="card-body">`;
+  [['suggest','Suggest only','Helix recommends; humans take every action'],['approval','Human approval required','Helix prepares actions; a human approves before execution'],['auto','Auto-execute approved workflows','Helix runs pre-approved automations without prompting']].forEach(o=>{h+=`<div onclick="sset('ai_autonomy','${o[0]}');renders.settings('ai')" style="display:flex;gap:11px;align-items:flex-start;padding:11px;border:1px solid ${auto===o[0]?'var(--pri)':'var(--border)'};border-radius:var(--radius-sm);margin-bottom:9px;cursor:pointer;background:${auto===o[0]?'var(--pri-tint)':'#fff'}"><div style="width:18px;height:18px;border-radius:50%;border:2px solid ${auto===o[0]?'var(--pri)':'var(--border)'};flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center">${auto===o[0]?'<div style="width:8px;height:8px;border-radius:50%;background:var(--pri)"></div>':''}</div><div><div class="cell-main" style="font-size:13px">${o[1]}</div><div class="cell-sub">${o[2]}</div></div></div>`;});
+  h+=`</div></div>`;
+  h+=`<div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Insight monitoring</h3><div class="sub">Which categories Helix watches</div></div><div class="card-body">`;
+  INSIGHT_CATS.slice(1).forEach(c=>{h+=toggleRow(c,'','mon_'+c,true);});
+  h+=`</div></div>`;
+  h+=`<div class="card"><div class="card-head"><h3>Knowledge sources</h3></div><div class="card-body">${[['Help Centre articles','142 indexed','Synced'],['Internal SOPs','38 documents','Synced'],['Past resolved tickets','12,486 records','Indexing']].map(k=>`<div class="flex items-center justify-between" style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div><div class="cell-main" style="font-size:12.5px">${k[0]}</div><div class="cell-sub">${k[1]}</div></div><span class="badge ${k[2]==='Synced'?'green':'amber'}">${k[2]}</span></div>`).join('')}<button class="btn btn-ghost btn-sm" style="margin-top:12px" onclick="toast('Upload dialog (demo)','indigo')">Upload documents</button></div></div>`;
+  return h;
+}
+function settingsNotifications(){
+  let h=`<div class="card"><div class="card-head"><h3>Notification preferences</h3></div><div class="card-body">`;
+  [['New regulatory insight','Alert the Support Manager on a new high-severity insight'],['Control status → Failing','Notify owner when a control starts failing'],['SLA breach risk','Alert when tickets approach SLA breach'],['Remediation overdue','Escalate overdue remediations after 48h'],['Daily AI briefing','Morning summary to the Head of CX'],['Weekly posture digest','Monday email to leadership']].forEach((t,i)=>{h+=toggleRow(t[0],t[1],'notif_'+i,i<4);});
+  h+=`</div></div>`;
+  h+=`<div class="card" style="margin-top:16px"><div class="card-head"><h3>Delivery channels</h3></div><div class="card-body" style="padding:0"><table class="tbl"><tbody>
+    ${[['Email','All notifications'],['Slack (#cx-alerts)','Failures, overdue, SLA risk'],['In-app','Everything']].map(c=>`<tr><td class="cell-main" style="font-size:12.5px">${c[0]}</td><td class="text-2">${c[1]}</td><td style="text-align:right"><span class="badge green">Active</span></td></tr>`).join('')}
+  </tbody></table></div></div>`;
+  return h;
+}
+function settingsSecurity(){
+  return `<div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Authentication</h3></div><div class="card-body">
+    ${toggleRow('Single sign-on (SSO)','SAML 2.0 via Okta','sec_sso',true)}
+    ${toggleRow('Two-factor authentication','Required for all admins','sec_2fa',true)}
+    ${toggleRow('Enforce IP allowlist','Restrict access to office networks','sec_ip',false)}
+  </div></div>
+  <div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Data & audit</h3></div><div class="card-body">
+    <div class="field"><label>Data retention</label><select class="input" style="max-width:260px"><option>24 months</option><option>12 months</option><option>36 months</option></select></div>
+    <div class="flex items-center justify-between" style="padding:9px 0"><div><div class="cell-main" style="font-size:12.5px">Audit logs</div><div class="cell-sub">14,203 events this month</div></div><button class="ctrl" onclick="toast('Audit log opened (demo)','indigo')">View logs</button></div>
+  </div></div>
+  <div class="card"><div class="card-head"><h3>API keys</h3><button class="btn btn-ghost btn-sm" onclick="toast('New key generated (demo)','green')">+ Generate key</button></div><div class="card-body" style="padding:0"><table class="tbl"><tbody>
+    <tr><td class="cell-main" style="font-size:12.5px">Production key</td><td class="text-3" style="font-family:monospace">hlx_live_••••••••4a21</td><td style="text-align:right"><span class="badge green">Active</span></td></tr>
+    <tr><td class="cell-main" style="font-size:12.5px">Sandbox key</td><td class="text-3" style="font-family:monospace">hlx_test_••••••••9f07</td><td style="text-align:right"><span class="badge gray">Active</span></td></tr>
+  </tbody></table></div></div>`;
+}
+function settingsBilling(){
+  return `<div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Current plan</h3></div><div class="card-body flex items-center justify-between"><div><div style="font-size:19px;font-weight:700">Enterprise</div><div class="text-2" style="font-size:13px">Billed annually · renews 01 Apr 2027</div></div><button class="btn btn-ghost btn-sm" onclick="toast('Manage plan (demo)','indigo')">Manage plan</button></div></div>
+  <div class="grid-3 mb-16">
+    ${[['Agent seats','25 / 30','83%','var(--pri)'],['AI consumption','68%','68%','var(--teal)'],['Monthly tickets','12.5k / 20k','63%','var(--amber)']].map(c=>`<div class="card"><div class="card-body"><div class="text-2" style="font-size:12px">${c[0]}</div><div style="font-size:20px;font-weight:700;margin:4px 0 8px">${c[1]}</div><div class="dist-track"><div class="dist-fill" style="width:${c[2]};background:${c[3]}"></div></div></div></div>`).join('')}
+  </div>
+  <div class="card"><div class="card-head"><h3>Billing history</h3></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead><tbody>
+    ${[['01 Apr 2026','Enterprise — annual','₹18,00,000','Paid'],['01 Apr 2025','Enterprise — annual','₹15,60,000','Paid'],['12 Mar 2025','Additional seats (5)','₹1,20,000','Paid']].map(r=>`<tr><td class="text-2">${r[0]}</td><td class="cell-main" style="font-size:12.5px">${r[1]}</td><td>${r[2]}</td><td><span class="badge green">${r[3]}</span></td></tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+function toggleRow(label,sub,key,def){const on=sget(key,def);return `<div class="flex items-center justify-between" style="padding:11px 0;border-bottom:1px solid var(--border-2)"><div><div class="cell-main" style="font-size:12.5px">${label}</div>${sub?`<div class="cell-sub">${sub}</div>`:''}</div><div class="switch ${on?'on':''}" onclick="sset('${key}',${!on});renders.settings(sget('set_tab','general'))"></div></div>`;}
+
+// ============================================================
+// UNIFIED INBOX
+// ============================================================
+let inboxSel=null;
+renders.inbox=function(){
+  const folder=sget('inbox_folder','Open');
+  const statusMap={Open:['Open','In Progress','Escalated'],Pending:['Pending'],Snoozed:[],Resolved:['Resolved']};
+  let convs=DATA.tickets.filter(t=>folder==='Snoozed'?false:statusMap[folder].includes(t.status));
+  if(!inboxSel&&convs.length)inboxSel=convs[0].id;
+  const active=ticketById(inboxSel)||convs[0];
+  const folders=[['Open',DATA.tickets.filter(t=>['Open','In Progress','Escalated'].includes(t.status)).length],['Pending',DATA.tickets.filter(t=>t.status==='Pending').length],['Snoozed',0],['Resolved',DATA.tickets.filter(t=>t.status==='Resolved').length]];
+  let h=`<div style="height:100%;display:flex;flex-direction:column">`;
+  h+=`<div style="padding:18px 24px 14px"><div class="page-title">Unified Inbox</div><div class="page-sub">Every channel, one conversation view.</div></div>`;
+  h+=`<div style="flex:1;display:grid;grid-template-columns:200px 340px 1fr;gap:0;border-top:1px solid var(--border);min-height:0">`;
+  // folders
+  h+=`<div style="border-right:1px solid var(--border);padding:14px 12px;background:var(--surface)">
+    <div class="dl-label" style="padding:0 8px 8px">Folders</div>`;
+  folders.forEach(f=>{h+=`<div class="cmdk-item ${f[0]===folder?'sel':''}" style="font-size:13px;justify-content:space-between" onclick="inboxSel=null;sset('inbox_folder','${f[0]}');renders.inbox()"><span class="flex items-center gap-8">${svgIcon(f[0]==='Resolved'?IC.check:f[0]==='Snoozed'?'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>':IC.inbox,15)} ${f[0]}</span><span class="text-3">${f[1]}</span></div>`;});
+  h+=`<div class="dl-label" style="padding:14px 8px 8px">Channels</div>`;
+  ['Email','WhatsApp','Live Chat','Phone'].forEach(c=>{h+=`<div class="cmdk-item" style="font-size:13px"><span class="flex items-center gap-8">${chIcon(c,15)} ${c}</span></div>`;});
+  h+=`</div>`;
+  // conversation list
+  h+=`<div style="border-right:1px solid var(--border);overflow-y:auto;background:var(--surface)">`;
+  convs.forEach(t=>{const c=custById(t.customer);const sel=t.id===inboxSel;
+    h+=`<div onclick="inboxSel='${t.id}';renders.inbox()" style="padding:13px 16px;border-bottom:1px solid var(--border-2);cursor:pointer;background:${sel?'var(--pri-tint)':'#fff'};border-left:3px solid ${sel?'var(--pri)':'transparent'}">
+      <div class="flex items-center gap-8" style="margin-bottom:4px">${avatar(c.name,26)}<div style="flex:1;min-width:0"><div class="cell-main" style="font-size:12.5px">${c.name}</div></div>${chIcon(t.channel,13)}${t.sentiment==='Negative'?'<span style="width:7px;height:7px;border-radius:50%;background:var(--red)"></span>':''}</div>
+      <div style="font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.subject}</div>
+      <div class="text-3" style="font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px">${openingMsg(t).slice(0,54)}…</div>
+      <div class="flex items-center gap-8" style="margin-top:6px">${priBadge(t.priority)}${statusBadge(t.status)}</div></div>`;});
+  if(!convs.length)h+=`<div class="empty-state">${svgIcon(IC.inbox,34)}<div>No conversations in ${folder}</div></div>`;
+  h+=`</div>`;
+  // active conversation
+  h+=`<div style="overflow-y:auto;background:var(--bg)">`;
+  if(active){const c=custById(active.customer);const conv=genConversation(active);
+    h+=`<div style="padding:16px 22px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:2"><div class="flex items-center gap-12">${avatar(c.name,38)}<div><div style="font-weight:700">${c.name}</div><div class="text-3" style="font-size:12px">${c.email} · via ${active.channel}</div></div><div style="margin-left:auto" class="flex gap-8"><button class="btn btn-ghost btn-sm" onclick="openTicket('${active.id}')">Open ticket</button><button class="btn btn-ghost btn-sm" onclick="toast('Assigned','green')">Assign</button></div></div></div>`;
+    h+=`<div style="padding:18px 22px">
+      <div class="ai-expl" style="margin:0 0 16px"><span class="lbl">${svgIcon(IC.sparkle,12)} Conversation summary</span><br>${c.name.split(' ')[0]} contacted via ${active.channel} about "${active.subject.toLowerCase()}". Sentiment is ${active.sentiment.toLowerCase()}; ${active.status==='Escalated'?'escalated and awaiting senior handling.':'in progress.'}</div>`;
+    conv.forEach(m=>{if(m.who==='note')return;const isC=m.who==='customer';
+      h+=`<div style="display:flex;gap:10px;margin-bottom:14px;${isC?'':'flex-direction:row-reverse'}">${avatar(m.name,28)}<div style="max-width:74%"><div class="flex items-center gap-8" style="${isC?'':'justify-content:flex-end'};margin-bottom:3px"><b style="font-size:12px">${m.name}</b><span class="text-3" style="font-size:11px">${m.time}</span></div><div style="background:${isC?'#fff':'var(--pri)'};color:${isC?'var(--text)':'#fff'};border:1px solid ${isC?'var(--border)':'var(--pri)'};border-radius:12px;padding:10px 13px;font-size:13px;line-height:1.5">${m.text}</div></div></div>`;});
+    h+=`<div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px"><textarea class="input" placeholder="Reply to ${c.name.split(' ')[0]}..." style="min-height:60px;border:none"></textarea><div class="flex items-center gap-8" style="margin-top:8px"><button class="btn btn-ghost btn-sm" onclick="toast('AI reply inserted','indigo')">${svgIcon(IC.sparkle,13)} AI reply</button><button class="btn btn-pri btn-sm" style="margin-left:auto" onclick="toast('Reply sent','green')">Send</button></div></div>`;
+    h+=`</div>`;
+  }else h+=`<div class="empty-state" style="padding:80px">${svgIcon(IC.inbox,34)}<div>Select a conversation</div></div>`;
+  h+=`</div>`;
+  h+=`</div></div>`;
+  document.getElementById('content').innerHTML=h;
+  document.getElementById('content').style.overflow='hidden';
+};
+
+// ============================================================
+// CUSTOMERS
+// ============================================================
+renders.customers=function(){
+  document.getElementById('content').style.overflow='';
+  let h=`<div class="content-inner">`;
+  h+=`<div class="page-head"><div><div class="page-title">Customers</div><div class="page-sub">${DATA.customers.length} customers · ${DATA.customers.filter(c=>c.risk==='High').length} flagged at-risk by Helix</div></div></div>`;
+  h+=`<div class="card"><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Customer</th><th>Segment</th><th>Lifetime value</th><th>Tickets</th><th>CSAT</th><th>Last interaction</th><th>Risk</th></tr></thead><tbody>`;
+  [...DATA.customers].sort((a,b)=>({High:0,Medium:1,Low:2}[a.risk]-{High:0,Medium:1,Low:2}[b.risk])).forEach(c=>{
+    h+=`<tr class="clickable" onclick="openCustomer('${c.id}')"><td><div class="u-cell">${avatar(c.name)}<div><div class="cell-main" style="font-size:12.5px">${c.name}</div><div class="cell-sub">${c.email}</div></div></div></td>
+      <td><span class="badge ${c.segment==='Enterprise'?'indigo':c.segment==='Pro'?'teal':'gray'}">${c.segment}</span></td>
+      <td class="fw6">${c.ltv}</td><td>${c.tickets}</td><td><b>${c.csat}%</b></td><td class="text-2">${c.last}</td>
+      <td><span class="badge ${c.risk==='High'?'red':c.risk==='Medium'?'amber':'green'}">${c.risk}</span></td></tr>`;});
+  h+=`</tbody></table></div></div></div>`;
+  document.getElementById('content').innerHTML=h;
+};
+window.openCustomer=function(id){
+  const c=custById(id);if(!c){navigate('customers');return;}
+  document.getElementById('content').style.overflow='';
+  currentMod='customers';document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.mod==='customers'));
+  document.getElementById('crumb').innerHTML=`<span>Workspace</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg><span class="card-link" onclick="navigate('customers')">Customers</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg><b>${c.name}</b>`;
+  const tks=DATA.tickets.filter(t=>t.customer===c.id);
+  let h=`<div style="max-width:1100px;margin:0 auto;padding:18px 24px 48px">`;
+  h+=`<button class="ctrl" style="margin-bottom:16px" onclick="navigate('customers')">${svgIcon('<path d="M19 12H5M12 19l-7-7 7-7"/>',14)} Back to customers</button>`;
+  h+=`<div style="display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start">`;
+  // left profile
+  h+=`<div class="card"><div class="card-body">
+    <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding-bottom:14px;border-bottom:1px solid var(--border-2)">${avatar(c.name,56)}<div style="font-weight:700;margin-top:10px">${c.name}</div><div class="text-3" style="font-size:12px">${c.email}</div><div class="flex gap-8" style="margin-top:8px"><span class="badge ${c.segment==='Enterprise'?'indigo':c.segment==='Pro'?'teal':'gray'}">${c.segment}</span><span class="badge ${c.risk==='High'?'red':c.risk==='Medium'?'amber':'green'}">${c.risk} risk</span></div></div>
+    <div style="padding-top:14px">${[['Customer ID',c.id],['Lifetime value',c.ltv],['Total tickets',c.tickets],['CSAT',c.csat+'%'],['Last interaction',c.last],['Sentiment',c.sentiment]].map(r=>`<div class="flex justify-between" style="padding:7px 0;font-size:12.5px"><span class="text-2">${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div>
+    <div class="dl-label" style="margin-top:8px">Preferences</div><div class="text-2" style="font-size:12.5px">Prefers ${tks[0]?tks[0].channel:'Email'} · ${c.segment==='Enterprise'?'Dedicated support line':'Standard support'}</div>
+  </div></div>`;
+  // right
+  h+=`<div>`;
+  h+=`<div class="card" style="margin-bottom:16px;border-color:#E4E2FF"><div class="card-head" style="background:var(--pri-tint)"><div class="flex items-center gap-8"><span style="color:var(--pri)">${svgIcon(IC.sparkle,15)}</span><h3>AI customer summary</h3></div></div><div class="card-body" style="font-size:13px;line-height:1.6">
+    ${c.name.split(' ')[0]} is ${/^[aeiou]/.test(c.segment)?'an':'a'} <b>${c.segment.toLowerCase()}</b> customer with ${c.tickets} lifetime contacts. ${c.risk==='High'?`Helix flags <b>elevated churn risk</b>: ${tks.filter(t=>t.status!=='Resolved').length} open issues and a declining sentiment trend over the last interactions.`:c.risk==='Medium'?`Sentiment has dipped recently — worth a proactive check-in.`:`Healthy relationship with consistent positive sentiment.`} ${tks.filter(t=>t.sentiment==='Negative').length>1?'Repeated complaints centre on refunds and delivery.':''}
+  </div></div>`;
+  // sentiment timeline (simple)
+  h+=`<div class="card" style="margin-bottom:16px"><div class="card-head"><h3 style="font-size:13px">Sentiment timeline</h3></div><div class="card-body">${lineChart({labels:['Jun','Jul','Aug','Sep','Oct','Nov'],h:150,series:[{data:c.risk==='High'?[82,78,70,62,55,48]:c.risk==='Medium'?[80,78,76,72,70,68]:[85,87,88,90,91,c.csat],color:c.risk==='High'?'#EF4444':c.risk==='Medium'?'#F59E0B':'#16A34A',area:true}]})}</div></div>`;
+  // ticket history
+  h+=`<div class="card"><div class="card-head"><h3 style="font-size:13px">Ticket history</h3><div class="sub">${tks.length} tickets</div></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Ticket</th><th>Subject</th><th>Category</th><th>Status</th></tr></thead><tbody>`;
+  tks.forEach(t=>{h+=`<tr class="clickable" onclick="openTicket('${t.id}')"><td class="cell-main" style="font-size:12.5px">${t.id}</td><td style="font-size:12.5px">${t.subject}</td><td><span class="badge gray">${t.category}</span></td><td>${statusBadge(t.status)}</td></tr>`;});
+  h+=`</tbody></table></div></div>`;
+  h+=`</div></div></div>`;
+  document.getElementById('content').innerHTML=h;
+  document.getElementById('content').scrollTop=0;
+};
+
+// ============================================================
+// ANALYTICS
+// ============================================================
+renders.analytics=function(){
+  document.getElementById('content').style.overflow='';
+  let h=`<div class="content-inner">`;
+  h+=`<div class="page-head"><div><div class="page-title">Analytics</div><div class="page-sub">Reporting across support, experience, channels and AI effectiveness.</div></div><div class="page-actions"><button class="ctrl">Last 30 days ${svgIcon('<path d="M6 9l6 6 6-6"/>',14)}</button><button class="btn btn-ghost btn-sm" onclick="toast('Report exported','green')">Export</button></div></div>`;
+  // AI narrative
+  h+=`<div class="briefing" style="margin-bottom:20px"><div class="briefing-head"><div class="brief-spark">${svgIcon(IC.sparkle,19)}</div><div><h2 style="font-size:14px">Helix narrative</h2><p>The most important changes this period</p></div></div><div style="padding:14px 18px;font-size:13.5px;line-height:1.6">First response time improved <b>12%</b> and AI resolution rose <b>5.4 pts</b> — efficiency is up. But <b>CSAT slipped 2.1 pts</b>, concentrated in Returns & Refunds where backlog grew. The single biggest lever this month is fixing refund processing latency, which drives both the CSAT dip and the complaint spike.</div></div>`;
+  // support performance
+  h+=`<div class="section-title">Support performance</div><div class="grid-2 mb-20">
+    <div class="card"><div class="card-head"><h3 style="font-size:13px">Ticket volume (incoming vs resolved)</h3></div><div class="card-body">${lineChart({labels:['W1','W2','W3','W4'],h:190,series:[{data:[3600,3850,4100,3936],color:'#635BFF',area:true},{data:[3500,3700,3980,4010],color:'#14B8A6'}]})}</div></div>
+    <div class="card"><div class="card-head"><h3 style="font-size:13px">SLA compliance trend</h3></div><div class="card-body">${lineChart({labels:['W1','W2','W3','W4'],h:190,series:[{data:[94,92,90,91],color:'#16A34A',area:true}]})}</div></div>
+  </div>`;
+  // operational distributions
+  h+=`<div class="section-title">Operational</div><div class="grid-3 mb-20">
+    <div class="card"><div class="card-head"><h3 style="font-size:13px">Peak hours</h3></div><div class="card-body">${lineChart({labels:['9','12','15','18','21'],h:160,series:[{data:[40,92,78,86,52],color:'#635BFF',area:true}]})}</div></div>
+    <div class="card"><div class="card-head"><h3 style="font-size:13px">By channel</h3></div><div class="card-body" style="display:flex;justify-content:center">${donut(DATA.distChannel.map(d=>({v:d.v,c:d.c})),130)}</div></div>
+    <div class="card"><div class="card-head"><h3 style="font-size:13px">Team capacity</h3></div><div class="card-body">${DATA.teams.map(t=>`<div class="dist-row"><div class="dist-label" style="width:120px">${t.name}</div><div class="dist-track"><div class="dist-fill" style="width:${Math.min(100,t.workload/3.5)}%;background:${t.workload>300?'var(--amber)':'var(--pri)'}"></div></div></div>`).join('')}</div></div>
+  </div>`;
+  // AI effectiveness
+  h+=`<div class="section-title">AI effectiveness</div><div class="kpi-grid" style="grid-template-columns:repeat(6,1fr)">`;
+  [['AI resolution rate','38.6%'],['AI-assisted responses','61%'],['Recommendation acceptance','74%'],['Containment rate','42%'],['Human escalation','23%'],['Time saved','1,240h']].forEach(k=>{h+=`<div class="kpi" style="cursor:default"><div class="kpi-label">${k[0]}</div><div class="kpi-val" style="font-size:22px;margin-top:6px;color:var(--pri)">${k[1]}</div></div>`;});
+  h+=`</div>`;
+  h+=`</div>`;
+  document.getElementById('content').innerHTML=h;
+};
+
+// ============================================================
+// AUTOMATIONS
+// ============================================================
+DATA.automations=[
+  {id:'AU1',name:'SLA Protection',status:true,trigger:'Ticket has <15 min to SLA breach',cond:'Priority is High or Critical',action:'Notify team lead + escalate priority',runs:214,success:98},
+  {id:'AU2',name:'Negative Sentiment Detection',status:true,trigger:'Sentiment turns highly negative',cond:'Customer contacted >2× in 24h',action:'Escalate to senior agent',runs:86,success:94},
+  {id:'AU3',name:'Emerging Issue Detection',status:true,trigger:'Sudden ticket spike in a category',cond:'—',action:'Generate AI insight + notify manager',runs:37,success:100},
+  {id:'AU4',name:'High-Value Customer Protection',status:false,trigger:'High-value customer submits a complaint',cond:'LTV in top decile',action:'Prioritise + assign senior agent',runs:52,success:96},
+];
+renders.automations=function(){
+  document.getElementById('content').style.overflow='';
+  let h=`<div class="content-inner">`;
+  h+=`<div class="page-head"><div><div class="page-title">Automations</div><div class="page-sub">Trigger → Condition → Action workflows that run your playbook automatically.</div></div><div class="page-actions"><button class="btn btn-pri btn-sm" onclick="toast('Workflow builder (demo)','indigo')">+ New automation</button></div></div>`;
+  DATA.automations.forEach(a=>{const on=sget('auto_'+a.id,a.status);
+    h+=`<div class="card" style="margin-bottom:14px"><div class="card-body">
+      <div class="flex items-center gap-12" style="margin-bottom:14px"><div style="width:34px;height:34px;border-radius:8px;background:var(--pri-tint);color:var(--pri);display:flex;align-items:center;justify-content:center">${svgIcon(IC.automations,17)}</div>
+        <div><div style="font-weight:700;font-size:14px">${a.name}</div><div class="text-3" style="font-size:12px">${fmt(a.runs)} runs · ${a.success}% success</div></div>
+        <div style="margin-left:auto" class="flex items-center gap-12"><span class="badge ${on?'green':'gray'}">${on?'Active':'Paused'}</span><div class="switch ${on?'on':''}" onclick="sset('auto_${a.id}',${!on});renders.automations();toast('${a.name} ${on?'paused':'activated'}','${on?'amber':'green'}')"></div></div></div>
+      <div style="display:flex;align-items:stretch;gap:10px;flex-wrap:wrap">
+        ${autoBlock('Trigger',a.trigger,'#635BFF')}
+        ${autoArrow()}
+        ${autoBlock('Condition',a.cond==='—'?'Always':a.cond,'#F59E0B')}
+        ${autoArrow()}
+        ${autoBlock('Action',a.action,'#14B8A6')}
+      </div></div></div>`;});
+  h+=`</div>`;
+  document.getElementById('content').innerHTML=h;
+};
+function autoBlock(label,text,color){return `<div style="flex:1;min-width:200px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;border-top:3px solid ${color}"><div class="dl-label" style="color:${color}">${label}</div><div style="font-size:13px;font-weight:500;margin-top:4px;line-height:1.4">${text}</div></div>`;}
+function autoArrow(){return `<div style="display:flex;align-items:center;color:var(--text-3)">${svgIcon('<path d="M5 12h14M13 6l6 6-6 6"/>',18)}</div>`;}
+
+// ============================================================
+// TEAM & AGENTS
+// ============================================================
+renders.team=function(){
+  document.getElementById('content').style.overflow='';
+  let h=`<div class="content-inner">`;
+  h+=`<div class="page-head"><div><div class="page-title">Team & Agents</div><div class="page-sub">${DATA.teams.length} teams · ${DATA.agents.length} agents</div></div><div class="page-actions"><button class="btn btn-ghost btn-sm" onclick="toast('Add agent (demo)','indigo')">+ Add agent</button></div></div>`;
+  // teams
+  h+=`<div class="section-title">Teams</div><div class="grid-2 mb-20">`;
+  DATA.teams.forEach(t=>{h+=`<div class="card"><div class="card-body"><div class="flex items-center justify-between" style="margin-bottom:12px"><div><div style="font-weight:700;font-size:14px">${t.name}</div><div class="text-3" style="font-size:12px">Lead: ${t.lead} · ${t.agents} agents</div></div><span class="badge ${t.sla>=92?'green':t.sla>=85?'amber':'red'}">${t.sla}% SLA</span></div>
+    <div style="display:flex;gap:16px"><div><div class="text-3" style="font-size:11px">Workload</div><div class="fw6">${t.workload}</div></div><div><div class="text-3" style="font-size:11px">Avg CSAT</div><div class="fw6">${t.csat}%</div></div></div>
+    <div class="dist-track" style="margin-top:10px"><div class="dist-fill" style="width:${Math.min(100,t.workload/3.5)}%;background:${t.workload>300?'var(--amber)':'var(--pri)'}"></div></div></div></div>`;});
+  h+=`</div>`;
+  // agents
+  h+=`<div class="section-title">Agents</div><div class="card"><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Agent</th><th>Team</th><th>Role</th><th>CSAT</th><th>Capacity</th><th>Status</th><th></th></tr></thead><tbody>`;
+  DATA.agents.forEach(a=>{h+=`<tr><td><div class="u-cell">${avatar(a.name)}<span class="cell-main" style="font-size:12.5px">${a.name}</span></div></td><td class="text-2">${teamName(a.team)}</td><td>${a.role}</td><td><b>${a.csat}%</b></td>
+    <td><div class="flex items-center gap-8"><div class="mini-bar" style="max-width:80px"><span style="width:${Math.round(a.assigned/80*100)}%;background:var(--pri)"></span></div><span style="font-size:11.5px" class="text-2">${a.assigned}/80</span></div></td>
+    <td><span class="badge green">Active</span></td><td style="text-align:right"><button class="ctrl" onclick="openAgent('${a.id}')">View</button></td></tr>`;});
+  h+=`</tbody></table></div></div></div>`;
+  document.getElementById('content').innerHTML=h;
+};
+
+// ---------- INIT ----------
+if(sget('rail_collapsed',true))document.querySelector('.shell').classList.add('rail-collapsed');
+renderNav();
+navigate('overview');
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PeopleOS — Acme Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F7FA; --surface:#FFFFFF; --surface2:#F0F3F7; --sage:#F0F3F7;
+  --green:#3657A7; --green-d:#2C488C; --pri-l:#E9EEFA; --olive:#6B7A99; --terra:#0F8B83; --teal-l:#E4F4F1; --butter:#FFF5E3;
+  --ink:#202938; --ink2:#687386; --mut:#929BAA; --line:#E5E9F0; --line2:#DDE2EC;
+  --ok:#23865B; --warn:#C48A27; --crit:#CE5555; --info:#5277C7;
+  --shadow:0 1px 2px rgba(32,41,56,.04),0 4px 14px rgba(32,41,56,.05);
+  --shadow-lg:0 10px 40px rgba(32,41,56,.14);
+  --r:12px; --r-sm:9px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+.serif{font-family:'Inter',system-ui,sans-serif;font-weight:700;letter-spacing:-.02em}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#d7d6ca;border-radius:8px;border:3px solid var(--bg)}
+.lbl{font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--mut)}
+.mut{color:var(--ink2)}
+
+/* ---- top utility bar ---- */
+.util{height:46px;background:var(--green);color:#EAF0E9;display:flex;align-items:center;gap:16px;padding:0 20px;position:sticky;top:0;z-index:60}
+.util .org{display:flex;align-items:center;gap:9px;font-weight:700;font-size:13px;cursor:pointer;padding:5px 9px;border-radius:8px}
+.util .org:hover{background:rgba(255,255,255,.08)}
+.util .orgmark{width:22px;height:22px;border-radius:6px;background:#fff;color:var(--green);display:grid;place-items:center;font-weight:800;font-size:12px}
+.util .usearch{flex:1;max-width:460px;margin:0 auto;display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:7px 12px;color:#D7E2D6;font-size:12.5px;cursor:text}
+.util .usearch:hover{background:rgba(255,255,255,.17)}
+.util .usearch kbd{margin-left:auto;background:rgba(255,255,255,.16);border-radius:5px;padding:1px 6px;font-size:10.5px;font-family:inherit}
+.util .uic{width:33px;height:33px;border-radius:8px;display:grid;place-items:center;color:#D7E2D6;position:relative}
+.util .uic:hover{background:rgba(255,255,255,.1);color:#fff}
+.util .dot{position:absolute;top:6px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--terra);border:2px solid var(--green)}
+.util .me{display:flex;align-items:center;gap:9px;padding:4px 7px 4px 4px;border-radius:9px;cursor:pointer}
+.util .me:hover{background:rgba(255,255,255,.1)}
+.util .ava{width:28px;height:28px;border-radius:50%;background:var(--terra);color:#fff;display:grid;place-items:center;font-weight:700;font-size:12px}
+
+/* ---- primary horizontal nav ---- */
+.nav{height:50px;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:stretch;padding:0 14px;position:sticky;top:46px;z-index:55;gap:2px}
+.navgrp{position:relative;display:flex;align-items:center}
+.navgrp>button{display:flex;align-items:center;gap:7px;padding:0 14px;height:100%;font-weight:600;font-size:13.5px;color:var(--ink2);border-bottom:2.5px solid transparent}
+.navgrp>button:hover{color:var(--ink)}
+.navgrp.on>button{color:var(--green);border-bottom-color:var(--green)}
+.navgrp>button .chev{transition:transform .15s;opacity:.5}
+.navgrp:hover .chev{transform:rotate(180deg)}
+.submenu{position:absolute;top:48px;left:6px;min-width:230px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lg);padding:7px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:.15s;z-index:80}
+.navgrp:hover .submenu{opacity:1;visibility:visible;transform:translateY(0)}
+.submenu a{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:8px;font-weight:500;font-size:13.5px;color:var(--ink)}
+.submenu a:hover{background:var(--sage)}
+.submenu a.on{background:var(--green);color:#fff}
+.submenu a .si{width:18px;display:grid;place-items:center;opacity:.65}
+.submenu a.on .si{opacity:1}
+
+/* ---- layout ---- */
+.wrap{max-width:1340px;margin:0 auto;padding:30px 30px 80px}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:26px;flex-wrap:wrap}
+.page-head .eyebrow{margin-bottom:9px}
+.page-head h1{font-size:30px;line-height:1.14;letter-spacing:-.022em;max-width:640px;font-weight:700}
+.page-head p.sub{color:var(--ink2);font-size:14.5px;margin-top:10px;max-width:540px}
+.head-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:9px;font-weight:600;font-size:13px;background:var(--surface);border:1px solid var(--line2);color:var(--ink);transition:.12s;white-space:nowrap}
+.btn:hover{border-color:var(--olive);background:#fff}
+.btn.pri{background:var(--green);color:#fff;border-color:var(--green)}
+.btn.pri:hover{background:var(--green-d)}
+.btn.terra{background:var(--terra);color:#fff;border-color:var(--terra)}
+.btn.terra:hover{filter:brightness(.94)}
+.btn.sm{padding:6px 11px;font-size:12px}
+.btn.gho{background:transparent;border-color:transparent}
+.btn.gho:hover{background:var(--sage);border-color:transparent}
+.chip-f{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--line2);font-weight:600;font-size:12.5px;color:var(--ink2)}
+.chip-f:hover{border-color:var(--olive);color:var(--ink)}
+.chip-f.active{border-color:var(--green);color:var(--green);background:var(--pri-l)}
+/* filter popover */
+.fwrap{position:relative}
+.fmenu{position:absolute;top:calc(100% + 6px);left:0;min-width:210px;background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-lg);padding:6px;z-index:70;display:none}
+.fmenu.on{display:block}
+.fmenu .fmhead{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);padding:7px 10px 4px}
+.fmenu button{display:flex;width:100%;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;font-size:13px;font-weight:500;text-align:left;color:var(--ink)}
+.fmenu button:hover{background:var(--sage)}
+.fmenu button.sel{color:var(--green);font-weight:600;background:var(--pri-l)}
+.fmenu button.sel::after{content:'✓';margin-left:auto;font-size:12px}
+/* stat clusters */
+.cluster .stat-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.cluster .stat-row:last-child{border-bottom:none;padding-bottom:2px}
+.cluster .stat-row:first-of-type{padding-top:6px}
+.cluster .stat-k{font-size:13px;color:var(--ink2);font-weight:500}
+.cluster .stat-rt{display:flex;align-items:baseline;gap:10px}
+.cluster .stat-v{font-size:25px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.cluster .delta{font-size:11.5px;font-weight:600;display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.cluster .delta.up{color:var(--ok)}.cluster .delta.down{color:var(--crit)}.cluster .delta.flat{color:var(--mut)}
+
+/* cards & surfaces */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:20px}
+.sec-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec-label h3{font-size:15px;font-weight:700}
+.grid{display:grid;gap:18px}
+
+/* pills / tags */
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.01em}
+.pill.green{background:var(--pri-l);color:var(--green)}
+.pill.sage{background:#EEF2F8;color:#5a6a86}
+.pill.terra{background:var(--teal-l);color:#0C7169}
+.pill.butter{background:#FFF5E3;color:var(--warn)}
+.pill.ok{background:#E7F5ED;color:var(--ok)}
+.pill.warn{background:#FFF5E3;color:var(--warn)}
+.pill.crit{background:#FCECEC;color:var(--crit)}
+.pill.ink{background:#EDEFF3;color:var(--ink2)}
+.dotpill{width:7px;height:7px;border-radius:50%;display:inline-block}
+
+/* avatars */
+.av{border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;flex:none;background:var(--olive)}
+.av.sm{width:30px;height:30px;font-size:11.5px}
+.av.md{width:40px;height:40px;font-size:14px}
+.av.lg{width:72px;height:72px;font-size:24px}
+.av.c0{background:#4C6FC2}.av.c1{background:var(--terra)}.av.c2{background:#5277C7}.av.c3{background:#6B7A99}.av.c4{background:#3657A7}.av.c5{background:#2C488C}
+
+/* tables */
+table.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr{cursor:pointer}
+.tbl tbody tr:hover{background:#FBFAF4}
+.tbl th.num,.tbl td.num{text-align:right}
+
+/* bars & meters */
+.meter{height:7px;border-radius:999px;background:var(--line);overflow:hidden}
+.meter>span{display:block;height:100%;border-radius:999px;background:var(--green)}
+.meter.terra>span{background:var(--terra)}
+.meter.warn>span{background:var(--warn)}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(37,42,38,.38);opacity:0;visibility:hidden;transition:.2s;z-index:90}
+.scrim.on{opacity:1;visibility:visible}
+.drawer{position:fixed;top:0;right:0;height:100%;width:540px;max-width:94vw;background:var(--bg);box-shadow:var(--shadow-lg);transform:translateX(100%);transition:transform .24s cubic-bezier(.4,0,.2,1);z-index:95;display:flex;flex-direction:column}
+.drawer.on{transform:translateX(0)}
+.drawer .dhead{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:14px;background:var(--surface)}
+.drawer .dbody{flex:1;overflow:auto;padding:22px}
+.drawer .dfoot{padding:14px 22px;border-top:1px solid var(--line);background:var(--surface);display:flex;gap:9px;flex-wrap:wrap}
+.xbtn{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--ink2)}
+.xbtn:hover{background:var(--sage);color:var(--ink)}
+
+/* modal */
+.modal-scrim{position:fixed;inset:0;background:rgba(37,42,38,.42);display:none;align-items:center;justify-content:center;z-index:100;padding:24px}
+.modal-scrim.on{display:flex}
+.modal{background:var(--bg);border-radius:18px;box-shadow:var(--shadow-lg);width:520px;max-width:96vw;max-height:90vh;overflow:auto}
+.modal .mhead{padding:20px 24px 0}
+.modal .mbody{padding:16px 24px}
+.modal .mfoot{padding:14px 24px 22px;display:flex;gap:10px;justify-content:flex-end}
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:600;font-size:12.5px;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid var(--line2);border-radius:9px;background:var(--surface)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--green)}
+.field.err input,.field.err select{border-color:var(--crit)}
+.field .emsg{color:var(--crit);font-size:11.5px;margin-top:5px;display:none}
+.field.err .emsg{display:block}
+
+/* toast */
+.toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:120;display:flex;flex-direction:column;gap:9px;align-items:center}
+.toast{background:var(--green);color:#fff;padding:11px 18px;border-radius:11px;box-shadow:var(--shadow-lg);font-weight:600;font-size:13px;display:flex;align-items:center;gap:10px;animation:tin .2s}
+.toast.terra{background:var(--terra)}.toast.warn{background:var(--warn)}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}}
+
+/* command palette */
+.cmd-scrim{position:fixed;inset:0;background:rgba(37,42,38,.4);display:none;align-items:flex-start;justify-content:center;z-index:110;padding-top:11vh}
+.cmd-scrim.on{display:flex}
+.cmd{width:640px;max-width:94vw;background:var(--surface);border-radius:16px;box-shadow:var(--shadow-lg);overflow:hidden}
+.cmd .cin{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.cmd .cin input{flex:1;border:none;font-size:17px;background:none}
+.cmd .cin input:focus{outline:none}
+.cmd .cres{max-height:52vh;overflow:auto;padding:8px}
+.cmd .cgrp{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);padding:10px 12px 5px}
+.cmd .cres a{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:9px}
+.cmd .cres a.sel,.cmd .cres a:hover{background:var(--sage)}
+.cmd .cres .ci{width:30px;height:30px;border-radius:7px;background:var(--sage);display:grid;place-items:center;color:var(--green)}
+.cmd .cmeta{margin-left:auto;font-size:11.5px;color:var(--ink2)}
+.cmd .cfoot{padding:9px 16px;border-top:1px solid var(--line);font-size:11px;color:var(--ink2);display:flex;gap:16px}
+
+/* misc */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:20px;overflow-x:auto}
+.tabs button{padding:10px 15px;font-weight:600;font-size:13.5px;color:var(--ink2);border-bottom:2.5px solid transparent;white-space:nowrap}
+.tabs button.on{color:var(--green);border-bottom-color:var(--green)}
+.tabs button:hover{color:var(--ink)}
+.spark{display:flex;align-items:flex-end;gap:3px;height:34px}
+.spark span{flex:1;background:var(--olive);border-radius:2px;opacity:.55;min-height:3px}
+.empty{text-align:center;padding:50px 20px;color:var(--ink2)}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--ink2);font-size:12.5px}
+.kv .v{font-weight:600;font-size:13px;text-align:right}
+.ai-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:7px;background:var(--pri-l);color:var(--green);font-size:10.5px;font-weight:600;letter-spacing:.02em}
+.ai-spark{width:13px;height:13px}
+.hl{background:var(--pri-l);border-radius:3px;padding:0 3px}
+.load-dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--olive);margin:0 2px;animation:ld 1s infinite}
+.load-dots span:nth-child(2){animation-delay:.15s}.load-dots span:nth-child(3){animation-delay:.3s}
+@keyframes ld{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+@media(max-width:860px){
+  .nav{overflow-x:auto}.wrap{padding:22px 16px 70px}.page-head h1{font-size:26px}
+  .util .usearch{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="scrim" id="scrim" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer"></aside>
+<div class="modal-scrim" id="modalScrim"><div class="modal" id="modal"></div></div>
+<div class="cmd-scrim" id="cmdScrim"><div class="cmd" id="cmdBox"></div></div>
+<div class="toasts" id="toasts"></div>
+<script>
+
+/* ========================================================================
+   PeopleOS — shared mock database + state layer
+   All modules read/write this single model. Persisted to localStorage.
+   ======================================================================== */
+'use strict';
+
+const LS_KEY = 'peopleos_state_v1';
+
+/* ---- static reference data ---------------------------------------------- */
+const DEPARTMENTS = [
+  { id:'eng', name:'Engineering', head:'Priya Nair', hc:38 },
+  { id:'prod', name:'Product', head:'Daniel Cho', hc:14 },
+  { id:'design', name:'Design', head:'Lena Fischer', hc:9 },
+  { id:'cs', name:'Customer Success', head:'Marcus Hale', hc:17 },
+  { id:'sales', name:'Sales', head:'Sofia Marín', hc:16 },
+  { id:'mktg', name:'Marketing', head:'Aisha Khan', hc:11 },
+  { id:'data', name:'Data & Analytics', head:'Ravi Iyer', hc:8 },
+  { id:'ops', name:'People & Ops', head:'Elena Rossi', hc:7 },
+];
+const LOCATIONS = ['Bengaluru','London','Berlin','Singapore','Austin'];
+const STATUSES = ['Active','On leave','Notice period','Probation'];
+
+const SKILLS = [
+  // technical
+  {id:'cloudarch',name:'Cloud Architecture',cat:'Technical',crit:'Critical',demand:42},
+  {id:'k8s',name:'Kubernetes',cat:'Technical',crit:'Critical',demand:30},
+  {id:'golang',name:'Go',cat:'Technical',crit:'High',demand:22},
+  {id:'react',name:'React',cat:'Technical',crit:'High',demand:34},
+  {id:'python',name:'Python',cat:'Technical',crit:'High',demand:40},
+  {id:'ml',name:'Machine Learning',cat:'Technical',crit:'Critical',demand:18},
+  {id:'dataeng',name:'Data Engineering',cat:'Technical',crit:'High',demand:20},
+  {id:'security',name:'Application Security',cat:'Technical',crit:'Critical',demand:14},
+  {id:'sql',name:'SQL',cat:'Technical',crit:'Medium',demand:46},
+  {id:'devops',name:'DevOps',cat:'Technical',crit:'High',demand:24},
+  // business
+  {id:'prodstrat',name:'Product Strategy',cat:'Business',crit:'Critical',demand:16},
+  {id:'roadmap',name:'Roadmap Ownership',cat:'Business',crit:'High',demand:18},
+  {id:'prodanalytics',name:'Product Analytics',cat:'Business',crit:'High',demand:26},
+  {id:'gtm',name:'Go-to-Market',cat:'Business',crit:'High',demand:14},
+  {id:'finmodel',name:'Financial Modelling',cat:'Business',crit:'Medium',demand:10},
+  {id:'negotiation',name:'Negotiation',cat:'Business',crit:'Medium',demand:12},
+  // leadership
+  {id:'peoplelead',name:'People Leadership',cat:'Leadership',crit:'Critical',demand:22},
+  {id:'stakeholder',name:'Stakeholder Management',cat:'Leadership',crit:'High',demand:30},
+  {id:'coaching',name:'Coaching & Mentoring',cat:'Leadership',crit:'High',demand:20},
+  {id:'orgdesign',name:'Org Design',cat:'Leadership',crit:'Medium',demand:8},
+  // functional
+  {id:'uxresearch',name:'UX Research',cat:'Functional',crit:'High',demand:12},
+  {id:'uidesign',name:'UI Design',cat:'Functional',crit:'High',demand:14},
+  {id:'contentdes',name:'Content Design',cat:'Functional',crit:'Medium',demand:8},
+  {id:'csmgmt',name:'Customer Success Mgmt',cat:'Functional',crit:'High',demand:20},
+  {id:'salesops',name:'Sales Operations',cat:'Functional',crit:'Medium',demand:10},
+  {id:'demandgen',name:'Demand Generation',cat:'Functional',crit:'Medium',demand:9},
+  // emerging
+  {id:'genai',name:'Generative AI',cat:'Emerging',crit:'Critical',demand:28},
+  {id:'prompteng',name:'Prompt Engineering',cat:'Emerging',crit:'High',demand:16},
+  {id:'dataviz',name:'Data Visualisation',cat:'Emerging',crit:'Medium',demand:12},
+  {id:'platformeng',name:'Platform Engineering',cat:'Emerging',crit:'High',demand:15},
+];
+const SKILL_BY_ID = Object.fromEntries(SKILLS.map(s=>[s.id,s]));
+const PROF = ['Beginner','Intermediate','Advanced','Expert'];
+
+/* department → skill affinity, used when seeding employee skills */
+const DEPT_SKILLS = {
+  eng:['cloudarch','k8s','golang','react','python','devops','security','platformeng','sql','genai'],
+  prod:['prodstrat','roadmap','prodanalytics','stakeholder','gtm','genai'],
+  design:['uidesign','uxresearch','contentdes','prodanalytics'],
+  cs:['csmgmt','stakeholder','negotiation','coaching'],
+  sales:['gtm','negotiation','salesops','stakeholder','demandgen'],
+  mktg:['demandgen','gtm','contentdes','dataviz','genai'],
+  data:['python','sql','dataeng','ml','dataviz','prompteng'],
+  ops:['peoplelead','orgdesign','stakeholder','coaching','finmodel'],
+};
+
+/* ---- deterministic PRNG so the dataset is stable across reloads --------- */
+let _seed = 20260411;
+function rnd(){ _seed = (_seed*1664525+1013904223)%4294967296; return _seed/4294967296; }
+function pick(a){ return a[Math.floor(rnd()*a.length)]; }
+function pickN(a,n){ const c=[...a],o=[]; while(o.length<n&&c.length) o.push(c.splice(Math.floor(rnd()*c.length),1)[0]); return o; }
+function ri(lo,hi){ return lo+Math.floor(rnd()*(hi-lo+1)); }
+
+const FIRST = ['Aarav','Diya','Kabir','Ananya','Vihaan','Isha','Rohan','Meera','Arjun','Saanvi','Dev','Riya','Advait','Nisha','Kiran','Tara','Neil','Aditi','Yash','Pooja',
+ 'Liam','Emma','Noah','Olivia','Lucas','Mia','Elias','Clara','Jonas','Lena','Mateo','Sofia','Hugo','Alba','Leon','Greta','Finn','Maja','Theo','Nora',
+ 'Wei','Mei','Jun','Hana','Ken','Yuki','Min','Sang','Chen','Li','Marcus','Grace','Daniel','Hannah','Samuel','Ruth','Caleb','Naomi','Ethan','Zoe'];
+const LAST = ['Menon','Nair','Iyer','Rao','Kapoor','Sharma','Reddy','Bose','Das','Gupta','Malhotra','Chandra','Pillai','Sethi','Verma',
+ 'Fischer','Müller','Schmidt','Weber','Becker','Hoffmann','Rossi','Marín','Lopez','Garcia','Costa','Silva','Moreau','Dubois','Laurent',
+ 'Tan','Lim','Wong','Chen','Ng','Park','Kim','Hale','Brooks','Hayes','Reed','Cole','Shaw','Frost','Ward','Khan','Ali','Osei','Mensah','Okafor'];
+const DESIG = {
+  eng:['Software Engineer','Senior Software Engineer','Staff Engineer','Engineering Manager','Platform Engineer','SRE'],
+  prod:['Product Analyst','Associate PM','Product Manager','Senior Product Manager','Group PM'],
+  design:['Product Designer','Senior Designer','UX Researcher','Design Lead'],
+  cs:['CS Associate','Customer Success Manager','Senior CSM','CS Team Lead'],
+  sales:['SDR','Account Executive','Senior AE','Sales Manager'],
+  mktg:['Marketing Associate','Content Strategist','Growth Marketer','Marketing Manager'],
+  data:['Data Analyst','Senior Data Analyst','Data Engineer','ML Engineer'],
+  ops:['People Ops Associate','HR Business Partner','Talent Manager','People Ops Lead'],
+};
+const ASPIRE = ['Product Management','Engineering Leadership','Data Science','Design Leadership','People Leadership','Platform Engineering','Growth','Solutions Architecture','—'];
+
+function daysAgo(d){ const t=new Date('2026-11-12'); t.setDate(t.getDate()-d); return t.toISOString().slice(0,10); }
+function monthsAgo(m){ const t=new Date('2026-11-12'); t.setMonth(t.getMonth()-m); return t.toISOString().slice(0,10); }
+
+/* ---- build 120 employees ------------------------------------------------ */
+function buildEmployees(){
+  const emps=[]; let n=1;
+  // department heads first (hero managers)
+  const heads={};
+  DEPARTMENTS.forEach(d=>{
+    const [fn,...ln]=d.head.split(' ');
+    const id='E'+String(n).padStart(4,'0');
+    heads[d.id]=id;
+    emps.push(makeEmp(id, fn, ln.join(' '), d.id, DESIG[d.id][DESIG[d.id].length-1], null, 'Active', ri(40,84)));
+    n++;
+  });
+  // fill the rest
+  for(; n<=120; n++){
+    const d=pick(DEPARTMENTS);
+    const id='E'+String(n).padStart(4,'0');
+    const desig=pick(DESIG[d.id].slice(0,-1));
+    emps.push(makeEmp(id, pick(FIRST), pick(LAST), d.id, desig, heads[d.id], pick(STATUSES), ri(1,60)));
+  }
+  // make sure hero candidate Aarav Menon exists & is strong
+  const aarav=emps.find(e=>e.id==='E0011') || emps[10];
+  aarav.first='Aarav'; aarav.last='Menon'; aarav.dept='prod'; aarav.desig='Product Analyst';
+  aarav.loc='Bengaluru'; aarav.aspire='Product Management'; aarav.status='Active';
+  aarav.mgr=heads['prod']; aarav.tenure=38;
+  aarav.skills=[['prodanalytics',3,true],['stakeholder',3,true],['prodstrat',2,false],['roadmap',2,false],['sql',3,true],['dataviz',3,true],['gtm',2,false]];
+  aarav.name=aarav.first+' '+aarav.last;
+  return emps;
+}
+function makeEmp(id, first, last, dept, desig, mgr, status, tenure){
+  const deptSkills=DEPT_SKILLS[dept];
+  const ns=ri(3,6);
+  const chosen=pickN(deptSkills, Math.min(ns,deptSkills.length));
+  const skills=chosen.map(sid=>[sid, ri(1,4), rnd()>0.35]);
+  const loc=pick(LOCATIONS);
+  const aspire=rnd()>0.42 ? pick(ASPIRE.slice(0,-1)) : '—';
+  const perf=pick(['Exceeds','Meets','Meets','Meets','Developing','Outstanding']);
+  return {
+    id, first, last, name:first+' '+last, dept, desig, mgr, loc, status,
+    tenure, join: monthsAgo(tenure), email:(first+'.'+last).toLowerCase().replace(/[^a-z.]/g,'')+'@acmetech.com',
+    skills, aspire, perf,
+    engagement: ri(48,96),
+    exploring: aspire!=='—' && rnd()>0.55,
+  };
+}
+
+/* ---- opportunities (internal roles) ------------------------------------ */
+const OPPORTUNITIES=[
+  {id:'R-301',title:'Senior Product Manager',team:'Consumer Platform',dept:'prod',loc:'Bengaluru',mgr:'Daniel Cho',pri:'High',status:'Open',deadline:daysAgo(-18),
+   req:[['prodstrat',3],['roadmap',3],['prodanalytics',3],['stakeholder',3],['gtm',2]], exp:'5+ years in product, platform experience preferred'},
+  {id:'R-302',title:'Engineering Manager',team:'Infrastructure',dept:'eng',loc:'Berlin',mgr:'Priya Nair',pri:'Critical',status:'Open',deadline:daysAgo(-11),
+   req:[['peoplelead',3],['cloudarch',3],['k8s',3],['stakeholder',3]], exp:'Experience leading infra teams of 6+'},
+  {id:'R-303',title:'Senior Data Analyst',team:'Growth',dept:'data',loc:'London',mgr:'Ravi Iyer',pri:'High',status:'Open',deadline:daysAgo(-25),
+   req:[['sql',3],['python',3],['dataviz',3],['prodanalytics',2]], exp:'3+ years analytics, growth domain a plus'},
+  {id:'R-304',title:'Customer Success Lead',team:'Enterprise',dept:'cs',loc:'Austin',mgr:'Marcus Hale',pri:'Medium',status:'Open',deadline:daysAgo(-32),
+   req:[['csmgmt',3],['stakeholder',3],['negotiation',3],['coaching',2]], exp:'Enterprise CS, 4+ years'},
+  {id:'R-305',title:'Product Marketing Manager',team:'B2B',dept:'mktg',loc:'Singapore',mgr:'Aisha Khan',pri:'Medium',status:'Open',deadline:daysAgo(-14),
+   req:[['gtm',3],['demandgen',3],['contentdes',2],['stakeholder',2]], exp:'B2B PMM, 4+ years'},
+];
+
+/* ---- goals / OKRs (interconnected org → dept → individual) -------------- */
+const GOALS=[
+  {id:'G-1',level:'Organisation',title:'Improve enterprise customer retention',owner:'Elena Rossi',prog:62,status:'On track',due:'2026-12-31',parent:null,
+   krs:['Lift net revenue retention to 118%','Reduce enterprise churn below 6%']},
+  {id:'G-2',level:'Department',title:'Reduce customer onboarding friction',owner:'Marcus Hale',dept:'cs',prog:48,status:'At risk',due:'2026-12-15',parent:'G-1',
+   krs:['Cut time-to-value from 34 to 21 days','Raise CSAT at 30 days to 4.5']},
+  {id:'G-3',level:'Individual',title:'Improve onboarding completion rate from 72% to 85%',owner:'Aarav Menon',dept:'prod',prog:70,status:'On track',due:'2026-12-20',parent:'G-2',
+   krs:['Ship guided setup checklist','Instrument drop-off funnel']},
+  {id:'G-4',level:'Organisation',title:'Build the AI-native product platform',owner:'Daniel Cho',prog:55,status:'On track',due:'2027-03-31',parent:null,
+   krs:['Launch 3 AI-assisted workflows','Reach 40% AI feature adoption']},
+  {id:'G-5',level:'Department',title:'Close critical cloud-infrastructure skill gaps',owner:'Priya Nair',dept:'eng',prog:35,status:'At risk',due:'2027-02-28',parent:'G-4',
+   krs:['Certify 10 engineers in cloud architecture','Fill 3 senior infra roles']},
+  {id:'G-6',level:'Individual',title:'Lead migration to platform engineering model',owner:'—',dept:'eng',prog:40,status:'On track',due:'2027-01-31',parent:'G-5',
+   krs:['Stand up internal developer platform','Onboard 4 teams']},
+];
+
+/* ---- leave requests ---------------------------------------------------- */
+const LEAVE_TYPES=['Annual','Sick','Parental','Unpaid','Comp off'];
+function buildLeave(emps){
+  const out=[]; for(let i=0;i<30;i++){
+    const e=pick(emps); const t=pick(LEAVE_TYPES); const s=ri(-10,30);
+    out.push({id:'LV-'+(2100+i), emp:e.id, type:t, from:daysAgo(s), to:daysAgo(s-ri(1,6)),
+      days:ri(1,6), status:pick(['Pending','Pending','Approved','Approved','Rejected']), reason:pick(['Family time','Vacation','Medical','Personal','Relocation'])});
+  } return out;
+}
+/* ---- HR requests ------------------------------------------------------- */
+const HR_CATS=['Payroll','Benefits','Employment documents','Policy clarification','Relocation','General HR support'];
+function buildHR(emps){
+  const out=[]; for(let i=0;i<35;i++){
+    const e=pick(emps);
+    out.push({id:'HR-'+(5200+i), emp:e.id, cat:pick(HR_CATS), pri:pick(['Low','Medium','Medium','High']),
+      status:pick(['Open','Open','In progress','Resolved','Resolved']), owner:pick(['Elena Rossi','People Ops','Talent Team']),
+      created:daysAgo(ri(0,40)), sla:pick(['Within SLA','Within SLA','Breaching','Met']),
+      summary:pick(['Request for revised payslip','Question on parental leave policy','Relocation support to Berlin','Employment verification letter','Benefits enrolment change','Clarification on comp-off accrual'])});
+  } return out;
+}
+/* ---- onboarding -------------------------------------------------------- */
+const ONB_STAGES=['Offer accepted','Documents pending','Background verification','IT provisioning','Manager introduction','Orientation','Completed'];
+function buildOnboarding(emps){
+  const out=[]; const recent=emps.slice(60,75);
+  recent.forEach((e,i)=>{
+    const stage=ri(0,6);
+    out.push({id:'ONB-'+(700+i), emp:e.id, stage:ONB_STAGES[stage], stageIdx:stage,
+      owner:pick(['Elena Rossi','IT Team','Hiring Manager']), start:daysAgo(ri(2,40)),
+      blocker: stage>0 && stage<6 && rnd()>0.6 ? pick(['Awaiting signed NDA','ID verification delayed','Laptop shipment pending']) : null});
+  }); return out;
+}
+/* ---- succession plans -------------------------------------------------- */
+function buildSuccession(emps){
+  const critical=[
+    {role:'VP Engineering',holder:'Priya Nair',crit:'Critical',dept:'eng'},
+    {role:'Head of Product',holder:'Daniel Cho',crit:'Critical',dept:'prod'},
+    {role:'Director, Customer Success',holder:'Marcus Hale',crit:'High',dept:'cs'},
+    {role:'Head of Data',holder:'Ravi Iyer',crit:'High',dept:'data'},
+    {role:'Design Director',holder:'Lena Fischer',crit:'Medium',dept:'design'},
+    {role:'Head of Sales',holder:'Sofia Marín',crit:'Critical',dept:'sales'},
+    {role:'Head of Marketing',holder:'Aisha Khan',crit:'Medium',dept:'mktg'},
+    {role:'CHRO',holder:'Elena Rossi',crit:'Critical',dept:'ops'},
+    {role:'Principal Architect',holder:'—',crit:'High',dept:'eng'},
+    {role:'Platform Lead',holder:'—',crit:'High',dept:'eng'},
+    {role:'Enterprise CS Lead',holder:'—',crit:'Medium',dept:'cs'},
+    {role:'Growth Lead',holder:'—',crit:'Medium',dept:'mktg'},
+  ];
+  const readiness=['Ready now','Ready in 1–2 years','Ready in 3+ years','No identified successor'];
+  return critical.map((c,i)=>{
+    const pool=emps.filter(e=>e.dept===c.dept && e.desig!==DESIG[c.dept].slice(-1)[0]);
+    const succ = (c.holder==='—'||rnd()>0.75) && i%4===3 ? [] : pickN(pool,ri(1,3)).map(e=>({id:e.id,name:e.name,ready:pick(readiness.slice(0,3))}));
+    return {id:'SP-'+(900+i), ...c, successors:succ, readiness: succ.length?succ[0].ready:'No identified successor',
+      dev: succ.length?pick(['Executive coaching','Stretch assignment','Cross-functional rotation','Leadership programme']):'Identify candidates'};
+  });
+}
+/* ---- learning programmes ---------------------------------------------- */
+const LEARNING=[
+  {id:'L-1',name:'Cloud Architecture Mastery',cat:'Technical',skill:'cloudarch',dur:'8 weeks',enrolled:24},
+  {id:'L-2',name:'Product Strategy Path',cat:'Business',skill:'prodstrat',dur:'6 weeks',enrolled:18},
+  {id:'L-3',name:'Leading Teams',cat:'Leadership',skill:'peoplelead',dur:'5 weeks',enrolled:21},
+  {id:'L-4',name:'Generative AI for Builders',cat:'Emerging',skill:'genai',dur:'4 weeks',enrolled:40},
+  {id:'L-5',name:'Advanced SQL & Analytics',cat:'Technical',skill:'sql',dur:'3 weeks',enrolled:30},
+  {id:'L-6',name:'Stakeholder Influence',cat:'Leadership',skill:'stakeholder',dur:'4 weeks',enrolled:16},
+];
+/* ---- AI insights (People Briefing + investigations) -------------------- */
+const INSIGHTS=[
+  {id:'AI-1',title:'Cloud infrastructure skills shortage in Engineering',sev:'Critical',module:'skills',
+   expl:'Engineering has a 14% shortage in cloud infrastructure skills versus planned workforce requirements for the next two quarters.',
+   data:['Required verified coverage: 42 employees','Current verified coverage: 29 employees','Gap: 13 employees'],
+   rec:'Launch a targeted cloud-architecture development programme and review external hiring for 3 senior roles.',conf:'High',fresh:'Updated 2 hours ago'},
+  {id:'AI-2',title:'Internal candidates could fill 4 of 12 open senior roles',sev:'Opportunity',module:'marketplace',
+   expl:'Four open senior Product and Engineering roles have potentially suitable internal candidates who have expressed mobility interest.',
+   data:['18 employees have relevant skills','7 have expressed interest in these tracks','4 meet initial role-specific criteria'],
+   rec:'Review candidate profiles, validate skill evidence and invite interested employees to explore.',conf:'Medium',fresh:'Updated today'},
+  {id:'AI-3',title:'Customer Success voluntary attrition rising',sev:'Warning',module:'insights',
+   expl:'Customer Success shows an increase in voluntary attrition over the last 60 days versus its historical baseline.',
+   data:['60-day voluntary exits: 4 (baseline ~1.5)','Median tenure of leavers: 1.4 years','Engagement dropped 6 points QoQ'],
+   rec:'Investigate workload and team conditions; offer targeted retention support. This is a signal, not a prediction of individual decisions.',conf:'Medium',fresh:'Updated yesterday'},
+  {id:'AI-4',title:'23 employees have unmapped career aspirations',sev:'Warning',module:'career',
+   expl:'23 employees have expressed interest in career paths that currently have no mapped development plan.',
+   data:['Product Management interest: 9','Engineering Leadership: 6','Data Science: 5','Other: 3'],
+   rec:'Create development plans and connect employees with mentors and internal opportunities.',conf:'High',fresh:'Updated today'},
+];
+
+/* ---- team & permissions ------------------------------------------------ */
+const ROLES_RBAC=['Super Admin','HR Admin','HR Business Partner','Talent Manager','Department Manager','Employee'];
+const TEAM=[
+  {id:'T-1',name:'John Doe',role:'HR Admin',dept:'People & Ops',email:'john.doe@acmetech.com',last:'Active now'},
+  {id:'T-2',name:'Elena Rossi',role:'Super Admin',dept:'People & Ops',email:'elena.rossi@acmetech.com',last:'2h ago'},
+  {id:'T-3',name:'Daniel Cho',role:'Department Manager',dept:'Product',email:'daniel.cho@acmetech.com',last:'1d ago'},
+  {id:'T-4',name:'Priya Nair',role:'Department Manager',dept:'Engineering',email:'priya.nair@acmetech.com',last:'3h ago'},
+  {id:'T-5',name:'Marcus Hale',role:'HR Business Partner',dept:'Customer Success',email:'marcus.hale@acmetech.com',last:'5h ago'},
+  {id:'T-6',name:'Sofia Marín',role:'Talent Manager',dept:'Sales',email:'sofia.marin@acmetech.com',last:'1d ago'},
+  {id:'T-7',name:'Ravi Iyer',role:'Department Manager',dept:'Data & Analytics',email:'ravi.iyer@acmetech.com',last:'2d ago'},
+  {id:'T-8',name:'Aisha Khan',role:'Talent Manager',dept:'Marketing',email:'aisha.khan@acmetech.com',last:'4h ago'},
+];
+const INTEGRATIONS=[
+  {name:'Workday HRIS',cat:'HRIS',status:'Connected',sync:'12 min ago'},
+  {name:'ADP Payroll',cat:'Payroll',status:'Connected',sync:'1 hr ago'},
+  {name:'Greenhouse ATS',cat:'ATS',status:'Connected',sync:'28 min ago'},
+  {name:'Docebo LMS',cat:'Learning',status:'Connected',sync:'3 hr ago'},
+  {name:'Okta Identity',cat:'IAM',status:'Connected',sync:'6 min ago'},
+  {name:'Slack',cat:'Collaboration',status:'Connected',sync:'2 min ago'},
+  {name:'Culture Amp',cat:'Engagement',status:'Not connected',sync:'—'},
+];
+const POLICIES=[
+  {id:'P-1',name:'Employee Handbook',cat:'General',updated:monthsAgo(2)},
+  {id:'P-2',name:'Leave Policy',cat:'Time off',updated:monthsAgo(1)},
+  {id:'P-3',name:'Expense Policy',cat:'Finance',updated:monthsAgo(4)},
+  {id:'P-4',name:'Benefits Documentation',cat:'Benefits',updated:monthsAgo(3)},
+  {id:'P-5',name:'Code of Conduct',cat:'General',updated:monthsAgo(6)},
+  {id:'P-6',name:'Remote Work Policy',cat:'General',updated:monthsAgo(2)},
+  {id:'P-7',name:'Data Privacy & Security',cat:'Compliance',updated:monthsAgo(1)},
+];
+/* department-level workforce metrics on the full 2,480 universe (illustrative) */
+const DEPT_METRICS={
+  eng:  {total:740,active:720,open:28,attr:11.8,fill:34,critcov:71,tenure:3.1,eng:76},
+  prod: {total:230,active:226,open:9, attr:10.2,fill:38,critcov:74,tenure:2.9,eng:81},
+  design:{total:140,active:137,open:4,attr:9.4, fill:29,critcov:66,tenure:3.0,eng:83},
+  cs:   {total:320,active:308,open:12,attr:16.1,fill:27,critcov:63,tenure:2.1,eng:72},
+  sales:{total:340,active:331,open:10,attr:14.6,fill:24,critcov:60,tenure:2.3,eng:74},
+  mktg: {total:210,active:205,open:6, attr:12.0,fill:30,critcov:64,tenure:2.6,eng:77},
+  data: {total:300,active:293,open:11,attr:9.8, fill:33,critcov:78,tenure:2.8,eng:80},
+  ops:  {total:200,active:196,open:6, attr:8.9, fill:31,critcov:70,tenure:3.3,eng:79},
+};
+const ORG_METRICS={total:2480,active:2412,open:86,attr:12.4,fill:31,critcov:76,tenure:2.8,eng:78};
+
+const SCENARIOS=[
+  {id:'S-A',name:'Business as usual',hc:2480,hire:86,cost:'$198M',gap:'13 critical',note:'Baseline plan with current trajectory.'},
+  {id:'S-B',name:'+15% Engineering capacity',hc:2537,hire:132,cost:'$214M',gap:'19 critical',note:'Accelerated platform roadmap, higher external hiring.'},
+  {id:'S-C',name:'Internal mobility-first',hc:2480,hire:58,cost:'$191M',gap:'7 critical',note:'Prioritise internal fills; invest in development over hiring.'},
+];
+
+/* ---- assemble the seed state ------------------------------------------- */
+function seedState(){
+  _seed=20260411;
+  const employees=buildEmployees();
+  return {
+    employees,
+    leave: buildLeave(employees),
+    hr: buildHR(employees),
+    onboarding: buildOnboarding(employees),
+    succession: buildSuccession(employees),
+    goals: JSON.parse(JSON.stringify(GOALS)),
+    insights: INSIGHTS.map(i=>({...i, reviewed:false})),
+    shortlist: {},            // roleId -> [empId]
+    applications: [],         // {role, emp, stage}
+    inferred: buildInferred(employees),
+    audit: [],
+    reviewedCount: 0,
+  };
+}
+function buildInferred(emps){
+  // AI-suggested skills awaiting validation
+  const out=[];
+  const samples=pickN(emps.filter(e=>e.status==='Active'),8);
+  samples.forEach((e,i)=>{
+    const have=e.skills.map(s=>s[0]);
+    const cand=DEPT_SKILLS[e.dept].filter(s=>!have.includes(s));
+    if(!cand.length) return;
+    const sid=pick(cand);
+    out.push({id:'INF-'+(400+i), emp:e.id, skill:sid, conf:ri(62,94),
+      evidence:pick(['Named in 3 project retrospectives','Referenced in manager feedback','Completed relevant learning path','Tagged in 5 merged pull requests']),
+      status:'Pending'});
+  });
+  return out;
+}
+
+/* ---- state load / save ------------------------------------------------- */
+let STATE;
+function loadState(){
+  try{ const raw=localStorage.getItem(LS_KEY); if(raw){ STATE=JSON.parse(raw); return; } }catch(e){}
+  STATE=seedState();
+}
+function saveState(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(STATE)); }catch(e){} }
+function resetState(){ STATE=seedState(); saveState(); }
+function audit(action, detail){
+  STATE.audit.unshift({ts:new Date().toISOString(), who:'John Doe', action, detail});
+  if(STATE.audit.length>200) STATE.audit.pop();
+  saveState();
+}
+function empById(id){ return STATE.employees.find(e=>e.id===id); }
+function deptName(id){ const d=DEPARTMENTS.find(x=>x.id===id); return d?d.name:id; }
+
+/* ========================================================================
+   PeopleOS — UI: icons, shell, router, helpers + signature views (part A)
+   ======================================================================== */
+
+/* ---- inline icons ------------------------------------------------------ */
+const IC={
+  search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>',
+  help:'<circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4"/><path d="M12 17h.01"/>',
+  chev:'<path d="M6 9l6 6 6-6"/>',
+  overview:'<path d="M3 13h8V3H3zM13 21h8v-8h-8zM13 3v6h8V3zM3 21h8v-4H3z"/>',
+  directory:'<circle cx="9" cy="8" r="3.2"/><path d="M4 20c0-3 2.2-5 5-5s5 2 5 5"/><path d="M16 5.5a3 3 0 0 1 0 5.5M18 20c0-2.2-1-3.8-2.5-4.6"/>',
+  org:'<rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="15" width="6" height="5" rx="1"/><rect x="15" y="15" width="6" height="5" rx="1"/><path d="M12 8v4M6 15v-2h12v2"/>',
+  skills:'<path d="M12 3l2.2 5.6L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.8-.4z"/>',
+  market:'<path d="M3 9l1-4h16l1 4M4 9h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1zM9 13h6"/>',
+  career:'<path d="M3 20h18M6 20V10M12 20V4M18 20v-7"/>',
+  succession:'<path d="M12 3l3 3-3 3-3-3zM4 14l3 3-3 3-3-3zM20 14l3 3-3 3-3-3zM12 9v5m0 0l-7 4m7-4l7 4" transform="scale(.85) translate(2,1)"/>',
+  goals:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3"/>',
+  review:'<path d="M14 3v5h5M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8zM9 13l2 2 4-4"/>',
+  feedback:'<path d="M21 12a8 8 0 0 1-11.5 7.2L3 21l1.8-6.5A8 8 0 1 1 21 12z"/><path d="M8 11h8M8 14h5"/>',
+  onboard:'<path d="M16 11l2 2 4-4M3 7a4 4 0 1 0 8 0 4 4 0 0 0-8 0M1 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/>',
+  leave:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4M9 14l2 2 4-4"/>',
+  hr:'<path d="M7 8h10M7 12h7M4 4h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H9l-5 4z"/>',
+  policy:'<path d="M14 3v5h5M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8zM8 13h8M8 17h5"/>',
+  insights:'<path d="M12 2a9 9 0 0 0-5 16.5V21h10v-2.5A9 9 0 0 0 12 2z"/><path d="M9 21h6"/>',
+  planning:'<path d="M3 3v18h18M7 15l3-4 3 2 5-7"/>',
+  assistant:'<rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 7V4M9 13h.01M15 13h.01M2 11v4M22 11v4"/>',
+  team:'<circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4a3 3 0 0 1 0 6M18 14c2 .6 3 2.3 3 4"/>',
+  integ:'<path d="M8 8V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v3M8 8H5a2 2 0 0 0-2 2v0a2 2 0 0 0 2 2h3M16 8h3a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-3M12 16v3a2 2 0 0 1-2 2h0a2 2 0 0 1-2-2v-3"/>',
+  settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.1A1.6 1.6 0 0 0 6.8 19l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H3a2 2 0 0 1 0-4h.1A1.6 1.6 0 0 0 4.2 6.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9A1.6 1.6 0 0 0 10 3.1V3a2 2 0 0 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>',
+  export:'<path d="M12 3v12M8 11l4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>',
+  spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  check:'<path d="M20 6L9 17l-5-5"/>',
+  x:'<path d="M18 6L6 18M6 6l12 12"/>',
+  filter:'<path d="M3 5h18l-7 8v6l-4-2v-4z"/>',
+  dot:'<circle cx="12" cy="12" r="3"/>',
+  up:'<path d="M12 19V5M5 12l7-7 7 7"/>',
+  down:'<path d="M12 5v14M5 12l7 7 7-7"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  mappin:'<path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+  book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 1 2-2h13"/>',
+};
+function icon(name,sz=18,sw=1.7){return `<svg class="ic" width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${IC[name]||''}</svg>`;}
+function sparkSvg(){return '<svg class="ai-spark" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>';}
+
+/* ---- helpers ----------------------------------------------------------- */
+const $=s=>document.querySelector(s);
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function initials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
+function avColor(id){let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))%6;return 'c'+h;}
+function avatar(emp,sz='sm'){const e=typeof emp==='string'?empById(emp):emp;if(!e)return '';return `<span class="av ${sz} ${avColor(e.id)}">${initials(e.name)}</span>`;}
+function fmtDate(d){if(!d)return '—';const dt=new Date(d);return dt.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
+function tenureStr(m){return m>=12?(m/12).toFixed(1)+' yrs':m+' mo';}
+function profLabel(n){return PROF[Math.max(0,Math.min(3,n-1))];}
+let toastT;
+function toast(msg,kind=''){const t=document.createElement('div');t.className='toast '+kind;t.innerHTML=icon('check',16)+esc(msg);$('#toasts').appendChild(t);setTimeout(()=>t.remove(),2600);}
+function openDrawer(html){$('#drawer').innerHTML=html;$('#drawer').classList.add('on');$('#scrim').classList.add('on');}
+function closeDrawer(){$('#drawer').classList.remove('on');$('#scrim').classList.remove('on');}
+function openModal(html){$('#modal').innerHTML=html;$('#modalScrim').classList.add('on');}
+function closeModal(){$('#modalScrim').classList.remove('on');}
+$('#modalScrim')&&$('#modalScrim').addEventListener('click',e=>{if(e.target.id==='modalScrim')closeModal();});
+let _confirmCb=null;
+function confirmModal(title,body,okLabel,cb,kind='pri'){
+  _confirmCb=cb;
+  openModal(`<div class="mhead"><h3 class="serif" style="font-size:22px">${esc(title)}</h3></div>
+    <div class="mbody"><p class="mut" style="font-size:14px;line-height:1.55">${body}</p></div>
+    <div class="mfoot"><button class="btn" onclick="closeModal()">Cancel</button>
+    <button class="btn ${kind}" onclick="runConfirm()">${esc(okLabel)}</button></div>`);
+}
+function runConfirm(){const cb=_confirmCb;_confirmCb=null;closeModal();if(cb)cb();}
+
+/* ---- navigation structure --------------------------------------------- */
+const NAV=[
+  {grp:'Discover',items:[['overview','People Overview','overview'],['directory','Employee Directory','directory'],['org','Organisation','org']]},
+  {grp:'Talent',items:[['skills','Skills Intelligence','skills'],['market','Internal Talent Marketplace','market'],['career','Career Development','career'],['succession','Succession Planning','succession']]},
+  {grp:'Performance',items:[['goals','Goals & OKRs','goals'],['review','Performance Reviews','reviews'],['feedback','Feedback & Recognition','feedback']]},
+  {grp:'People Operations',items:[['onboard','Onboarding','onboard'],['leave','Leave & Attendance','leave'],['hr','HR Requests','hr'],['policy','Policies & Documents','policy']]},
+  {grp:'Intelligence',items:[['insights','People Signals','insights'],['planning','Workforce Planning','planning'],['assistant','PeopleOS Copilot','assistant']]},
+  {grp:'Administration',items:[['team','Team & Permissions','team'],['integ','Integrations','integ'],['settings','Settings','settings']]},
+];
+const VIEW_TITLES={};NAV.forEach(g=>g.items.forEach(it=>VIEW_TITLES[it[2]]=it[1]));
+let CUR='overview';
+
+function renderShell(){
+  const nav=NAV.map(g=>{
+    const active=g.items.some(it=>it[2]===CUR);
+    const subs=g.items.map(it=>`<a class="${it[2]===CUR?'on':''}" onclick="navigate('${it[2]}')"><span class="si">${icon(it[0],17)}</span>${esc(it[1])}</a>`).join('');
+    return `<div class="navgrp ${active?'on':''}"><button>${esc(g.grp)}<span class="chev">${icon('chev',14)}</span></button><div class="submenu">${subs}</div></div>`;
+  }).join('');
+  return `
+  <div class="util">
+    <div class="org"><span class="orgmark">A</span>Acme Technologies ${icon('chev',13)}</div>
+    <div class="usearch" onclick="openCmd()">${icon('search',15)}<span>Search people, skills, roles…</span><kbd>⌘K</kbd></div>
+    <button class="uic" title="Notifications" onclick="notif()">${icon('bell',18)}<span class="dot"></span></button>
+    <button class="uic" title="Help" onclick="toast('Help centre opened')">${icon('help',18)}</button>
+    <div class="me"><span class="ava">JD</span><div style="line-height:1.15"><div style="font-weight:700;font-size:12.5px">John Doe</div><div style="font-size:10.5px;opacity:.75">HR Admin</div></div></div>
+  </div>
+  <nav class="nav">${nav}</nav>
+  <main class="wrap" id="view"></main>`;
+}
+function navigate(v){CUR=v;$('#app').innerHTML=renderShell();renderView();window.scrollTo(0,0);}
+function renderView(){
+  const map={overview:vOverview,directory:vDirectory,org:vOrg,skills:vSkills,market:vMarket,career:vCareer,
+    succession:vSuccession,goals:vGoals,reviews:vReviews,feedback:vFeedback,onboard:vOnboard,leave:vLeave,
+    hr:vHR,policy:vPolicy,insights:vInsights,planning:vPlanning,assistant:vAssistant,team:vTeam,integ:vInteg,settings:vSettings};
+  (map[CUR]||vOverview)();
+}
+function pageHead(eyebrow,title,sub,actions){
+  return `<div class="page-head"><div><div class="lbl eyebrow">${esc(eyebrow)}</div><h1 class="serif">${title}</h1>${sub?`<p class="sub">${sub}</p>`:''}</div><div class="head-actions">${actions||''}</div></div>`;
+}
+function sevPill(s){const m={Critical:'crit',Warning:'warn',Opportunity:'green','At risk':'warn','On track':'ok','High':'terra','Medium':'butter','Low':'ink'};return `<span class="pill ${m[s]||'ink'}">${esc(s)}</span>`;}
+
+/* ===== computed aggregates (derived from the live dataset) ============== */
+function agg(){
+  const e=STATE.employees;
+  const total=2480, active=2412;
+  const deptCount={};DEPARTMENTS.forEach(d=>deptCount[d.id]=0);e.forEach(x=>deptCount[x.dept]++);
+  // skills coverage
+  const cov={};const crit=SKILLS.filter(s=>s.crit==='Critical');DEPARTMENTS.forEach(d=>{
+    const emps=e.filter(x=>x.dept===d.id);
+    cov[d.id]=Math.round(crit.reduce((a,s)=>a+skillCoverage(emps,s.id,d.id),0)/crit.length);
+  });
+  return {total,active,open:86,attr:12.4,fill:31,critcov:76,tenure:2.8,eng:78,deptCount,cov};
+}
+
+/* ======================================================================
+   MODULE 1 — PEOPLE OVERVIEW (command centre)
+   ====================================================================== */
+let OV_SCOPE={range:'90d',bu:'all',loc:'all'};
+const OV_RANGES=[['7d','Last 7 days'],['30d','Last 30 days'],['90d','Last 90 days'],['12m','Last 12 months']];
+const OV_RANGE_DAYS={'7d':7,'30d':30,'90d':90,'12m':365};
+function ovLbl(which){return which==='range'?(OV_RANGES.find(r=>r[0]===OV_SCOPE.range)||OV_RANGES[2])[1]:which==='bu'?(OV_SCOPE.bu==='all'?'All business units':deptName(OV_SCOPE.bu)):(OV_SCOPE.loc==='all'?'All locations':OV_SCOPE.loc);}
+function ovToggle(which,e){if(e)e.stopPropagation();const m=document.getElementById('fm-'+which);const open=m.classList.contains('on');document.querySelectorAll('.fmenu.on').forEach(x=>x.classList.remove('on'));if(!open)m.classList.add('on');}
+function ovPick(which,val){OV_SCOPE[which]=val;vOverview();}
+function ovReset(){OV_SCOPE={range:'90d',bu:'all',loc:'all'};vOverview();}
+function fmtNum(v){return v.toLocaleString('en-US');}
+function ovInRange(dateStr){const d=Math.abs((new Date('2026-11-12')-new Date(dateStr))/864e5);return d<=OV_RANGE_DAYS[OV_SCOPE.range];}
+function ovDelta(key,val){
+  const good={total:1,active:1,fill:1,critcov:1,tenure:1,eng:1,attr:0,open:2}[key];
+  if(OV_SCOPE.bu==='all'){const q={total:'+3.1%',active:'+1.4%',open:'+12',attr:'+0.6pt',fill:'+4pt',critcov:'−2pt',tenure:'+0.1',eng:'+2'}[key];
+    const dir={total:'up',active:'up',open:'flat',attr:'down',fill:'up',critcov:'down',tenure:'up',eng:'up'}[key];
+    return `<span class="delta ${dir}">${dir!=='flat'?icon(dir,12):''}${q} <span class="mut" style="font-weight:500">vs last qtr</span></span>`;}
+  const o=ORG_METRICS[key];const diff=+(val-o).toFixed(1);const sign=diff>0?'+':'';
+  const unit=(key==='attr'||key==='fill'||key==='critcov')?'pt':'';
+  if(good===2||diff===0)return `<span class="delta flat">${sign}${diff}${unit} <span class="mut" style="font-weight:500">vs org</span></span>`;
+  const better=(good===1&&diff>0)||(good===0&&diff<0);
+  return `<span class="delta ${better?'up':'down'}">${icon(diff>0?'up':'down',12)}${sign}${diff}${unit} <span class="mut" style="font-weight:500">vs org</span></span>`;
+}
+function vOverview(){
+  const m=OV_SCOPE.bu==='all'?ORG_METRICS:DEPT_METRICS[OV_SCOPE.bu];
+  const scoped=OV_SCOPE.bu!=='all'||OV_SCOPE.loc!=='all'||OV_SCOPE.range!=='90d';
+  const stat=(key,label,val)=>`<div class="stat-row"><div class="stat-k">${label}</div><div class="stat-rt"><div class="stat-v">${val}</div>${ovDelta(key,m[key])}</div></div>`;
+  const clusters=`<div class="grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:26px">
+     <div class="card pad cluster"><div class="lbl">Headcount</div>
+       ${stat('total','Total employees',fmtNum(m.total))}
+       ${stat('active','Active employees',fmtNum(m.active))}
+       ${stat('open','Open positions',m.open)}</div>
+     <div class="card pad cluster"><div class="lbl">Retention &amp; mobility</div>
+       ${stat('attr','Voluntary attrition',m.attr+'%')}
+       ${stat('fill','Internal fill rate',m.fill+'%')}
+       ${stat('tenure','Average tenure',m.tenure+' yrs')}</div>
+     <div class="card pad cluster"><div class="lbl">Capability &amp; engagement</div>
+       ${stat('critcov','Critical skill coverage',m.critcov+'%')}
+       ${stat('eng','Employee engagement',m.eng+'/100')}
+       <div class="stat-row"><div class="stat-k">Capability gaps</div><div class="stat-rt"><div class="stat-v">${OV_SCOPE.bu==='all'?13:Math.max(1,Math.round((100-m.critcov)/5))}</div><span class="delta flat" style="color:var(--mut)">critical skills</span></div></div></div>
+   </div>`;
+
+  // scope-aware activity lists
+  const inScope=e=>(OV_SCOPE.bu==='all'||e.dept===OV_SCOPE.bu)&&(OV_SCOPE.loc==='all'||e.loc===OV_SCOPE.loc);
+  const joinRows=STATE.onboarding.filter(o=>o.stageIdx<6&&inScope(empById(o.emp))&&ovInRange(o.start)).slice(0,4);
+  const joiners=joinRows.map(o=>{const e=empById(o.emp);return `<div class="kv"><div style="display:flex;align-items:center;gap:9px">${avatar(e)}<div><div style="font-weight:600;font-size:13px">${esc(e.name)}</div><div class="mut" style="font-size:11.5px">${esc(e.desig)}</div></div></div><span class="pill sage">${esc(o.stage)}</span></div>`;}).join('')||'<div class="mut" style="padding:10px 0;font-size:13px">No joiners in this scope</div>';
+  const apprRows=STATE.leave.filter(l=>l.status==='Pending'&&inScope(empById(l.emp))).slice(0,4);
+  const approvals=apprRows.map(l=>{const e=empById(l.emp);return `<div class="kv"><div style="display:flex;align-items:center;gap:9px">${avatar(e)}<div><div style="font-weight:600;font-size:13px">${esc(e.name)}</div><div class="mut" style="font-size:11.5px">${esc(l.type)} · ${l.days}d</div></div></div><button class="btn sm pri" onclick="event.stopPropagation();navigate('leave')">Review</button></div>`;}).join('')||'<div class="mut" style="padding:10px 0;font-size:13px">No pending approvals</div>';
+  const revRows=STATE.employees.filter(inScope).slice(0,4);
+  const reviews=revRows.map(e=>`<div class="kv"><div style="display:flex;align-items:center;gap:9px">${avatar(e)}<div><div style="font-weight:600;font-size:13px">${esc(e.name)}</div><div class="mut" style="font-size:11.5px">${esc(deptName(e.dept))}</div></div></div><span class="mut" style="font-size:12px">Due ${fmtDate(daysAgo(-ri(3,20)))}</span></div>`).join('')||'<div class="mut" style="padding:10px 0;font-size:13px">No reviews in this scope</div>';
+
+  const briefing=STATE.insights.map(ins=>`
+    <div class="card pad" style="border-left:3px solid ${ins.sev==='Critical'?'var(--crit)':ins.sev==='Opportunity'?'var(--green)':'var(--warn)'};cursor:pointer" onclick="openInsight('${ins.id}')">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">${sevPill(ins.sev)}<span class="mut" style="font-size:11px;margin-left:auto">${esc(ins.fresh)}</span></div>
+      <div style="font-weight:700;font-size:14.5px;margin-bottom:6px">${esc(ins.title)}</div>
+      <div class="mut" style="font-size:13px;line-height:1.5">${esc(ins.expl)}</div>
+      <div style="margin-top:11px;display:flex;align-items:center;gap:7px;color:var(--green);font-weight:600;font-size:12.5px">Explore signal ${icon('arrow',14)}</div>
+    </div>`).join('');
+
+  const fchip=(which,ic)=>`<div class="fwrap"><button class="chip-f ${OV_SCOPE[which]!==(which==='range'?'90d':'all')?'active':''}" onclick="ovToggle('${which}',event)">${ic?icon(ic,14):''} ${esc(ovLbl(which))} ${icon('chev',13)}</button>
+     <div class="fmenu" id="fm-${which}">${which==='range'?`<div class="fmhead">Date range</div>${OV_RANGES.map(r=>`<button class="${OV_SCOPE.range===r[0]?'sel':''}" onclick="ovPick('range','${r[0]}')">${r[1]}</button>`).join('')}`:which==='bu'?`<div class="fmhead">Business unit</div><button class="${OV_SCOPE.bu==='all'?'sel':''}" onclick="ovPick('bu','all')">All business units</button>${DEPARTMENTS.map(d=>`<button class="${OV_SCOPE.bu===d.id?'sel':''}" onclick="ovPick('bu','${d.id}')">${esc(d.name)}</button>`).join('')}`:`<div class="fmhead">Location</div><button class="${OV_SCOPE.loc==='all'?'sel':''}" onclick="ovPick('loc','all')">All locations</button>${LOCATIONS.map(l=>`<button class="${OV_SCOPE.loc===l?'sel':''}" onclick="ovPick('loc','${l}')">${esc(l)}</button>`).join('')}`}</div></div>`;
+
+  $('#view').innerHTML=
+    pageHead('Workforce Command Centre','Your people, in perspective.',
+      'Workforce intelligence and people operations for Acme Technologies.',
+      `${fchip('range','clock')}${fchip('bu','')}${fchip('loc','mappin')}
+       <button class="btn" onclick="exportReport('People Overview')">${icon('export',15)} Export report</button>
+       <button class="btn terra" onclick="navigate('assistant')">${sparkSvg()} Ask about your workforce</button>`)
+    +(scoped?`<div style="display:flex;align-items:center;gap:10px;margin:-10px 0 20px;font-size:12.5px"><span class="pill green">Scope</span><span class="mut">${esc(ovLbl('bu'))} · ${esc(ovLbl('loc'))} · ${esc(ovLbl('range'))}</span><button class="btn sm gho" onclick="ovReset()" style="color:var(--green)">Reset</button></div>`:'')
+    +clusters
+    +`<div class="grid" style="grid-template-columns:1.5fr 1fr;align-items:start;margin-bottom:26px">
+        <div class="card pad">
+          <div class="sec-label"><h3>Workforce trends</h3><div style="display:flex;gap:6px">
+            <button class="chip-f sm" id="cvHead" onclick="ovChart('head')" style="background:var(--green);color:#fff;border-color:var(--green)">Headcount</button>
+            <button class="chip-f sm" id="cvAttr" onclick="ovChart('attr')">Attrition</button>
+            <button class="chip-f sm" id="cvHire" onclick="ovChart('hire')">Hiring vs exits</button></div></div>
+          <div id="ovChartBox">${chartHeadcount()}</div>
+        </div>
+        <div class="card pad">
+          <div class="sec-label"><h3>By department</h3><span class="mut" style="font-size:11.5px">headcount · coverage</span></div>
+          ${deptBars()}
+        </div>
+      </div>
+      <div class="sec-label" style="margin-bottom:14px"><h3 class="serif" style="font-size:22px;font-weight:400">Workforce Pulse</h3><span class="ai-badge">${sparkSvg()} Workforce signals · human review required</span></div>
+      <div class="grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:28px">${briefing}</div>
+      <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="card pad"><div class="sec-label"><h3>New joiners</h3><a class="mut" style="font-size:12px;cursor:pointer" onclick="navigate('onboard')">Onboarding →</a></div>${joiners}</div>
+        <div class="card pad"><div class="sec-label"><h3>Pending approvals</h3><a class="mut" style="font-size:12px;cursor:pointer" onclick="navigate('leave')">All →</a></div>${approvals}</div>
+        <div class="card pad"><div class="sec-label"><h3>Upcoming reviews</h3><a class="mut" style="font-size:12px;cursor:pointer" onclick="navigate('reviews')">Cycle →</a></div>${reviews}</div>
+      </div>`;
+}
+function ovChart(t){['head','attr','hire'].forEach(x=>{const b=document.getElementById('cv'+x[0].toUpperCase()+x.slice(1));if(b){b.style.background='';b.style.color='';b.style.borderColor='';}});
+  const btn=document.getElementById('cv'+t[0].toUpperCase()+t.slice(1));if(btn){btn.style.background='var(--green)';btn.style.color='#fff';btn.style.borderColor='var(--green)';}
+  $('#ovChartBox').innerHTML = t==='head'?chartHeadcount():t==='attr'?chartAttrition():chartHireExit();}
+function chartHeadcount(){
+  const data=[2180,2210,2245,2270,2295,2320,2355,2380,2405,2430,2455,2480];
+  const mn=2150,mx=2500,W=560,H=200,pad=28;
+  const pts=data.map((v,i)=>[pad+i*(W-pad*2)/11, H-pad-(v-mn)/(mx-mn)*(H-pad*2)]);
+  const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area=line+` L${pts[11][0]} ${H-pad} L${pts[0][0]} ${H-pad} Z`;
+  const mo=['Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov'];
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto"><defs><linearGradient id="gh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3657A7" stop-opacity=".16"/><stop offset="1" stop-color="#3657A7" stop-opacity="0"/></linearGradient></defs>
+    ${[0,1,2,3].map(i=>`<line x1="${pad}" x2="${W-pad}" y1="${pad+i*(H-pad*2)/3}" y2="${pad+i*(H-pad*2)/3}" stroke="#E4E3D9"/>`).join('')}
+    <path d="${area}" fill="url(#gh)"/><path d="${line}" fill="none" stroke="#3657A7" stroke-width="2.4"/>
+    ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="${i===11?4:0}" fill="#0F8B83"/>`).join('')}
+    ${pts.map((p,i)=>`<text x="${p[0]}" y="${H-8}" font-size="9.5" fill="#737A72" text-anchor="middle">${mo[i]}</text>`).join('')}
+    <text x="${pts[11][0]-4}" y="${pts[11][1]-10}" font-size="11" font-weight="700" fill="#3657A7" text-anchor="end">2,480</text></svg>`;
+}
+function chartAttrition(){
+  const data=[10.8,11.1,11.0,11.4,11.9,12.0,12.2,12.1,12.3,12.6,12.5,12.4];
+  const mn=10,mx=13,W=560,H=200,pad=28;
+  const pts=data.map((v,i)=>[pad+i*(W-pad*2)/11, H-pad-(v-mn)/(mx-mn)*(H-pad*2)]);
+  const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const mo=['Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov'];
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">
+    ${[0,1,2,3].map(i=>`<line x1="${pad}" x2="${W-pad}" y1="${pad+i*(H-pad*2)/3}" y2="${pad+i*(H-pad*2)/3}" stroke="#E4E3D9"/>`).join('')}
+    <path d="${line}" fill="none" stroke="#0F8B83" stroke-width="2.4"/>
+    ${pts.map((p,i)=>`<text x="${p[0]}" y="${H-8}" font-size="9.5" fill="#737A72" text-anchor="middle">${mo[i]}</text>`).join('')}
+    <text x="${pts[11][0]-4}" y="${pts[11][1]-10}" font-size="11" font-weight="700" fill="#0F8B83" text-anchor="end">12.4%</text></svg>`;
+}
+function chartHireExit(){
+  const hire=[22,18,26,24,30,28,34,31,27,33,29,36], exit=[14,16,12,19,21,18,15,20,24,17,19,16];
+  const W=560,H=200,pad=28,mx=40,bw=(W-pad*2)/12;
+  let b='';for(let i=0;i<12;i++){const x=pad+i*bw;const hh=hire[i]/mx*(H-pad*2);const eh=exit[i]/mx*(H-pad*2);
+    b+=`<rect x="${x+4}" y="${H-pad-hh}" width="${bw/2-5}" height="${hh}" rx="2" fill="#3657A7"/><rect x="${x+bw/2+1}" y="${H-pad-eh}" width="${bw/2-5}" height="${eh}" rx="2" fill="#0F8B83" opacity=".8"/>`;}
+  const mo=['D','J','F','M','A','M','J','J','A','S','O','N'];
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${b}
+    ${mo.map((m,i)=>`<text x="${pad+i*bw+bw/2}" y="${H-8}" font-size="9.5" fill="#737A72" text-anchor="middle">${m}</text>`).join('')}</svg>
+    <div style="display:flex;gap:16px;margin-top:8px;font-size:11.5px;color:var(--ink2)"><span><span class="dotpill" style="background:#3657A7"></span> Hires</span><span><span class="dotpill" style="background:#0F8B83"></span> Exits</span></div>`;
+}
+function deptBars(){
+  const max=Math.max(...DEPARTMENTS.map(d=>DEPT_METRICS[d.id].total));
+  return DEPARTMENTS.map(d=>{const dm=DEPT_METRICS[d.id];const pct=dm.total/max*100;const sel=OV_SCOPE&&OV_SCOPE.bu===d.id;
+    return `<div style="margin-bottom:12px;cursor:pointer;${sel?'opacity:1':OV_SCOPE&&OV_SCOPE.bu!=='all'?'opacity:.45':''}" onclick="ovPick('bu','${d.id}')"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">${esc(d.name)}</span><span class="mut">${fmtNum(dm.total)} · ${dm.critcov}% cov</span></div><div class="meter"><span style="width:${Math.max(6,pct)}%;${sel?'background:var(--terra)':''}"></span></div></div>`;}).join('');
+}
+
+/* ======================================================================
+   MODULE 2 — EMPLOYEE DIRECTORY + EMPLOYEE 360
+   ====================================================================== */
+let DIR={q:'',dept:'',loc:'',status:'',sort:'name',page:1};
+function vDirectory(){
+  $('#view').innerHTML=
+    pageHead('Discover','Employee Directory','Search, filter and explore every person at Acme Technologies.',
+      `<button class="btn" onclick="savedViews()">${icon('filter',15)} Saved views</button>
+       <button class="btn pri" onclick="navigate('org')">${icon('org',15)} Org chart</button>`)
+    +`<div class="card pad" style="margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <div style="flex:1;min-width:220px;display:flex;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--line2);border-radius:9px;padding:9px 13px">${icon('search',16)}<input id="dq" placeholder="Search by name, email, employee ID or skill…" style="border:none;background:none;width:100%;outline:none" value="${esc(DIR.q)}" oninput="DIR.q=this.value;DIR.page=1;dirRows()"></div>
+        <select class="chip-f" onchange="DIR.dept=this.value;DIR.page=1;dirRows()" style="padding:9px 12px"><option value="">All departments</option>${DEPARTMENTS.map(d=>`<option value="${d.id}" ${DIR.dept===d.id?'selected':''}>${d.name}</option>`).join('')}</select>
+        <select class="chip-f" onchange="DIR.loc=this.value;DIR.page=1;dirRows()" style="padding:9px 12px"><option value="">All locations</option>${LOCATIONS.map(l=>`<option ${DIR.loc===l?'selected':''}>${l}</option>`).join('')}</select>
+        <select class="chip-f" onchange="DIR.status=this.value;DIR.page=1;dirRows()" style="padding:9px 12px"><option value="">Any status</option>${STATUSES.map(s=>`<option ${DIR.status===s?'selected':''}>${s}</option>`).join('')}</select>
+      </div>
+      <div class="card"><div style="overflow:auto"><table class="tbl"><thead><tr>
+        <th onclick="dirSort('name')" style="cursor:pointer">Employee</th><th>Designation</th><th>Department</th><th>Manager</th><th>Location</th><th>Skills</th><th onclick="dirSort('tenure')" style="cursor:pointer" class="num">Tenure</th><th>Status</th>
+      </tr></thead><tbody id="dirBody"></tbody></table></div>
+      <div id="dirPager" style="padding:14px;display:flex;align-items:center;justify-content:space-between"></div></div>`;
+  dirRows();
+}
+function dirFilter(){
+  let r=STATE.employees.filter(e=>{
+    if(DIR.dept&&e.dept!==DIR.dept)return false;
+    if(DIR.loc&&e.loc!==DIR.loc)return false;
+    if(DIR.status&&e.status!==DIR.status)return false;
+    if(DIR.q){const q=DIR.q.toLowerCase();const sk=e.skills.map(s=>SKILL_BY_ID[s[0]].name.toLowerCase()).join(' ');
+      if(!(e.name.toLowerCase().includes(q)||e.email.toLowerCase().includes(q)||e.id.toLowerCase().includes(q)||e.desig.toLowerCase().includes(q)||sk.includes(q)))return false;}
+    return true;
+  });
+  r.sort((a,b)=>DIR.sort==='tenure'?b.tenure-a.tenure:a.name.localeCompare(b.name));
+  return r;
+}
+function dirSort(s){DIR.sort=s;dirRows();}
+function dirRows(){
+  const all=dirFilter();const per=12;const pages=Math.max(1,Math.ceil(all.length/per));
+  if(DIR.page>pages)DIR.page=pages;
+  const rows=all.slice((DIR.page-1)*per,DIR.page*per);
+  $('#dirBody').innerHTML=rows.map(e=>{
+    const sk=e.skills.slice(0,3).map(s=>`<span class="pill sage" style="font-size:10.5px">${esc(SKILL_BY_ID[s[0]].name)}</span>`).join(' ');
+    const mgr=e.mgr?empById(e.mgr):null;
+    const stc={'Active':'ok','On leave':'butter','Notice period':'crit','Probation':'sage'}[e.status];
+    return `<tr onclick="openEmp('${e.id}')">
+      <td><div style="display:flex;align-items:center;gap:10px">${avatar(e)}<div><div style="font-weight:600">${esc(e.name)}</div><div class="mut" style="font-size:11.5px">${e.id} · ${esc(e.email)}</div></div></div></td>
+      <td>${esc(e.desig)}</td><td>${esc(deptName(e.dept))}</td><td class="mut">${mgr?esc(mgr.name):'—'}</td><td>${esc(e.loc)}</td>
+      <td><div style="display:flex;gap:4px;flex-wrap:wrap">${sk}</div></td><td class="num">${tenureStr(e.tenure)}</td><td><span class="pill ${stc}">${esc(e.status)}</span></td></tr>`;
+  }).join('')||`<tr><td colspan="8"><div class="empty">No employees match these filters.</div></td></tr>`;
+  $('#dirPager').innerHTML=`<span class="mut" style="font-size:12.5px">${all.length} employees · page ${DIR.page} of ${pages}</span>
+    <div style="display:flex;gap:7px"><button class="btn sm" ${DIR.page<=1?'disabled style=opacity:.4':''} onclick="DIR.page--;dirRows()">Previous</button><button class="btn sm" ${DIR.page>=pages?'disabled style=opacity:.4':''} onclick="DIR.page++;dirRows()">Next</button></div>`;
+}
+function savedViews(){toast('Saved views: Engineering · Notice period · New joiners');}
+
+/* ---- Employee 360 drawer ---------------------------------------------- */
+let EMP_TAB='overview';
+function openEmp(id,tab='overview'){EMP_TAB=tab;const e=empById(id);if(!e)return;renderEmp(e);}
+function renderEmp(e){
+  const mgr=e.mgr?empById(e.mgr):null;
+  const tabs=['overview','journey','skills','performance','growth','activity'];
+  const tabLbl={overview:'Overview',journey:'Journey',skills:'Skills',performance:'Performance',growth:'Growth',activity:'Activity'};
+  openDrawer(`
+    <div class="dhead">
+      <span class="av lg ${avColor(e.id)}">${initials(e.name)}</span>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px"><h3 class="serif" style="font-size:23px">${esc(e.name)}</h3>${e.aspire!=='—'?'<span class="pill terra" style="font-size:10px">Exploring mobility</span>':''}</div>
+        <div class="mut" style="font-size:13.5px;margin-top:2px">${esc(e.desig)} · ${esc(deptName(e.dept))}</div>
+        <div class="mut" style="font-size:12.5px;margin-top:4px;display:flex;gap:12px;flex-wrap:wrap"><span>${icon('mappin',13)} ${esc(e.loc)}</span><span>${e.id}</span><span>${tenureStr(e.tenure)} tenure</span></div>
+      </div>
+      <button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button>
+    </div>
+    <div style="padding:0 22px;background:var(--surface);border-bottom:1px solid var(--line)"><div class="tabs" style="margin:0;border:none">${tabs.map(t=>`<button class="${EMP_TAB===t?'on':''}" onclick="openEmp('${e.id}','${t}')">${tabLbl[t]}</button>`).join('')}</div></div>
+    <div class="dbody" id="empBody">${empTab(e)}</div>
+    <div class="dfoot">
+      <button class="btn pri" onclick="toast('Message sent to ${esc(e.name.split(' ')[0])}')">${icon('feedback',15)} Message</button>
+      <button class="btn" onclick="devPlanModal('${e.id}')">${icon('career',15)} Development plan</button>
+      <button class="btn" onclick="toast('Added to shortlist')">${icon('plus',15)} Shortlist</button>
+      <button class="btn gho" style="margin-left:auto" onclick="toast('Full profile export queued')">${icon('export',15)}</button>
+    </div>`);
+}
+function empTab(e){
+  const mgr=e.mgr?empById(e.mgr):null;
+  if(EMP_TAB==='overview'){
+    const sk=e.skills.map(s=>`<span class="pill sage">${esc(SKILL_BY_ID[s[0]].name)} · ${profLabel(s[1])}</span>`).join(' ');
+    return `<div class="card pad" style="margin-bottom:16px">
+      <div class="lbl" style="margin-bottom:12px">Profile</div>
+      <div class="kv"><span class="k">Reporting manager</span><span class="v">${mgr?esc(mgr.name):'—'}</span></div>
+      <div class="kv"><span class="k">Joining date</span><span class="v">${fmtDate(e.join)}</span></div>
+      <div class="kv"><span class="k">Employment status</span><span class="v">${esc(e.status)}</span></div>
+      <div class="kv"><span class="k">Email</span><span class="v">${esc(e.email)}</span></div>
+      <div class="kv"><span class="k">Engagement</span><span class="v">${e.engagement}/100</span></div>
+      <div class="kv"><span class="k">Career aspiration</span><span class="v">${esc(e.aspire)}</span></div>
+    </div>
+    <div class="card pad"><div class="lbl" style="margin-bottom:10px">Skills</div><div style="display:flex;gap:6px;flex-wrap:wrap">${sk}</div></div>`;
+  }
+  if(EMP_TAB==='journey'){
+    const roles=[{r:e.desig,d:deptName(e.dept),t:'Current · '+fmtDate(e.join)},
+      {r:'Associate '+e.desig.replace(/Senior |Staff /,''),d:deptName(e.dept),t:fmtDate(monthsAgo(e.tenure+14))},
+      {r:'Graduate Programme',d:'Rotational',t:fmtDate(monthsAgo(e.tenure+26))}];
+    return `<div class="lbl" style="margin-bottom:14px">Professional journey</div>
+      ${roles.map((r,i)=>`<div style="display:flex;gap:14px;margin-bottom:4px"><div style="display:flex;flex-direction:column;align-items:center"><span class="dotpill" style="width:11px;height:11px;background:${i?'var(--line2)':'var(--green)'}"></span>${i<roles.length-1?'<span style="width:2px;flex:1;background:var(--line)"></span>':''}</div><div style="padding-bottom:20px"><div style="font-weight:700;font-size:14px">${esc(r.r)}</div><div class="mut" style="font-size:12.5px">${esc(r.d)}</div><div class="mut" style="font-size:11.5px;margin-top:2px">${esc(r.t)}</div></div></div>`).join('')}
+      <div class="card pad" style="margin-top:8px"><div class="lbl" style="margin-bottom:8px">Notable projects</div>
+        <div class="mut" style="font-size:13px;line-height:1.7">· Led migration of ${esc(deptName(e.dept))} reporting pipeline<br>· Mentored 3 graduate hires<br>· Recognised in Q2 company all-hands</div></div>`;
+  }
+  if(EMP_TAB==='skills'){
+    const cats={};e.skills.forEach(s=>{const c=SKILL_BY_ID[s[0]].cat;(cats[c]=cats[c]||[]).push(s);});
+    const want=e.aspire!=='—'?SKILLS.filter(s=>s.crit==='Critical'&&!e.skills.some(k=>k[0]===s.id)).slice(0,3):[];
+    return Object.entries(cats).map(([c,arr])=>`<div style="margin-bottom:16px"><div class="lbl" style="margin-bottom:9px">${esc(c)}</div>
+      ${arr.map(s=>`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="font-weight:600">${esc(SKILL_BY_ID[s[0]].name)} ${s[2]?icon('check',12):''}</span><span class="mut">${profLabel(s[1])}</span></div><div class="meter"><span style="width:${s[1]/4*100}%"></span></div></div>`).join('')}</div>`).join('')
+      +(want.length?`<div class="card pad" style="background:var(--sage)"><div class="lbl" style="margin-bottom:9px">Skill gaps vs ${esc(e.aspire)} aspiration</div>${want.map(w=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:13px"><span style="font-weight:600">${esc(w.name)}</span><span class="pill warn">Develop</span></div>`).join('')}</div>`:'');
+  }
+  if(EMP_TAB==='performance'){
+    const g=STATE.goals.filter(x=>x.owner===e.name);
+    return `<div class="lbl" style="margin-bottom:12px">Latest review</div>
+      <div class="card pad" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-weight:700">H1 2026 Review</span><span class="pill ${e.perf==='Outstanding'||e.perf==='Exceeds'?'ok':'sage'}">${esc(e.perf)}</span></div>
+        <div class="mut" style="font-size:13px;line-height:1.6">Consistently delivers high-quality work and collaborates well across teams. Development focus on broadening strategic influence.</div></div>
+      <div class="lbl" style="margin-bottom:10px">Goals</div>
+      ${g.length?g.map(x=>`<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="font-weight:600">${esc(x.title)}</span><span class="mut">${x.prog}%</span></div><div class="meter ${x.prog<40?'warn':''}"><span style="width:${x.prog}%"></span></div></div>`).join(''):'<div class="mut" style="font-size:13px">No individual goals assigned this cycle.</div>'}`;
+  }
+  if(EMP_TAB==='growth'){
+    const recs=LEARNING.filter(l=>e.aspire!=='—').slice(0,3);
+    return `<div class="card pad" style="margin-bottom:14px;background:#F4F7FC"><div class="lbl" style="margin-bottom:6px">Career aspiration</div><div class="serif" style="font-size:20px">${esc(e.aspire)}</div></div>
+      <div class="lbl" style="margin-bottom:10px">Recommended learning</div>
+      ${recs.map(l=>`<div class="kv"><div><div style="font-weight:600;font-size:13px">${esc(l.name)}</div><div class="mut" style="font-size:11.5px">${esc(l.cat)} · ${esc(l.dur)}</div></div><button class="btn sm" onclick="toast('Enrolled in ${esc(l.name)}')">Enrol</button></div>`).join('')||'<div class="mut">No active development track.</div>'}
+      <div class="lbl" style="margin:18px 0 10px">Internal opportunities</div>
+      ${OPPORTUNITIES.slice(0,2).map(o=>`<div class="kv"><div><div style="font-weight:600;font-size:13px">${esc(o.title)}</div><div class="mut" style="font-size:11.5px">${esc(o.team)} · ${esc(o.loc)}</div></div><button class="btn sm" onclick="navigate('market')">View</button></div>`).join('')}`;
+  }
+  if(EMP_TAB==='activity'){
+    const lv=STATE.leave.filter(l=>l.emp===e.id);
+    const hr=STATE.hr.filter(h=>h.emp===e.id);
+    return `<div class="lbl" style="margin-bottom:10px">Recent activity</div>
+      <div class="card pad"><div class="mut" style="font-size:13px;line-height:1.9">
+        · Updated skill profile ${fmtDate(daysAgo(4))}<br>· Completed learning module ${fmtDate(daysAgo(12))}<br>· 1:1 with manager logged ${fmtDate(daysAgo(18))}</div></div>
+      <div class="lbl" style="margin:16px 0 10px">Leave history</div>
+      ${lv.length?lv.map(l=>`<div class="kv"><span class="k">${esc(l.type)} · ${l.days}d</span><span class="pill ${l.status==='Approved'?'ok':l.status==='Rejected'?'crit':'butter'}">${esc(l.status)}</span></div>`).join(''):'<div class="mut" style="font-size:13px">No leave on record.</div>'}
+      <div class="lbl" style="margin:16px 0 10px">HR requests</div>
+      ${hr.length?hr.map(h=>`<div class="kv"><span class="k">${esc(h.cat)}</span><span class="pill sage">${esc(h.status)}</span></div>`).join(''):'<div class="mut" style="font-size:13px">No open requests.</div>'}`;
+  }
+}
+
+/* ---- Organisation view ------------------------------------------------- */
+function vOrg(){
+  const heads=DEPARTMENTS.map((d,i)=>{const head=STATE.employees.find(e=>e.dept===d.id&&e.mgr===null);
+    const n=STATE.employees.filter(e=>e.dept===d.id).length;
+    return `<div class="card pad" style="cursor:pointer" onclick="DIR={q:'',dept:'${d.id}',loc:'',status:'',sort:'name',page:1};navigate('directory')">
+      <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px">${head?avatar(head,'md'):''}<div><div style="font-weight:700">${esc(d.name)}</div><div class="mut" style="font-size:12px">${head?esc(head.name):esc(d.head)} · Lead</div></div></div>
+      <div style="display:flex;gap:18px"><div><div class="serif" style="font-size:24px">${n}</div><div class="lbl">Headcount</div></div><div><div class="serif" style="font-size:24px">${agg().cov[d.id]}%</div><div class="lbl">Crit. coverage</div></div></div></div>`;}).join('');
+  $('#view').innerHTML=pageHead('Discover','Organisation',
+    'How Acme Technologies is structured — 8 departments across 5 locations.',
+    `<button class="btn" onclick="exportReport('Org structure')">${icon('export',15)} Export</button>`)
+    +`<div class="card pad" style="margin-bottom:22px;display:flex;align-items:center;gap:30px;flex-wrap:wrap">
+       <div><div class="serif" style="font-size:34px">2,480</div><div class="lbl">Total employees</div></div>
+       <div style="width:1px;height:40px;background:var(--line)"></div>
+       <div><div class="serif" style="font-size:34px">8</div><div class="lbl">Departments</div></div>
+       <div><div class="serif" style="font-size:34px">5</div><div class="lbl">Locations</div></div>
+       <div><div class="serif" style="font-size:34px">142</div><div class="lbl">People managers</div></div>
+       <div style="margin-left:auto;display:flex;gap:7px;flex-wrap:wrap">${LOCATIONS.map(l=>`<span class="pill sage">${icon('mappin',12)} ${l}</span>`).join('')}</div>
+     </div>
+     <div class="grid" style="grid-template-columns:repeat(3,1fr)">${heads}</div>`;
+}
+
+/* ========================================================================
+   PeopleOS — part B: Skills Intelligence + Internal Talent Marketplace
+   ======================================================================== */
+
+/* graded skill coverage for a team on one skill (0–96), smooth not binary */
+function skillCoverage(emps, skillId, deptId){
+  if(!emps.length) return 0;
+  const holders=emps.filter(x=>x.skills.some(k=>k[0]===skillId));
+  const hfrac=holders.length/emps.length;
+  const avgProf=holders.length?holders.reduce((a,x)=>a+x.skills.find(k=>k[0]===skillId)[1],0)/holders.length/4:0;
+  const inDomain=(DEPT_SKILLS[deptId]||[]).includes(skillId);
+  const pop=(SKILL_BY_ID[skillId].demand||20)/46;           // org-wide prevalence of the skill
+  let h=0;const key=deptId+skillId;for(const ch of key)h=(h*31+ch.charCodeAt(0))%101;const jit=(h/101-0.5)*20;
+  let raw;
+  if(inDomain){ raw=Math.max(hfrac*50+avgProf*42,48)+8+jit; return Math.max(46,Math.min(96,Math.round(raw))); }
+  raw=14+pop*24+hfrac*18+jit;                                // cross-functional coverage gradient
+  return Math.max(12,Math.min(52,Math.round(raw)));
+}
+
+/* ======================================================================
+   MODULE 3 — SKILLS INTELLIGENCE
+   ====================================================================== */
+let SK_CAT='All';
+function skillStats(){
+  const e=STATE.employees;
+  const mapped=SKILLS.length;
+  const critical=SKILLS.filter(s=>s.crit==='Critical').length;
+  // shortage = demand exceeds advanced+ holders
+  let shortage=0;
+  SKILLS.forEach(s=>{const holders=e.filter(x=>x.skills.some(k=>k[0]===s.id&&k[1]>=3)).length;if(holders*20<s.demand)shortage++;});
+  const incomplete=e.filter(x=>x.skills.length<4).length;
+  return {mapped,critical,shortage,incomplete};
+}
+function vSkills(){
+  const st=skillStats();
+  const kpis=[['Mapped skills',st.mapped,''],['Critical skills',st.critical,''],['Skills in shortage',st.shortage,'terra'],['Incomplete profiles',st.incomplete,'']];
+  $('#view').innerHTML=
+    pageHead('Talent','Skills Intelligence','An organisation-wide view of the capabilities you have, the ones you need, and where the gaps are.',
+      `<button class="btn" onclick="exportReport('Skills Intelligence')">${icon('export',15)} Export</button>
+       <button class="btn terra" onclick="skillInferPanel()">${sparkSvg()} Review suggested skills · ${STATE.inferred.filter(i=>i.status==='Pending').length}</button>`)
+    +`<div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+        ${kpis.map(k=>`<div class="card pad"><div class="lbl">${esc(k[0])}</div><div class="serif" style="font-size:34px;margin-top:6px;${k[2]==='terra'?'color:var(--terra)':''}">${k[1]}</div></div>`).join('')}
+      </div>
+      <div class="sec-label"><h3 class="serif" style="font-size:21px;font-weight:400">Skills coverage heatmap</h3><span class="mut" style="font-size:12px">Rows: departments · Columns: critical skills · click a cell to inspect</span></div>
+      <div class="card pad" style="margin-bottom:26px;overflow:auto">${heatmap()}</div>
+      <div class="grid" style="grid-template-columns:1.3fr 1fr;align-items:start">
+        <div class="card">
+          <div class="pad sec-label"><h3>Skills taxonomy</h3>
+            <select class="chip-f" onchange="SK_CAT=this.value;skillTax()" style="padding:7px 11px"><option>All</option>${[...new Set(SKILLS.map(s=>s.cat))].map(c=>`<option ${SK_CAT===c?'selected':''}>${c}</option>`).join('')}</select></div>
+          <div style="overflow:auto;max-height:420px"><table class="tbl"><thead><tr><th>Skill</th><th>Category</th><th>Criticality</th><th class="num">Holders</th><th class="num">Demand</th></tr></thead><tbody id="taxBody"></tbody></table></div>
+        </div>
+        <div class="card pad">
+          <div class="ai-badge" style="margin-bottom:12px">${sparkSvg()} Suggested Skills</div>
+          <h3 style="margin-bottom:6px">Suggested skills awaiting validation</h3>
+          <p class="mut" style="font-size:12.5px;margin-bottom:14px">PeopleOS infers skills from role, projects, learning records and feedback. Nothing is added to an employee record until a human validates it.</p>
+          <div id="inferList"></div>
+        </div>
+      </div>`;
+  skillTax();skillInferList();
+}
+function heatmap(){
+  const crit=SKILLS.filter(s=>s.crit==='Critical');
+  const e=STATE.employees;
+  let head='<tr><th style="position:sticky;left:0;background:var(--surface);z-index:2">Department</th>'+crit.map(s=>`<th style="text-align:center;font-size:9px;min-width:62px">${esc(s.name.split(' ')[0])}</th>`).join('')+'</tr>';
+  let rows=DEPARTMENTS.map(d=>{
+    const emps=e.filter(x=>x.dept===d.id);
+    const cells=crit.map(s=>{
+      const c=skillCoverage(emps,s.id,d.id);
+      const bg=c>=72?'#2C488C':c>=52?'#3657A7':c>=34?'#6E8CC8':c>=20?'#AAC1E8':'#EAEEF6';
+      const fg=c>=34?'#fff':c>=20?'#2C488C':'#8793a8';
+      return `<td style="text-align:center;padding:6px"><div onclick="heatCell('${d.id}','${s.id}')" style="cursor:pointer;background:${bg};color:${fg};border-radius:7px;padding:9px 4px;font-weight:700;font-size:11.5px">${c}%</div></td>`;
+    }).join('');
+    return `<tr><td style="position:sticky;left:0;background:var(--surface);font-weight:600;z-index:1">${esc(d.name)}</td>${cells}</tr>`;
+  }).join('');
+  return `<table class="tbl" style="border-collapse:separate;border-spacing:0"><thead>${head}</thead><tbody>${rows}</tbody></table>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:14px;font-size:11.5px;color:var(--ink2)"><span>Low</span>
+      ${['#EAEEF6','#AAC1E8','#6E8CC8','#2C488C'].map(c=>`<span style="width:24px;height:12px;border-radius:3px;background:${c}"></span>`).join('')}<span>High coverage</span></div>`;
+}
+function heatCell(dept,skill){
+  const s=SKILL_BY_ID[skill];const emps=STATE.employees.filter(x=>x.dept===dept);
+  const holders=emps.filter(x=>x.skills.some(k=>k[0]===skill));
+  const avg=holders.length?(holders.reduce((a,x)=>a+x.skills.find(k=>k[0]===skill)[1],0)/holders.length):0;
+  openDrawer(`<div class="dhead"><div style="flex:1"><div class="lbl">${esc(deptName(dept))} · skill cell</div><h3 class="serif" style="font-size:22px;margin-top:4px">${esc(s.name)}</h3></div><button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button></div>
+    <div class="dbody">
+      <div class="grid" style="grid-template-columns:1fr 1fr;margin-bottom:18px">
+        <div class="card pad"><div class="lbl">Avg proficiency</div><div class="serif" style="font-size:28px;margin-top:4px">${avg.toFixed(1)}/4</div><div class="mut" style="font-size:12px">${profLabel(Math.round(avg))}</div></div>
+        <div class="card pad"><div class="lbl">Required proficiency</div><div class="serif" style="font-size:28px;margin-top:4px">3.0/4</div><div class="mut" style="font-size:12px">Advanced</div></div>
+      </div>
+      <div class="card pad" style="margin-bottom:18px;background:${avg<3?'#FCECEC':'#E7F5ED'}"><div style="font-weight:700;margin-bottom:4px">${avg<3?'Shortage detected':'Coverage sufficient'}</div><div class="mut" style="font-size:13px">${avg<3?`This team is below the required proficiency for ${esc(s.name)}. Suggested: launch a targeted learning path and identify internal development candidates.`:`This team meets the required proficiency threshold.`}</div></div>
+      <div class="lbl" style="margin-bottom:10px">Employees with this skill (${holders.length})</div>
+      ${holders.slice(0,8).map(h=>{const lv=h.skills.find(k=>k[0]===skill)[1];return `<div class="kv" style="cursor:pointer" onclick="openEmp('${h.id}')"><div style="display:flex;align-items:center;gap:9px">${avatar(h)}<span style="font-weight:600;font-size:13px">${esc(h.name)}</span></div><span class="pill sage">${profLabel(lv)}</span></div>`;}).join('')||'<div class="mut">No holders in this team.</div>'}
+    </div>
+    <div class="dfoot"><button class="btn pri" onclick="closeDrawer();launchLearning('${skill}')">${icon('book',15)} Launch learning path</button><button class="btn" onclick="closeDrawer();navigate('market')">Find internal talent</button></div>`);
+}
+function skillTax(){
+  const rows=SKILLS.filter(s=>SK_CAT==='All'||s.cat===SK_CAT);
+  $('#taxBody').innerHTML=rows.map(s=>{const holders=STATE.employees.filter(x=>x.skills.some(k=>k[0]===s.id)).length;
+    return `<tr onclick="skillDetail('${s.id}')"><td style="font-weight:600">${esc(s.name)}</td><td class="mut">${esc(s.cat)}</td><td>${sevPill(s.crit)}</td><td class="num">${holders}</td><td class="num mut">${s.demand}</td></tr>`;}).join('');
+}
+function skillDetail(id){const s=SKILL_BY_ID[id];const holders=STATE.employees.filter(x=>x.skills.some(k=>k[0]===id));
+  openDrawer(`<div class="dhead"><div style="flex:1"><div class="lbl">${esc(s.cat)} skill</div><h3 class="serif" style="font-size:22px;margin-top:4px">${esc(s.name)}</h3></div><button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button></div>
+    <div class="dbody"><div class="grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:18px">
+      <div class="card pad"><div class="lbl">Criticality</div><div style="margin-top:6px">${sevPill(s.crit)}</div></div>
+      <div class="card pad"><div class="lbl">Holders</div><div class="serif" style="font-size:26px;margin-top:2px">${holders.length}</div></div>
+      <div class="card pad"><div class="lbl">Demand</div><div class="serif" style="font-size:26px;margin-top:2px">${s.demand}</div></div></div>
+      <div class="lbl" style="margin-bottom:8px">Proficiency distribution</div>
+      ${[4,3,2,1].map(lv=>{const n=holders.filter(h=>h.skills.find(k=>k[0]===id)[1]===lv).length;return `<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span>${profLabel(lv)}</span><span class="mut">${n}</span></div><div class="meter"><span style="width:${holders.length?n/holders.length*100:0}%"></span></div></div>`;}).join('')}
+      <div class="lbl" style="margin:16px 0 8px">Top holders</div>
+      ${holders.sort((a,b)=>b.skills.find(k=>k[0]===id)[1]-a.skills.find(k=>k[0]===id)[1]).slice(0,6).map(h=>`<div class="kv" style="cursor:pointer" onclick="openEmp('${h.id}')"><div style="display:flex;gap:9px;align-items:center">${avatar(h)}<span style="font-weight:600;font-size:13px">${esc(h.name)}</span></div><span class="pill sage">${profLabel(h.skills.find(k=>k[0]===id)[1])}</span></div>`).join('')}
+    </div>`);
+}
+function skillInferList(){
+  const pend=STATE.inferred.filter(i=>i.status==='Pending');
+  $('#inferList').innerHTML=pend.length?pend.map(inf=>{const e=empById(inf.emp);const s=SKILL_BY_ID[inf.skill];
+    return `<div class="card pad" style="margin-bottom:11px;border:1px solid var(--line)">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">${avatar(e)}<div style="flex:1"><div style="font-weight:600;font-size:13px">${esc(e.name)}</div><div class="mut" style="font-size:11px">${esc(e.desig)}</div></div><span class="pill butter" style="font-size:10px">${inf.conf}% conf</span></div>
+      <div style="font-size:13px;margin-bottom:4px">Suggested skill: <b>${esc(s.name)}</b></div>
+      <div class="mut" style="font-size:11.5px;margin-bottom:10px">Evidence: ${esc(inf.evidence)}</div>
+      <div style="display:flex;gap:6px"><button class="btn sm pri" onclick="inferAct('${inf.id}','accept')">${icon('check',13)} Accept</button><button class="btn sm" onclick="inferAct('${inf.id}','edit')">Edit</button><button class="btn sm gho" onclick="inferAct('${inf.id}','reject')">Reject</button></div>
+    </div>`;}).join(''):'<div class="empty" style="padding:30px">All suggestions reviewed ✦</div>';
+}
+function skillInferPanel(){navigate('skills');setTimeout(()=>{const el=$('#inferList');if(el)el.scrollIntoView({behavior:'smooth'});},100);}
+function inferAct(id,act){
+  const inf=STATE.inferred.find(i=>i.id===id);if(!inf)return;const e=empById(inf.emp);const s=SKILL_BY_ID[inf.skill];
+  if(act==='reject'){inf.status='Rejected';audit('Skill suggestion rejected',`${s.name} for ${e.name}`);toast('Suggestion rejected','warn');saveState();skillInferList();return;}
+  if(act==='edit'){
+    openModal(`<div class="mhead"><h3 class="serif" style="font-size:21px">Edit inferred skill</h3></div>
+      <div class="mbody"><div class="field"><label>Employee</label><input value="${esc(e.name)}" disabled></div>
+      <div class="field"><label>Skill</label><input id="edSk" value="${esc(s.name)}"></div>
+      <div class="field"><label>Proficiency</label><select id="edLv"><option>Beginner</option><option selected>Intermediate</option><option>Advanced</option><option>Expert</option></select></div></div>
+      <div class="mfoot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="inferConfirm('${id}')">Validate & add</button></div>`);
+    return;
+  }
+  // accept
+  const lv=3;e.skills.push([inf.skill,lv,true]);inf.status='Accepted';
+  audit('Skill validated',`${s.name} (${profLabel(lv)}) added to ${e.name}`);saveState();
+  toast(`${s.name} added to ${e.name.split(' ')[0]}'s profile`);skillInferList();
+}
+function inferConfirm(id){const inf=STATE.inferred.find(i=>i.id===id);const e=empById(inf.emp);const lvTxt=$('#edLv').value;const lv=PROF.indexOf(lvTxt)+1;
+  e.skills.push([inf.skill,lv,true]);inf.status='Accepted';audit('Skill validated',`${SKILL_BY_ID[inf.skill].name} added to ${e.name}`);saveState();closeModal();toast('Skill validated and added');skillInferList();}
+function launchLearning(skill){const s=SKILL_BY_ID[skill];const prog=LEARNING.find(l=>l.skill===skill);audit('Learning path launched',`${s.name} programme`);toast(`Learning path launched: ${prog?prog.name:s.name}`);}
+
+/* ======================================================================
+   MODULE 4 — INTERNAL TALENT MARKETPLACE (signature)
+   ====================================================================== */
+let MKT_ROLE=null;
+function matchScore(emp,role){
+  // deterministic explainable match across role's required skills
+  const dims=role.req.map(([sid,need])=>{
+    const have=emp.skills.find(k=>k[0]===sid);
+    const lvl=have?have[1]:0;
+    const pct=Math.min(100,Math.round((lvl/need)*100));
+    return {skill:SKILL_BY_ID[sid].name,pct:Math.max(20,pct)};
+  });
+  // aspiration + domain bonus
+  const overall=Math.round(dims.reduce((a,d)=>a+d.pct,0)/dims.length);
+  return {dims,overall:Math.min(98,overall)};
+}
+function candidatesFor(role){
+  return STATE.employees.filter(e=>e.status==='Active'&&e.dept!==null)
+    .map(e=>({emp:e,...matchScore(e,role)}))
+    .filter(c=>c.overall>=55)
+    .sort((a,b)=>b.overall-a.overall).slice(0,8);
+}
+function vMarket(){
+  const openRoles=OPPORTUNITIES.length;
+  const exploring=STATE.employees.filter(e=>e.exploring).length;
+  $('#view').innerHTML=
+    pageHead('Talent','Talent already exists within your organisation.','Discover internal capabilities before looking outside.',
+      `<button class="btn" onclick="newRoleModal()">${icon('plus',15)} Open a role</button>`)
+    +`<div class="grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:26px">
+        ${[['Open positions',openRoles],['Exploring mobility',exploring],['Potential matches',40],['Roles w/ skill gaps',3],['Internal fill rate','31%']].map((k,i)=>`<div class="card pad"><div class="lbl">${esc(k[0])}</div><div class="serif" style="font-size:30px;margin-top:5px;${i===4?'color:var(--terra)':''}">${k[1]}</div></div>`).join('')}
+      </div>
+      <div class="grid" style="grid-template-columns:360px 1fr;align-items:start">
+        <div>
+          <div class="lbl" style="margin-bottom:12px">Open opportunities</div>
+          <div id="roleList">${OPPORTUNITIES.map(roleCard).join('')}</div>
+        </div>
+        <div id="matchPane">${matchPaneEmpty()}</div>
+      </div>`;
+}
+function roleCard(o){
+  const sl=(STATE.shortlist[o.id]||[]).length;
+  return `<div class="card pad" style="margin-bottom:12px;cursor:pointer;${MKT_ROLE===o.id?'border:1.5px solid var(--green);background:#F4F7F1':''}" onclick="selRole('${o.id}')">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">${sevPill(o.pri)}<span class="mut" style="font-size:11px;margin-left:auto">${o.id}</span></div>
+    <div style="font-weight:700;font-size:14.5px">${esc(o.title)}</div>
+    <div class="mut" style="font-size:12.5px;margin-bottom:9px">${esc(o.team)} · ${esc(o.loc)}</div>
+    <div style="display:flex;align-items:center;gap:10px;font-size:11.5px" class="mut"><span>${icon('team',13)} ${esc(o.mgr)}</span>${sl?`<span class="pill green" style="font-size:10px">${sl} shortlisted</span>`:''}</div>
+  </div>`;
+}
+function matchPaneEmpty(){
+  return `<div class="card pad" style="text-align:center;padding:70px 30px"><div style="width:54px;height:54px;border-radius:14px;background:var(--sage);display:grid;place-items:center;margin:0 auto 16px;color:var(--green)">${icon('market',26)}</div>
+    <h3 class="serif" style="font-size:22px;margin-bottom:8px">Select a role to discover talent</h3>
+    <p class="mut" style="max-width:380px;margin:0 auto">Choose an open opportunity and PeopleOS will surface internal candidates with an explainable skill match, gaps and a mobility workflow.</p></div>`;
+}
+function selRole(id){MKT_ROLE=id;$('#roleList').innerHTML=OPPORTUNITIES.map(roleCard).join('');renderMatches(id);}
+function renderMatches(id){
+  const o=OPPORTUNITIES.find(x=>x.id===id);
+  $('#matchPane').innerHTML=`<div class="card pad" style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px">
+        <div><h3 class="serif" style="font-size:24px">${esc(o.title)}</h3><div class="mut" style="font-size:13px;margin-top:3px">${esc(o.team)} · ${esc(o.loc)} · Hiring manager ${esc(o.mgr)}</div></div>
+        ${sevPill(o.pri)}</div>
+      <div class="mut" style="font-size:13px;margin:12px 0">${esc(o.exp)}. Application deadline ${fmtDate(o.deadline)}.</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${o.req.map(([s,n])=>`<span class="pill sage">${esc(SKILL_BY_ID[s].name)} · ${profLabel(n)}+</span>`).join('')}</div>
+    </div>
+    <div class="ai-badge" style="margin-bottom:12px">${sparkSvg()} Talent Match · explainable</div>
+    <div class="load-dots" id="matchLoad" style="padding:30px;text-align:center"><span></span><span></span><span></span><div class="mut" style="margin-top:10px;font-size:12.5px">Analysing skills, projects, aspirations…</div></div>
+    <div id="matchList" style="display:none"></div>`;
+  setTimeout(()=>{
+    const cands=candidatesFor(o);
+    const ml=$('#matchList'),load=$('#matchLoad');if(!ml)return;
+    ml.innerHTML=cands.map(c=>{const e=c.emp;const sl=(STATE.shortlist[o.id]||[]).includes(e.id);
+      return `<div class="card pad" style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          ${avatar(e,'md')}
+          <div style="flex:1;cursor:pointer" onclick="candDetail('${o.id}','${e.id}')"><div style="font-weight:700;font-size:14.5px">${esc(e.name)}</div><div class="mut" style="font-size:12px">${esc(e.desig)} · ${esc(deptName(e.dept))} · ${esc(e.loc)}</div></div>
+          <div style="text-align:right"><div class="serif" style="font-size:26px;color:${c.overall>=80?'var(--green)':c.overall>=65?'var(--olive)':'var(--terra)'}">${c.overall}%</div><div class="lbl">match</div></div>
+        </div>
+        <div style="display:flex;gap:5px;margin:11px 0 12px;flex-wrap:wrap">${c.dims.map(d=>`<div style="flex:1;min-width:84px"><div style="font-size:10.5px;color:var(--ink2);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(d.skill)}</div><div class="meter ${d.pct<60?'terra':''}" style="height:5px"><span style="width:${d.pct}%"></span></div></div>`).join('')}</div>
+        <div style="display:flex;gap:6px">
+          <button class="btn sm" onclick="candDetail('${o.id}','${e.id}')">View profile</button>
+          <button class="btn sm ${sl?'':'pri'}" onclick="toggleShortlist('${o.id}','${e.id}')">${sl?icon('check',13)+' Shortlisted':icon('plus',13)+' Shortlist'}</button>
+          <button class="btn sm gho" onclick="inviteCand('${o.id}','${e.id}')">Invite to explore</button>
+        </div></div>`;}).join('');
+    load.style.display='none';ml.style.display='block';
+  },620);
+}
+function candDetail(roleId,empId){
+  const o=OPPORTUNITIES.find(x=>x.id===roleId);const e=empById(empId);const c=matchScore(e,o);
+  const missing=o.req.filter(([s,n])=>{const h=e.skills.find(k=>k[0]===s);return !h||h[1]<n;});
+  const sl=(STATE.shortlist[roleId]||[]).includes(empId);
+  openDrawer(`<div class="dhead"><span class="av lg ${avColor(e.id)}">${initials(e.name)}</span>
+     <div style="flex:1"><h3 class="serif" style="font-size:23px">${esc(e.name)}</h3><div class="mut" style="font-size:13px">${esc(e.desig)} · ${esc(deptName(e.dept))}</div><div class="mut" style="font-size:12px;margin-top:3px">${icon('mappin',12)} ${esc(e.loc)} · ${tenureStr(e.tenure)} · aspires to ${esc(e.aspire)}</div></div>
+     <button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button></div>
+    <div class="dbody">
+      <div class="card pad" style="margin-bottom:16px;text-align:center;background:#F4F7FC">
+        <div class="serif" style="font-size:38px;color:var(--green)">${c.overall}%</div><div class="lbl">overall match for ${esc(o.title)}</div></div>
+      <div class="lbl" style="margin-bottom:10px">Matching breakdown</div>
+      ${c.dims.map(d=>`<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="font-weight:600">${esc(d.skill)}</span><span class="mut">${d.pct}%</span></div><div class="meter ${d.pct<60?'terra':''}"><span style="width:${d.pct}%"></span></div></div>`).join('')}
+      <div class="card pad" style="margin:16px 0;background:var(--sage)"><div class="lbl" style="margin-bottom:6px">How this score is derived</div><p class="mut" style="font-size:12.5px;line-height:1.55">The match averages proficiency on each required skill relative to the role's target level, weighted equally. It reflects skill alignment only — not an objective measure of the employee's quality or potential.</p></div>
+      ${missing.length?`<div class="lbl" style="margin-bottom:8px">Skill gaps to close</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">${missing.map(([s,n])=>`<span class="pill warn">${esc(SKILL_BY_ID[s].name)} → ${profLabel(n)}</span>`).join('')}</div>`:'<div class="pill ok" style="margin-bottom:16px">Meets all skill requirements</div>'}
+      <div class="lbl" style="margin-bottom:8px">Suggested action</div>
+      <div class="card pad" style="margin-bottom:6px"><div style="display:flex;gap:8px"><span style="color:var(--green)">${sparkSvg()}</span><p style="font-size:13px;line-height:1.55">${c.overall>=78?'Strong internal candidate. Recommend inviting to explore and validating project evidence with the hiring manager.':'Promising candidate with a development path. Recommend a structured plan to close the listed gaps before application.'} Manager feedback available on request.</p></div></div>
+    </div>
+    <div class="dfoot">
+      <button class="btn ${sl?'':'pri'}" onclick="toggleShortlist('${roleId}','${empId}');candDetail('${roleId}','${empId}')">${sl?'Shortlisted ✓':icon('plus',14)+' Add to shortlist'}</button>
+      <button class="btn terra" onclick="inviteCand('${roleId}','${empId}')">Invite to explore</button>
+      <button class="btn" onclick="toast('Manager feedback requested')">Request feedback</button>
+      <button class="btn gho" onclick="devPlanModal('${empId}')">Development plan</button>
+    </div>`);
+}
+function toggleShortlist(roleId,empId){
+  STATE.shortlist[roleId]=STATE.shortlist[roleId]||[];
+  const arr=STATE.shortlist[roleId];const i=arr.indexOf(empId);const e=empById(empId);
+  if(i>=0){arr.splice(i,1);toast(`${e.name.split(' ')[0]} removed from shortlist`,'warn');audit('Shortlist updated',`Removed ${e.name} from ${roleId}`);}
+  else{arr.push(empId);toast(`${e.name.split(' ')[0]} added to shortlist`);audit('Shortlist updated',`Shortlisted ${e.name} for ${roleId}`);}
+  saveState();
+  if($('#roleList'))$('#roleList').innerHTML=OPPORTUNITIES.map(roleCard).join('');
+  if(MKT_ROLE)renderMatches(MKT_ROLE);
+}
+function inviteCand(roleId,empId){
+  const o=OPPORTUNITIES.find(x=>x.id===roleId);const e=empById(empId);
+  confirmModal('Invite to explore opportunity',
+    `Send <b>${esc(e.name)}</b> an invitation to explore the <b>${esc(o.title)}</b> role? This notifies the employee and starts an internal application — it does <b>not</b> apply on their behalf. They choose whether to accept.`,
+    'Send invitation',()=>{
+      if(!STATE.applications.find(a=>a.role===roleId&&a.emp===empId))
+        STATE.applications.push({role:roleId,emp:empId,stage:'Invited',ts:new Date().toISOString()});
+      audit('Mobility invitation sent',`${e.name} invited to ${o.title}`);saveState();
+      toast(`Invitation sent to ${e.name.split(' ')[0]}`);closeDrawer();
+      if(MKT_ROLE)renderMatches(MKT_ROLE);
+    },'terra');
+}
+
+/* ========================================================================
+   PeopleOS — part C: remaining modules, search, shared actions, init
+   ======================================================================== */
+
+/* ======================================================================
+   MODULE 5a — CAREER DEVELOPMENT
+   ====================================================================== */
+function vCareer(){
+  const aarav=STATE.employees.find(e=>e.name==='Aarav Menon')||STATE.employees[10];
+  const unmapped=STATE.employees.filter(e=>e.aspire!=='—').slice(0,6);
+  $('#view').innerHTML=
+    pageHead('Talent','Career Development','Growth workspaces that connect aspirations, skills and internal opportunity.',
+      `<button class="btn pri" onclick="devPlanModal('${aarav.id}')">${icon('plus',15)} New development plan</button>`)
+    +`<div class="grid" style="grid-template-columns:1.4fr 1fr;align-items:start">
+      <div class="card pad">
+        <div class="sec-label"><h3>Development plan — spotlight</h3><button class="btn sm gho" onclick="openEmp('${aarav.id}','growth')">Open profile</button></div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">${avatar(aarav,'md')}<div><div style="font-weight:700">${esc(aarav.name)}</div><div class="mut" style="font-size:12.5px">${esc(aarav.desig)} · ${esc(deptName(aarav.dept))}</div></div></div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+          <div class="card pad" style="flex:1;text-align:center;background:var(--sage)"><div class="lbl">Current</div><div style="font-weight:700;margin-top:4px">Product Analyst</div></div>
+          <div style="color:var(--terra)">${icon('arrow',20)}</div>
+          <div class="card pad" style="flex:1;text-align:center;background:#F4F7FC"><div class="lbl">Target</div><div style="font-weight:700;margin-top:4px">Product Manager</div></div>
+        </div>
+        <div class="lbl" style="margin-bottom:10px">Development gaps</div>
+        ${[['Product strategy',35],['Roadmap prioritisation',45],['Stakeholder influence',60]].map(g=>`<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="font-weight:600">${g[0]}</span><span class="mut">${g[1]}%</span></div><div class="meter ${g[1]<50?'warn':''}"><span style="width:${g[1]}%"></span></div></div>`).join('')}
+        <div class="lbl" style="margin:18px 0 10px">Suggested development</div>
+        ${['Lead one cross-functional product initiative','Complete the Product Strategy learning path','Shadow a senior PM for one quarter','Present a quarterly roadmap review'].map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line)"><span style="width:20px;height:20px;border-radius:6px;border:1.5px solid var(--olive);display:grid;place-items:center;color:var(--olive)">${icon('check',12)}</span><span style="font-size:13.5px">${s}</span></div>`).join('')}
+      </div>
+      <div class="card pad">
+        <div class="ai-badge" style="margin-bottom:12px">${sparkSvg()} Signal</div>
+        <h3 style="margin-bottom:6px">Unmapped aspirations</h3>
+        <p class="mut" style="font-size:12.5px;margin-bottom:14px">23 employees have expressed career interests with no mapped development plan. A sample:</p>
+        ${unmapped.map(e=>`<div class="kv"><div style="display:flex;align-items:center;gap:9px;cursor:pointer" onclick="openEmp('${e.id}','growth')">${avatar(e)}<div><div style="font-weight:600;font-size:13px">${esc(e.name)}</div><div class="mut" style="font-size:11px">wants ${esc(e.aspire)}</div></div></div><button class="btn sm pri" onclick="devPlanModal('${e.id}')">Plan</button></div>`).join('')}
+      </div></div>`;
+}
+
+/* ======================================================================
+   MODULE 6 — SUCCESSION PLANNING
+   ====================================================================== */
+function vSuccession(){
+  const sp=STATE.succession;
+  const noCover=sp.filter(s=>!s.successors.length).length;
+  const readyNow=sp.filter(s=>s.readiness==='Ready now').length;
+  $('#view').innerHTML=
+    pageHead('Talent','Succession Planning','Strategic coverage for critical roles. Confidential — restricted to authorised reviewers.',
+      `<span class="pill crit">${icon('policy',13)} Restricted access</span>
+       <button class="btn" onclick="exportReport('Succession — confidential')">${icon('export',15)} Export</button>`)
+    +`<div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+        ${[['Critical roles',sp.length],['No succession coverage',noCover,'terra'],['Ready-now successors',readyNow],['Leadership pipeline','38']].map((k,i)=>`<div class="card pad"><div class="lbl">${esc(k[0])}</div><div class="serif" style="font-size:32px;margin-top:5px;${k[2]==='terra'?'color:var(--terra)':''}">${k[1]}</div></div>`).join('')}
+      </div>
+      <div class="card"><div class="pad sec-label"><h3>Succession matrix</h3></div>
+      <div style="overflow:auto"><table class="tbl"><thead><tr><th>Critical role</th><th>Current holder</th><th>Criticality</th><th>Potential successors</th><th>Readiness</th><th>Development</th></tr></thead><tbody>
+      ${sp.map(s=>`<tr onclick="succDetail('${s.id}')"><td style="font-weight:600">${esc(s.role)}</td><td class="mut">${esc(s.holder)}</td><td>${sevPill(s.crit)}</td>
+        <td>${s.successors.length?`<div style="display:flex;margin-left:4px">${s.successors.map((su,i)=>`<span class="av sm ${avColor(su.id)}" style="margin-left:-8px;border:2px solid var(--surface)" title="${esc(su.name)}">${initials(su.name)}</span>`).join('')}</div>`:'<span class="pill crit">None identified</span>'}</td>
+        <td><span class="pill ${s.readiness==='Ready now'?'ok':s.readiness==='No identified successor'?'crit':'butter'}">${esc(s.readiness)}</span></td>
+        <td class="mut" style="font-size:12.5px">${esc(s.dev)}</td></tr>`).join('')}
+      </tbody></table></div></div>
+      <div class="card pad" style="margin-top:18px;background:var(--sage);display:flex;gap:12px;align-items:flex-start"><span style="color:var(--green)">${sparkSvg()}</span><p class="mut" style="font-size:13px;line-height:1.55">Succession recommendations are inputs for authorised human review, not automated decisions. PeopleOS never finalises a successor or makes promotion decisions.</p></div>`;
+}
+function succDetail(id){const s=STATE.succession.find(x=>x.id===id);
+  openDrawer(`<div class="dhead"><div style="flex:1"><div class="lbl">Critical role · confidential</div><h3 class="serif" style="font-size:22px;margin-top:4px">${esc(s.role)}</h3><div class="mut" style="font-size:13px">Current holder: ${esc(s.holder)}</div></div><button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button></div>
+    <div class="dbody">
+      <div style="display:flex;gap:10px;margin-bottom:18px">${sevPill(s.crit)}<span class="pill ${s.readiness==='Ready now'?'ok':'butter'}">${esc(s.readiness)}</span></div>
+      <div class="lbl" style="margin-bottom:10px">Potential successors</div>
+      ${s.successors.length?s.successors.map(su=>`<div class="kv" style="cursor:pointer" onclick="openEmp('${su.id}')"><div style="display:flex;align-items:center;gap:9px">${avatar(su.id)}<div><div style="font-weight:600;font-size:13px">${esc(su.name)}</div><div class="mut" style="font-size:11px">${esc(su.ready)}</div></div></div><span class="pill ${su.ready==='Ready now'?'ok':'sage'}">${esc(su.ready)}</span></div>`).join(''):`<div class="card pad" style="background:#F6E1DE"><div style="font-weight:700;margin-bottom:4px">No identified successor</div><div class="mut" style="font-size:13px">This critical role has no succession coverage. Recommend identifying and developing candidates.</div></div>`}
+      <div class="lbl" style="margin:18px 0 8px">Required development</div><div class="card pad"><p style="font-size:13px">${esc(s.dev)}</p></div>
+    </div>
+    <div class="dfoot"><button class="btn pri" onclick="toast('Successor candidates requested for review')">Nominate candidate</button><button class="btn" onclick="navigate('market')">Find internal talent</button></div>`);
+}
+
+/* ======================================================================
+   MODULE 7 — GOALS & OKRs
+   ====================================================================== */
+function vGoals(){
+  const tree=buildGoalTree();
+  $('#view').innerHTML=
+    pageHead('Performance','Goals & OKRs','Aligned objectives from organisation to individual.',
+      `<button class="btn pri" onclick="newGoalModal()">${icon('plus',15)} Create goal</button>`)
+    +`<div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+       ${[['Organisation goals',STATE.goals.filter(g=>g.level==='Organisation').length],['On track',STATE.goals.filter(g=>g.status==='On track').length],['At risk',STATE.goals.filter(g=>g.status==='At risk').length,'terra'],['Avg progress',Math.round(STATE.goals.reduce((a,g)=>a+g.prog,0)/STATE.goals.length)+'%']].map(k=>`<div class="card pad"><div class="lbl">${esc(k[0])}</div><div class="serif" style="font-size:30px;margin-top:5px;${k[2]==='terra'?'color:var(--terra)':''}">${k[1]}</div></div>`).join('')}
+     </div>
+     <div class="lbl" style="margin-bottom:12px">Goal alignment tree</div>
+     <div id="goalTree">${tree}</div>`;
+}
+function buildGoalTree(){
+  const roots=STATE.goals.filter(g=>!g.parent);
+  function node(g,depth){
+    const kids=STATE.goals.filter(x=>x.parent===g.id);
+    const lvColor={Organisation:'green',Department:'sage',Individual:'butter'}[g.level];
+    return `<div style="margin-left:${depth*26}px;margin-bottom:10px"><div class="card pad" style="cursor:pointer;border-left:3px solid ${g.status==='At risk'?'var(--warn)':'var(--green)'}" onclick="goalDetail('${g.id}')">
+      <div style="display:flex;align-items:center;gap:10px"><span class="pill ${lvColor}" style="font-size:10px">${esc(g.level)}</span>
+        <div style="flex:1"><div style="font-weight:700;font-size:14px">${esc(g.title)}</div><div class="mut" style="font-size:11.5px">${esc(g.owner)} · due ${fmtDate(g.due)}</div></div>
+        <div style="width:120px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span class="mut">${g.prog}%</span>${sevPill(g.status)}</div><div class="meter ${g.prog<40?'warn':''}"><span style="width:${g.prog}%"></span></div></div></div></div>
+      ${kids.map(k=>node(k,depth+1)).join('')}</div>`;
+  }
+  return roots.map(r=>node(r,0)).join('');
+}
+function goalDetail(id){const g=STATE.goals.find(x=>x.id===id);const parent=g.parent?STATE.goals.find(x=>x.id===g.parent):null;
+  openDrawer(`<div class="dhead"><div style="flex:1"><span class="pill ${{Organisation:'green',Department:'sage',Individual:'butter'}[g.level]}" style="font-size:10px">${esc(g.level)}</span><h3 class="serif" style="font-size:21px;margin-top:8px">${esc(g.title)}</h3><div class="mut" style="font-size:12.5px;margin-top:3px">${esc(g.owner)} · due ${fmtDate(g.due)}</div></div><button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button></div>
+    <div class="dbody">
+      <div class="card pad" style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="lbl">Progress</span>${sevPill(g.status)}</div>
+        <div class="serif" style="font-size:36px;margin-bottom:8px">${g.prog}%</div><div class="meter ${g.prog<40?'warn':''}" style="height:9px"><span style="width:${g.prog}%"></span></div>
+        <div style="display:flex;gap:8px;margin-top:14px"><button class="btn sm" onclick="updateGoal('${id}',-10)">−10%</button><button class="btn sm pri" onclick="updateGoal('${id}',10)">+10%</button><button class="btn sm gho" onclick="toast('Comment added')">Add comment</button></div></div>
+      ${parent?`<div class="lbl" style="margin-bottom:8px">Aligned to</div><div class="card pad" style="margin-bottom:16px;cursor:pointer" onclick="goalDetail('${parent.id}')"><div style="font-weight:600;font-size:13px">${esc(parent.title)}</div><div class="mut" style="font-size:11.5px">${esc(parent.level)} · ${esc(parent.owner)}</div></div>`:''}
+      <div class="lbl" style="margin-bottom:8px">Key results</div>
+      ${g.krs.map((k,i)=>`<div style="display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line)"><span style="width:20px;height:20px;border-radius:6px;background:var(--sage);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--green)">${i+1}</span><span style="font-size:13.5px">${esc(k)}</span></div>`).join('')}
+    </div>
+    <div class="dfoot"><button class="btn pri" onclick="toast('Progress saved');closeDrawer()">Save</button><button class="btn" onclick="toast('Goal shared with manager')">Share</button></div>`);
+}
+function updateGoal(id,delta){const g=STATE.goals.find(x=>x.id===id);g.prog=Math.max(0,Math.min(100,g.prog+delta));
+  g.status=g.prog>=100?'On track':g.prog<40?'At risk':'On track';audit('Goal updated',`${g.title} → ${g.prog}%`);saveState();goalDetail(id);if($('#goalTree'))$('#goalTree').innerHTML=buildGoalTree();toast('Progress updated');}
+
+/* ======================================================================
+   MODULE 5b — PERFORMANCE REVIEWS
+   ====================================================================== */
+function vReviews(){
+  const emps=STATE.employees.slice(0,18);
+  const done=emps.filter((_,i)=>i%3===0).length;
+  $('#view').innerHTML=
+    pageHead('Performance','Performance Reviews','H2 2026 review cycle — self-assessment, manager and peer feedback.',
+      `<button class="btn" onclick="toast('Cycle settings opened')">${icon('settings',15)} Configure cycle</button>
+       <button class="btn pri" onclick="toast('Reminders sent to pending reviewers')">Send reminders</button>`)
+    +`<div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+       ${[['Cycle','H2 2026'],['In progress',emps.length-done],['Completed',done],['Completion',Math.round(done/emps.length*100)+'%']].map(k=>`<div class="card pad"><div class="lbl">${esc(k[0])}</div><div class="serif" style="font-size:28px;margin-top:5px">${k[1]}</div></div>`).join('')}
+     </div>
+     <div class="card"><div style="overflow:auto"><table class="tbl"><thead><tr><th>Employee</th><th>Manager</th><th>Self-assessment</th><th>Manager review</th><th>Peer feedback</th><th>Status</th><th></th></tr></thead><tbody>
+       ${emps.map((e,i)=>{const self=i%4!==0;const mgr=i%3===0;const peer=i%2===0?'3 of 3':i+'%';const status=mgr?'Completed':self?'Awaiting manager':'Not started';
+         return `<tr onclick="reviewDetail('${e.id}')"><td><div style="display:flex;align-items:center;gap:9px">${avatar(e)}<span style="font-weight:600">${esc(e.name)}</span></div></td><td class="mut">${e.mgr?esc(empById(e.mgr).name):'—'}</td>
+         <td><span class="pill ${self?'ok':'ink'}">${self?'Done':'Pending'}</span></td><td><span class="pill ${mgr?'ok':'butter'}">${mgr?'Done':'Pending'}</span></td><td class="mut">${i%2===0?'3 of 3':'1 of 3'}</td>
+         <td><span class="pill ${status==='Completed'?'ok':status==='Not started'?'ink':'butter'}">${status}</span></td><td><button class="btn sm" onclick="event.stopPropagation();reviewDetail('${e.id}')">Open</button></td></tr>`;}).join('')}
+     </tbody></table></div></div>`;
+}
+function reviewDetail(id){const e=empById(id);
+  openDrawer(`<div class="dhead"><span class="av md ${avColor(e.id)}">${initials(e.name)}</span><div style="flex:1"><h3 class="serif" style="font-size:21px">${esc(e.name)}</h3><div class="mut" style="font-size:12.5px">H2 2026 Performance Review</div></div><button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button></div>
+    <div class="dbody">
+      <div class="card pad" style="margin-bottom:14px;display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green)">${sparkSvg()}</span><div><div class="lbl" style="margin-bottom:4px">Feedback summary</div><p style="font-size:13px;line-height:1.55">Recurring themes across peer and manager input: strong execution and reliability, growing cross-functional influence. Development theme: strategic framing of trade-offs. <span class="mut">Summarises themes only — it never assigns ratings or promotion decisions.</span></p></div></div>
+      <div class="lbl" style="margin-bottom:8px">Achievements</div><div class="card pad" style="margin-bottom:14px"><div class="mut" style="font-size:13px;line-height:1.6">Delivered key workstream ahead of schedule; mentored two new joiners; improved a core metric by 11%.</div></div>
+      <div class="lbl" style="margin-bottom:8px">Development areas</div><div class="card pad" style="margin-bottom:14px"><div class="mut" style="font-size:13px;line-height:1.6">Broaden stakeholder influence; take ownership of a cross-functional initiative.</div></div>
+      <div class="field"><label>Manager comments</label><textarea rows="3" placeholder="Add your assessment…"></textarea></div>
+      <div class="field"><label>Next-period goals</label><textarea rows="2" placeholder="Agree goals for the next cycle…"></textarea></div>
+    </div>
+    <div class="dfoot"><button class="btn pri" onclick="toast('Review submitted');closeDrawer()">Submit review</button><button class="btn" onclick="toast('Draft saved')">Save draft</button></div>`);
+}
+
+/* ======================================================================
+   MODULE 5c — FEEDBACK & RECOGNITION
+   ====================================================================== */
+function vFeedback(){
+  const feed=STATE.employees.slice(5,13).map((e,i)=>({e,from:STATE.employees[(i*7+2)%120],type:i%3===0?'Recognition':'Feedback',txt:pick(['Went above and beyond on the launch','Exceptional partnership this quarter','Thoughtful code reviews that lifted the whole team','Brought calm and clarity to a hard problem','Mentored new joiners with real care'])}));
+  $('#view').innerHTML=
+    pageHead('Performance','Feedback & Recognition','Continuous feedback and peer recognition across Acme.',
+      `<button class="btn terra" onclick="giveFeedbackModal()">${icon('feedback',15)} Give recognition</button>`)
+    +`<div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+        ${[['This month','214'],['Recognition','96'],['Participation','74%'],['Top value','Craft']].map(k=>`<div class="card pad"><div class="lbl">${esc(k[0])}</div><div class="serif" style="font-size:28px;margin-top:5px">${k[1]}</div></div>`).join('')}
+     </div>
+     <div class="grid" style="grid-template-columns:1.4fr 1fr;align-items:start">
+       <div><div class="lbl" style="margin-bottom:12px">Recent recognition</div>
+       ${feed.map(f=>`<div class="card pad" style="margin-bottom:11px"><div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">${avatar(f.from)}<div style="flex:1"><span style="font-weight:600;font-size:13px">${esc(f.from.name)}</span> <span class="mut" style="font-size:12px">recognised</span> <span style="font-weight:600;font-size:13px">${esc(f.e.name)}</span></div><span class="pill ${f.type==='Recognition'?'terra':'sage'}" style="font-size:10px">${f.type}</span></div><div style="font-size:13.5px;line-height:1.5">${esc(f.txt)}</div></div>`).join('')}</div>
+       <div class="card pad"><div class="lbl" style="margin-bottom:12px">Most recognised</div>
+       ${STATE.employees.slice(0,6).map((e,i)=>`<div class="kv" style="cursor:pointer" onclick="openEmp('${e.id}')"><div style="display:flex;align-items:center;gap:9px"><span style="width:20px;font-weight:700;color:var(--terra)">${i+1}</span>${avatar(e)}<span style="font-weight:600;font-size:13px">${esc(e.name)}</span></div><span class="pill butter">${24-i*3}</span></div>`).join('')}</div>
+     </div>`;
+}
+
+/* ======================================================================
+   MODULE 7 — ONBOARDING
+   ====================================================================== */
+function vOnboard(){
+  const list=STATE.onboarding;
+  const active=list.filter(o=>o.stageIdx<6);
+  $('#view').innerHTML=
+    pageHead('People Operations','Onboarding','Track every new joiner from offer to fully onboarded.',
+      `<button class="btn pri" onclick="toast('New onboarding record created')">${icon('plus',15)} Add joiner</button>`)
+    +`<div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+        ${[['In onboarding',active.length],['Blocked',list.filter(o=>o.blocker).length,'terra'],['Completing this week',3],['Avg time to productive','18 days']].map((k,i)=>`<div class="card pad"><div class="lbl">${esc(k[0])}</div><div class="serif" style="font-size:30px;margin-top:5px;${k[2]==='terra'?'color:var(--terra)':''}">${k[1]}</div></div>`).join('')}
+     </div>
+     ${active.map(o=>{const e=empById(o.emp);
+       return `<div class="card pad" style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">${avatar(e,'md')}<div style="flex:1"><div style="font-weight:700">${esc(e.name)}</div><div class="mut" style="font-size:12px">${esc(e.desig)} · started ${fmtDate(o.start)} · owner ${esc(o.owner)}</div></div>${o.blocker?`<span class="pill crit">${icon('clock',12)} ${esc(o.blocker)}</span>`:`<span class="pill ok">On track</span>`}</div>
+       <div style="display:flex;gap:4px">${ONB_STAGES.map((st,i)=>`<div style="flex:1;text-align:center"><div style="height:6px;border-radius:3px;background:${i<=o.stageIdx?'var(--green)':'var(--line)'}"></div><div style="font-size:9.5px;margin-top:5px;color:${i===o.stageIdx?'var(--green)':'var(--ink2)'};font-weight:${i===o.stageIdx?'700':'500'}">${esc(st.split(' ')[0])}</div></div>`).join('')}</div>
+       <div style="display:flex;gap:6px;margin-top:14px"><button class="btn sm pri" onclick="advanceOnb('${o.id}')" ${o.stageIdx>=6?'disabled style=opacity:.4':''}>${icon('check',13)} Advance stage</button><button class="btn sm" onclick="openEmp('${e.id}')">View profile</button>${o.blocker?`<button class="btn sm gho" onclick="clearBlocker('${o.id}')">Clear blocker</button>`:''}</div></div>`;}).join('')}`;
+}
+function advanceOnb(id){const o=STATE.onboarding.find(x=>x.id===id);if(o.stageIdx<6){o.stageIdx++;o.stage=ONB_STAGES[o.stageIdx];if(o.stageIdx===6)o.blocker=null;audit('Onboarding advanced',`${empById(o.emp).name} → ${o.stage}`);saveState();toast(`Advanced to: ${o.stage}`);vOnboard();}}
+function clearBlocker(id){const o=STATE.onboarding.find(x=>x.id===id);o.blocker=null;audit('Onboarding blocker cleared',empById(o.emp).name);saveState();toast('Blocker cleared');vOnboard();}
+
+/* ======================================================================
+   MODULE 7b — LEAVE & ATTENDANCE
+   ====================================================================== */
+let LV_TAB='queue';
+function vLeave(){
+  const pend=STATE.leave.filter(l=>l.status==='Pending');
+  $('#view').innerHTML=
+    pageHead('People Operations','Leave & Attendance','Balances, requests and team availability.',
+      `<button class="btn pri" onclick="newLeaveModal()">${icon('plus',15)} Request leave</button>`)
+    +`<div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:22px">
+        ${[['Pending approvals',pend.length,'terra'],['Approved (month)',STATE.leave.filter(l=>l.status==='Approved').length],['On leave today','14'],['Avg balance','16.4 days']].map((k,i)=>`<div class="card pad"><div class="lbl">${esc(k[0])}</div><div class="serif" style="font-size:30px;margin-top:5px;${k[2]==='terra'?'color:var(--terra)':''}">${k[1]}</div></div>`).join('')}
+     </div>
+     <div class="tabs"><button class="${LV_TAB==='queue'?'on':''}" onclick="LV_TAB='queue';vLeave()">Approval queue</button><button class="${LV_TAB==='all'?'on':''}" onclick="LV_TAB='all';vLeave()">All requests</button><button class="${LV_TAB==='cal'?'on':''}" onclick="LV_TAB='cal';vLeave()">Team calendar</button></div>
+     <div id="leaveBody"></div>`;
+  leaveBody();
+}
+function leaveBody(){
+  const b=$('#leaveBody');
+  if(LV_TAB==='cal'){
+    const days=14;const today=new Date('2026-11-12');
+    const onLeave={};STATE.leave.filter(l=>l.status==='Approved').forEach(l=>{const d=new Date(l.from);const off=Math.round((d-today)/864e5);if(off>=0&&off<days)(onLeave[off]=onLeave[off]||[]).push(l);});
+    b.innerHTML=`<div class="card pad"><div class="lbl" style="margin-bottom:14px">Next 14 days</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px">
+      ${Array.from({length:days}).map((_,i)=>{const d=new Date(today);d.setDate(d.getDate()+i);const ppl=onLeave[i]||[];
+        return `<div class="card pad" style="padding:10px;min-height:88px"><div style="font-weight:700;font-size:13px">${d.getDate()}</div><div class="mut" style="font-size:10px;margin-bottom:6px">${d.toLocaleDateString('en',{weekday:'short'})}</div>${ppl.slice(0,3).map(l=>avatar(l.emp)).join(' ')}${ppl.length>3?`<span class="mut" style="font-size:10px">+${ppl.length-3}</span>`:''}</div>`;}).join('')}
+    </div></div>`;return;
+  }
+  const rows=LV_TAB==='queue'?STATE.leave.filter(l=>l.status==='Pending'):STATE.leave;
+  b.innerHTML=`<div class="card"><div style="overflow:auto"><table class="tbl"><thead><tr><th>Employee</th><th>Type</th><th>Dates</th><th class="num">Days</th><th>Reason</th><th>Status</th><th></th></tr></thead><tbody>
+    ${rows.map(l=>{const e=empById(l.emp);return `<tr><td onclick="openEmp('${e.id}')"><div style="display:flex;align-items:center;gap:9px">${avatar(e)}<span style="font-weight:600">${esc(e.name)}</span></div></td><td>${esc(l.type)}</td><td class="mut">${fmtDate(l.to)} – ${fmtDate(l.from)}</td><td class="num">${l.days}</td><td class="mut">${esc(l.reason)}</td><td><span class="pill ${l.status==='Approved'?'ok':l.status==='Rejected'?'crit':'butter'}">${esc(l.status)}</span></td>
+      <td>${l.status==='Pending'?`<div style="display:flex;gap:5px"><button class="btn sm pri" onclick="leaveAct('${l.id}','Approved')">Approve</button><button class="btn sm gho" onclick="leaveAct('${l.id}','Rejected')">Reject</button></div>`:''}</td></tr>`;}).join('')||`<tr><td colspan="7"><div class="empty">No requests.</div></td></tr>`}
+  </tbody></table></div></div>`;
+}
+function leaveAct(id,status){const l=STATE.leave.find(x=>x.id===id);const e=empById(l.emp);
+  if(status==='Rejected'){
+    openModal(`<div class="mhead"><h3 class="serif" style="font-size:21px">Reject leave request</h3></div><div class="mbody"><p class="mut" style="font-size:13px;margin-bottom:12px">Add a comment for ${esc(e.name)} explaining the decision.</p><div class="field"><textarea id="lvReason" rows="3" placeholder="Reason…"></textarea></div></div><div class="mfoot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn terra" onclick="doLeave('${id}','Rejected')">Reject request</button></div>`);
+    return;
+  }
+  doLeave(id,'Approved');
+}
+function doLeave(id,status){const l=STATE.leave.find(x=>x.id===id);l.status=status;audit('Leave '+status.toLowerCase(),`${empById(l.emp).name} · ${l.type} ${l.days}d`);saveState();closeModal();toast(`Leave ${status.toLowerCase()} for ${empById(l.emp).name.split(' ')[0]}`,status==='Rejected'?'warn':'');vLeave();}
+
+/* ======================================================================
+   MODULE 7c — HR REQUESTS
+   ====================================================================== */
+let HR_F='';
+function vHR(){
+  const rows=STATE.hr.filter(h=>!HR_F||h.status===HR_F);
+  $('#view').innerHTML=
+    pageHead('People Operations','HR Requests','A single queue for payroll, benefits, documents and support.',
+      `<button class="btn pri" onclick="toast('New HR request created')">${icon('plus',15)} New request</button>`)
+    +`<div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:22px">
+       ${[['Open',STATE.hr.filter(h=>h.status==='Open').length,'terra'],['In progress',STATE.hr.filter(h=>h.status==='In progress').length],['Resolved',STATE.hr.filter(h=>h.status==='Resolved').length],['Breaching SLA',STATE.hr.filter(h=>h.sla==='Breaching').length,'terra']].map((k,i)=>`<div class="card pad"><div class="lbl">${esc(k[0])}</div><div class="serif" style="font-size:30px;margin-top:5px;${k[2]==='terra'?'color:var(--terra)':''}">${k[1]}</div></div>`).join('')}
+     </div>
+     <div style="display:flex;gap:7px;margin-bottom:16px">${['','Open','In progress','Resolved'].map(s=>`<button class="chip-f" style="${HR_F===s?'background:var(--green);color:#fff;border-color:var(--green)':''}" onclick="HR_F='${s}';vHR()">${s||'All'}</button>`).join('')}</div>
+     <div class="card"><div style="overflow:auto"><table class="tbl"><thead><tr><th>ID</th><th>Employee</th><th>Category</th><th>Summary</th><th>Priority</th><th>Owner</th><th>SLA</th><th>Status</th></tr></thead><tbody>
+       ${rows.map(h=>{const e=empById(h.emp);return `<tr onclick="hrDetail('${h.id}')"><td class="mut">${h.id}</td><td><div style="display:flex;align-items:center;gap:8px">${avatar(e)}<span style="font-weight:600;font-size:13px">${esc(e.name)}</span></div></td><td>${esc(h.cat)}</td><td class="mut">${esc(h.summary)}</td><td>${sevPill(h.pri)}</td><td class="mut">${esc(h.owner)}</td><td><span class="pill ${h.sla==='Breaching'?'crit':'ok'}">${esc(h.sla)}</span></td><td><span class="pill ${h.status==='Resolved'?'ok':h.status==='Open'?'butter':'sage'}">${esc(h.status)}</span></td></tr>`;}).join('')}
+     </tbody></table></div></div>`;
+}
+function hrDetail(id){const h=STATE.hr.find(x=>x.id===id);const e=empById(h.emp);
+  openDrawer(`<div class="dhead"><div style="flex:1"><div class="lbl">${h.id} · ${esc(h.cat)}</div><h3 class="serif" style="font-size:20px;margin-top:4px">${esc(h.summary)}</h3></div><button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button></div>
+    <div class="dbody">
+      <div class="card pad" style="margin-bottom:14px"><div class="kv"><span class="k">Employee</span><span class="v">${esc(e.name)}</span></div><div class="kv"><span class="k">Priority</span><span class="v">${h.pri}</span></div><div class="kv"><span class="k">Owner</span><span class="v">${esc(h.owner)}</span></div><div class="kv"><span class="k">Created</span><span class="v">${fmtDate(h.created)}</span></div><div class="kv"><span class="k">SLA</span><span class="v">${esc(h.sla)}</span></div></div>
+      <div class="lbl" style="margin-bottom:10px">Conversation</div>
+      <div class="card pad" style="margin-bottom:10px"><div style="display:flex;gap:9px;margin-bottom:12px">${avatar(e)}<div><div style="font-weight:600;font-size:12.5px">${esc(e.name)}</div><div class="mut" style="font-size:12.5px">${esc(h.summary)}. Could you please help?</div></div></div>
+        <div style="display:flex;gap:9px"><span class="av sm c1">JD</span><div><div style="font-weight:600;font-size:12.5px">John Doe</div><div class="mut" style="font-size:12.5px">Looking into this now — will update shortly.</div></div></div></div>
+      <div class="field"><textarea rows="2" placeholder="Reply…"></textarea></div>
+    </div>
+    <div class="dfoot"><button class="btn pri" onclick="hrResolve('${id}')">Mark resolved</button><button class="btn" onclick="toast('Reply sent')">Send reply</button><button class="btn gho" onclick="toast('Reassigned to People Ops')">Reassign</button></div>`);
+}
+function hrResolve(id){const h=STATE.hr.find(x=>x.id===id);h.status='Resolved';h.sla='Met';audit('HR request resolved',h.id);saveState();closeDrawer();toast('Request resolved');vHR();}
+
+/* ======================================================================
+   MODULE 7d — POLICIES & DOCUMENTS
+   ====================================================================== */
+function vPolicy(){
+  $('#view').innerHTML=
+    pageHead('People Operations','Policies & Documents','Searchable, access-controlled company policies.',
+      `<button class="btn pri" onclick="toast('Upload dialog opened')">${icon('plus',15)} Upload document</button>`)
+    +`<div class="card pad" style="margin-bottom:18px;display:flex;align-items:center;gap:9px"><div style="flex:1;display:flex;align-items:center;gap:9px">${icon('search',16)}<input placeholder="Search policies and documents…" style="border:none;background:none;width:100%;outline:none" oninput="polFilter(this.value)"></div></div>
+     <div class="grid" style="grid-template-columns:repeat(3,1fr)" id="polGrid">${POLICIES.map(polCard).join('')}</div>`;
+}
+function polCard(p){return `<div class="card pad" style="cursor:pointer" onclick="toast('Opening ${esc(p.name)}')"><div style="display:flex;align-items:flex-start;gap:11px"><div style="width:40px;height:40px;border-radius:10px;background:var(--sage);display:grid;place-items:center;color:var(--green)">${icon('policy',20)}</div><div style="flex:1"><div style="font-weight:700;font-size:14px">${esc(p.name)}</div><div class="mut" style="font-size:12px;margin-top:3px">${esc(p.cat)} · updated ${fmtDate(p.updated)}</div></div></div><div style="display:flex;gap:6px;margin-top:14px"><button class="btn sm" onclick="event.stopPropagation();toast('Preview opened')">Preview</button><button class="btn sm gho" onclick="event.stopPropagation();toast('Download started')">Download</button></div></div>`;}
+function polFilter(q){q=q.toLowerCase();$('#polGrid').innerHTML=POLICIES.filter(p=>p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)).map(polCard).join('')||'<div class="empty">No documents match.</div>';}
+
+/* ======================================================================
+   MODULE 8 — PEOPLE INSIGHTS (investigative AI)
+   ====================================================================== */
+function vInsights(){
+  $('#view').innerHTML=
+    pageHead('Intelligence','People Signals','Evidence-backed workforce reviews with human-controlled actions.',
+      `<button class="btn terra" onclick="navigate('assistant')">${sparkSvg()} Ask about your workforce</button>`)
+    +`<div class="grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px" id="insGrid">
+      ${STATE.insights.map(ins=>`<div class="card pad" style="cursor:pointer;border-top:3px solid ${ins.sev==='Critical'?'var(--crit)':ins.sev==='Opportunity'?'var(--green)':'var(--warn)'}" onclick="openInsight('${ins.id}')">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">${sevPill(ins.sev)}${ins.reviewed?'<span class="pill ok" style="font-size:10px">Reviewed</span>':''}<span class="mut" style="font-size:10.5px;margin-left:auto">${esc(ins.fresh)}</span></div>
+        <div style="font-weight:700;font-size:14.5px;margin-bottom:8px">${esc(ins.title)}</div>
+        <div class="mut" style="font-size:12.5px;line-height:1.5">${esc(ins.expl)}</div>
+        <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between"><span class="mut" style="font-size:11.5px">Confidence: ${esc(ins.conf)}</span><span style="color:var(--green);font-weight:600;font-size:12px">Explore signal ${icon('arrow',13)}</span></div></div>`).join('')}
+    </div>`;
+}
+function openInsight(id){
+  const ins=STATE.insights.find(x=>x.id===id);
+  openDrawer(`<div class="dhead"><div style="flex:1"><div style="display:flex;gap:8px;align-items:center">${sevPill(ins.sev)}<span class="ai-badge">${sparkSvg()} Workforce Review</span></div><h3 class="serif" style="font-size:21px;margin-top:10px">${esc(ins.title)}</h3></div><button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button></div>
+    <div class="dbody">
+      <div class="lbl" style="margin-bottom:8px">What was detected</div><p style="font-size:13.5px;line-height:1.6;margin-bottom:18px">${esc(ins.expl)}</p>
+      <div class="lbl" style="margin-bottom:8px">Analytical steps</div>
+      <div class="card pad" style="margin-bottom:18px">${['Interpreted the question and scope','Identified relevant datasets','Computed coverage against requirements','Validated against verified records'].map((s,i)=>`<div style="display:flex;gap:10px;align-items:center;padding:6px 0;font-size:13px"><span style="width:18px;height:18px;border-radius:5px;background:var(--sage);display:grid;place-items:center;font-size:10px;font-weight:700;color:var(--green)">${i+1}</span>${s}</div>`).join('')}</div>
+      <div class="lbl" style="margin-bottom:8px">Supporting evidence</div>
+      <div class="card pad" style="margin-bottom:18px;background:var(--sage)">${ins.data.map(d=>`<div style="display:flex;gap:9px;align-items:center;padding:6px 0;font-size:13px"><span style="color:var(--green)">${icon('dot',10)}</span>${esc(d)}</div>`).join('')}</div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;margin-bottom:18px">
+        <div class="card pad"><div class="lbl">Confidence</div><div style="font-weight:700;margin-top:4px">${esc(ins.conf)}</div></div>
+        <div class="card pad"><div class="lbl">Data freshness</div><div style="font-weight:700;margin-top:4px">${esc(ins.fresh)}</div></div>
+      </div>
+      <div class="lbl" style="margin-bottom:8px">Suggested actions</div>
+      <div class="card pad" style="margin-bottom:12px"><p style="font-size:13.5px;line-height:1.55">${esc(ins.rec)}</p></div>
+      <p class="mut" style="font-size:11.5px;line-height:1.5">Known limitation: this is a decision-support signal, not a prediction of any individual's decisions. All actions require authorised human review.</p>
+    </div>
+    <div class="dfoot"><button class="btn pri" onclick="insightAction('${id}')">Create follow-up action</button><button class="btn" onclick="markReviewed('${id}')">${ins.reviewed?'Reviewed ✓':'Mark reviewed'}</button><button class="btn gho" onclick="navigate(insModuleMap('${ins.module}'));closeDrawer()">Open module</button></div>`);
+}
+function insModuleMap(m){return {skills:'skills',marketplace:'market',insights:'insights',career:'career'}[m]||'insights';}
+function insightAction(id){const ins=STATE.insights.find(x=>x.id===id);audit('Follow-up action created',ins.title);saveState();toast('Follow-up action created & assigned');}
+function markReviewed(id){const ins=STATE.insights.find(x=>x.id===id);ins.reviewed=true;audit('Insight marked reviewed',ins.title);saveState();closeDrawer();toast('Marked as reviewed');if(CUR==='insights')vInsights();}
+
+/* ======================================================================
+   MODULE 9 — WORKFORCE PLANNING
+   ====================================================================== */
+let WF_SCN='S-A';
+function vPlanning(){
+  $('#view').innerHTML=
+    pageHead('Intelligence','Workforce Planning','Scenario-based planning simulations — not forecasts.',
+      `<button class="btn" onclick="exportReport('Workforce plan')">${icon('export',15)} Export</button>`)
+    +`<div class="lbl" style="margin-bottom:12px">Compare scenarios</div>
+     <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
+       ${SCENARIOS.map(s=>`<div class="card pad" style="cursor:pointer;${WF_SCN===s.id?'border:1.5px solid var(--green);background:#F4F7F1':''}" onclick="WF_SCN='${s.id}';vPlanning()">
+         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">${WF_SCN===s.id?'<span class="pill green" style="font-size:10px">Selected</span>':`<span class="mut" style="font-size:11px">${s.id}</span>`}</div>
+         <div style="font-weight:700;font-size:15px;margin-bottom:12px">${esc(s.name)}</div>
+         <div class="kv"><span class="k">Headcount</span><span class="v">${s.hc.toLocaleString()}</span></div>
+         <div class="kv"><span class="k">External hires</span><span class="v">${s.hire}</span></div>
+         <div class="kv"><span class="k">Est. cost</span><span class="v">${s.cost}</span></div>
+         <div class="kv"><span class="k">Critical gaps</span><span class="v" style="color:var(--terra)">${s.gap}</span></div>
+       </div>`).join('')}
+     </div>
+     <div class="grid" style="grid-template-columns:1.3fr 1fr;align-items:start">
+       <div class="card pad"><div class="sec-label"><h3>Scenario detail — ${esc(SCENARIOS.find(s=>s.id===WF_SCN).name)}</h3></div>
+         <p class="mut" style="font-size:13px;margin-bottom:16px">${esc(SCENARIOS.find(s=>s.id===WF_SCN).note)}</p>
+         <div class="lbl" style="margin-bottom:10px">Editable assumptions</div>
+         <div class="field"><label>Engineering capacity change (%)</label><input type="range" min="-10" max="30" value="${WF_SCN==='S-B'?15:0}" oninput="this.nextElementSibling.textContent=this.value+'%'" style="width:100%"><span class="mut" style="font-size:12px">${WF_SCN==='S-B'?15:0}%</span></div>
+         <div class="field"><label>Internal mobility target (%)</label><input type="range" min="20" max="60" value="${WF_SCN==='S-C'?55:31}" oninput="this.nextElementSibling.textContent=this.value+'%'" style="width:100%"><span class="mut" style="font-size:12px">${WF_SCN==='S-C'?55:31}%</span></div>
+         <button class="btn pri" onclick="toast('Scenario recalculated')" style="margin-top:6px">Recalculate</button>
+       </div>
+       <div class="card pad"><div class="lbl" style="margin-bottom:12px">Department capacity</div>
+         ${DEPARTMENTS.slice(0,6).map(d=>{const cur=agg().deptCount[d.id];const plan=cur+(WF_SCN==='S-B'&&d.id==='eng'?6:ri(0,3));return `<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span style="font-weight:600">${esc(d.name)}</span><span class="mut">${cur} → ${plan}</span></div><div class="meter"><span style="width:${plan/44*100}%"></span></div></div>`;}).join('')}
+       </div>
+     </div>
+     <div class="card pad" style="margin-top:18px;background:var(--sage);display:flex;gap:12px"><span style="color:var(--green)">${sparkSvg()}</span><p class="mut" style="font-size:13px">These are planning simulations using illustrative cost figures, intended to support workforce decisions — not actual forecasts.</p></div>`;
+}
+
+/* ======================================================================
+   MODULE 8b — AI ASSISTANT (Ask about your workforce)
+   ====================================================================== */
+let ASK_MSGS=[];
+const ASK_SUGG=['Which departments have the largest critical skills shortages?','Which open positions have potential internal candidates?','How has voluntary attrition changed over the last six months?','Which employees have overdue development plans?'];
+function vAssistant(){
+  $('#view').innerHTML=
+    pageHead('Intelligence','PeopleOS Copilot','Ask questions of your workforce data. Every answer shows its reasoning and evidence.',
+      '<span class="ai-badge">'+sparkSvg()+' PeopleOS Copilot</span>')
+    +`<div class="card" style="overflow:hidden">
+        <div id="askScroll" style="padding:22px;min-height:340px;max-height:460px;overflow:auto;display:flex;flex-direction:column;gap:16px">${ASK_MSGS.length?ASK_MSGS.map(askBubble).join(''):askWelcome()}</div>
+        <div style="padding:14px 18px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center;background:var(--surface)">
+          <input id="askIn" placeholder="Ask about skills, attrition, mobility, succession…" style="flex:1;border:1px solid var(--line2);border-radius:10px;padding:11px 14px;outline:none" onkeydown="if(event.key==='Enter')askSend(this.value)">
+          <button class="btn pri" onclick="askSend(document.getElementById('askIn').value)">${icon('arrow',16)} Ask</button>
+        </div>
+      </div>`;
+  const sc=$('#askScroll');if(sc)sc.scrollTop=sc.scrollHeight;
+}
+function askWelcome(){
+  return `<div style="text-align:center;padding:24px 10px"><div style="width:52px;height:52px;border-radius:14px;background:var(--green);display:grid;place-items:center;margin:0 auto 14px;color:#fff">${sparkSvg()}</div>
+    <h3 class="serif" style="font-size:22px;margin-bottom:8px">How can I help with your people data?</h3>
+    <p class="mut" style="max-width:420px;margin:0 auto 20px">I interpret your question, identify the datasets, show my steps and evidence, and suggest next actions you control.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;max-width:520px;margin:0 auto">${ASK_SUGG.map(q=>`<button class="card pad" style="text-align:left;cursor:pointer;font-size:13.5px;font-weight:600" onclick="askSend(this.dataset.q)" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div></div>`;
+}
+function askBubble(m){
+  if(m.role==='user')return `<div style="align-self:flex-end;max-width:76%"><div style="background:var(--green);color:#fff;padding:11px 15px;border-radius:14px 14px 4px 14px;font-size:13.5px">${esc(m.text)}</div></div>`;
+  return `<div style="align-self:flex-start;max-width:88%;display:flex;gap:11px">
+    <div style="width:30px;height:30px;border-radius:9px;background:var(--green);display:grid;place-items:center;color:#fff;flex:none">${sparkSvg()}</div>
+    <div style="flex:1">${m.html}</div></div>`;
+}
+function askSend(q){
+  q=(q||'').trim();if(!q)return;
+  if(!ASK_MSGS.length)$('#askScroll').innerHTML='';
+  ASK_MSGS.push({role:'user',text:q});
+  const sc=$('#askScroll');sc.insertAdjacentHTML('beforeend',askBubble(ASK_MSGS[ASK_MSGS.length-1]));
+  $('#askIn').value='';
+  const loadId='ld'+Date.now();
+  sc.insertAdjacentHTML('beforeend',`<div id="${loadId}" style="align-self:flex-start;display:flex;gap:11px"><div style="width:30px;height:30px;border-radius:9px;background:var(--green);display:grid;place-items:center;color:#fff">${sparkSvg()}</div><div class="load-dots" style="padding:8px 0"><span></span><span></span><span></span></div></div>`);
+  sc.scrollTop=sc.scrollHeight;
+  setTimeout(()=>{const ld=document.getElementById(loadId);if(ld)ld.remove();
+    const ans=askAnswer(q);ASK_MSGS.push({role:'ai',html:ans});
+    sc.insertAdjacentHTML('beforeend',askBubble(ASK_MSGS[ASK_MSGS.length-1]));sc.scrollTop=sc.scrollHeight;
+  },700);
+}
+function askAnswer(q){
+  const l=q.toLowerCase();let ins=null;
+  if(l.includes('skill')||l.includes('shortage'))ins=STATE.insights[0];
+  else if(l.includes('internal')||l.includes('candidate')||l.includes('position')||l.includes('role'))ins=STATE.insights[1];
+  else if(l.includes('attrition')||l.includes('retention')||l.includes('leav'))ins=STATE.insights[2];
+  else if(l.includes('development')||l.includes('aspiration')||l.includes('career'))ins=STATE.insights[3];
+  if(ins){
+    return `<div class="card pad" style="margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">${sevPill(ins.sev)}<span class="mut" style="font-size:11px">${esc(ins.conf)} confidence · ${esc(ins.fresh)}</span></div>
+      <p style="font-size:13.5px;line-height:1.55;margin-bottom:12px">${esc(ins.expl)}</p>
+      <div class="lbl" style="margin-bottom:6px">Supporting evidence</div>
+      <div style="background:var(--sage);border-radius:9px;padding:11px 13px;margin-bottom:12px">${ins.data.map(d=>`<div style="font-size:12.5px;padding:3px 0">· ${esc(d)}</div>`).join('')}</div>
+      <div class="lbl" style="margin-bottom:6px">Suggested next step</div>
+      <p style="font-size:13px;line-height:1.5;margin-bottom:12px">${esc(ins.rec)}</p>
+      <div style="display:flex;gap:7px;flex-wrap:wrap"><button class="btn sm pri" onclick="openInsight('${ins.id}')">Explore signal</button><button class="btn sm" onclick="navigate('${insModuleMap(ins.module)}')">Inspect records</button></div></div>`;
+  }
+  return `<div class="card pad"><p style="font-size:13.5px;line-height:1.55;margin-bottom:10px">I can analyse skills coverage, internal mobility, attrition signals, succession coverage and development plans. Here are some starting points:</p><div style="display:flex;flex-direction:column;gap:6px">${ASK_SUGG.map(s=>`<button class="btn sm" style="justify-content:flex-start" onclick="askSend('${esc(s)}')">${esc(s)}</button>`).join('')}</div></div>`;
+}
+
+/* ======================================================================
+   MODULE 10 — ADMINISTRATION (Team, Integrations, Settings)
+   ====================================================================== */
+function vTeam(){
+  $('#view').innerHTML=
+    pageHead('Administration','Team & Permissions','Role-aware access across PeopleOS.',
+      `<button class="btn pri" onclick="inviteUserModal()">${icon('plus',15)} Invite user</button>`)
+    +`<div class="card pad" style="margin-bottom:20px"><div class="lbl" style="margin-bottom:12px">Role model</div>
+       <div style="display:flex;gap:8px;flex-wrap:wrap">${ROLES_RBAC.map(r=>`<span class="pill ${r==='Super Admin'?'green':'sage'}">${esc(r)}</span>`).join('')}</div>
+       <p class="mut" style="font-size:12.5px;margin-top:12px">Navigation and actions adapt to each role. Employees cannot access confidential manager, succession or compensation information.</p></div>
+     <div class="card"><div style="overflow:auto"><table class="tbl"><thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Email</th><th>Last active</th><th></th></tr></thead><tbody>
+       ${TEAM.map(t=>`<tr><td><div style="display:flex;align-items:center;gap:9px"><span class="av sm ${avColor(t.id)}">${initials(t.name)}</span><span style="font-weight:600">${esc(t.name)}</span></div></td><td><select class="chip-f" style="padding:5px 9px" onchange="changeRole('${t.id}',this.value)">${ROLES_RBAC.map(r=>`<option ${t.role===r?'selected':''}>${r}</option>`).join('')}</select></td><td class="mut">${esc(t.dept)}</td><td class="mut">${esc(t.email)}</td><td class="mut">${esc(t.last)}</td><td><button class="btn sm gho" onclick="toast('Permissions opened for ${esc(t.name)}')">Manage</button></td></tr>`).join('')}
+     </tbody></table></div></div>`;
+}
+function changeRole(id,role){const t=TEAM.find(x=>x.id===id);const old=t.role;t.role=role;audit('Role changed',`${t.name}: ${old} → ${role}`);toast(`${t.name.split(' ')[0]} is now ${role}`);}
+function vInteg(){
+  $('#view').innerHTML=
+    pageHead('Administration','Integrations','Simulated connections to your people stack.',
+      `<button class="btn pri" onclick="toast('Browse integration catalogue')">${icon('plus',15)} Add integration</button>`)
+    +`<div class="grid" style="grid-template-columns:repeat(2,1fr)">
+      ${INTEGRATIONS.map(ig=>`<div class="card pad" style="display:flex;align-items:center;gap:14px"><div style="width:44px;height:44px;border-radius:11px;background:var(--sage);display:grid;place-items:center;color:var(--green)">${icon('integ',22)}</div><div style="flex:1"><div style="font-weight:700">${esc(ig.name)}</div><div class="mut" style="font-size:12px">${esc(ig.cat)} · last sync ${esc(ig.sync)}</div></div><span class="pill ${ig.status==='Connected'?'ok':'ink'}">${esc(ig.status)}</span><button class="btn sm ${ig.status==='Connected'?'gho':'pri'}" onclick="toast('${ig.status==='Connected'?'Sync started':'Connection flow started'} — ${esc(ig.name)}')">${ig.status==='Connected'?'Sync':'Connect'}</button></div>`).join('')}
+     </div>
+     <p class="mut" style="font-size:12px;margin-top:16px">Integrations are simulated for this demonstration. No external systems are actually connected.</p>`;
+}
+function vSettings(){
+  const groups=[['Organisation profile','Departments','Locations','Employment types'],['Skills taxonomy','Performance cycles','Leave policies','Notifications'],['Copilot governance','Data privacy','Security','Audit logs']];
+  $('#view').innerHTML=
+    pageHead('Administration','Settings','Configure PeopleOS for Acme Technologies.',
+      `<button class="btn gho" onclick="resetDemo()">${icon('settings',15)} Reset demo data</button>`)
+    +`<div class="grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:22px">
+      ${groups.map(g=>`<div class="card pad">${g.map(x=>`<div class="kv" style="cursor:pointer" onclick="${x==='Audit logs'?"auditDrawer()":"toast('"+x+" settings opened')"}"><span class="k" style="font-weight:600;color:var(--ink)">${esc(x)}</span><span class="mut">${icon('chev',14)}</span></div>`).join('')}</div>`).join('')}
+     </div>
+     <div class="card pad"><div class="sec-label"><h3>Copilot governance</h3><span class="ai-badge">${sparkSvg()} Governed</span></div>
+       ${[['Suggested Skills','On — requires human validation'],['Talent match explanations','Always shown'],['Autonomous decisions','Disabled (hiring, promotion, pay, ratings)'],['Sensitive data access','Permission-controlled']].map(r=>`<div class="kv"><span class="k">${esc(r[0])}</span><span class="v">${esc(r[1])}</span></div>`).join('')}
+     </div>`;
+}
+function auditDrawer(){
+  openDrawer(`<div class="dhead"><div style="flex:1"><div class="lbl">Administration</div><h3 class="serif" style="font-size:21px;margin-top:4px">Audit log</h3></div><button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button></div>
+    <div class="dbody">${STATE.audit.length?STATE.audit.map(a=>`<div style="display:flex;gap:11px;padding:11px 0;border-bottom:1px dashed var(--line)"><span class="av sm c1">JD</span><div><div style="font-weight:600;font-size:13px">${esc(a.action)}</div><div class="mut" style="font-size:12px">${esc(a.detail)}</div><div class="mut" style="font-size:11px;margin-top:2px">${new Date(a.ts).toLocaleString('en-GB')}</div></div></div>`).join(''):'<div class="empty">No activity recorded yet. Actions you take will appear here.</div>'}</div>`);
+}
+function resetDemo(){confirmModal('Reset demonstration data','This restores all employees, requests, goals and actions to their original seeded state. Your changes in this session will be cleared.','Reset data',()=>{resetState();toast('Demo data reset');navigate('overview');},'terra');}
+
+/* ======================================================================
+   SHARED ACTION MODALS
+   ====================================================================== */
+function devPlanModal(empId){
+  const e=empById(empId);
+  openModal(`<div class="mhead"><h3 class="serif" style="font-size:22px">Development plan</h3><p class="mut" style="font-size:13px;margin-top:4px">For ${esc(e.name)} · ${esc(e.desig)}</p></div>
+    <div class="mbody">
+      <div class="field"><label>Target role</label><input id="dpTarget" value="${e.aspire!=='—'?esc(e.aspire):'Product Manager'}"></div>
+      <div class="field"><label>Focus skills</label><input id="dpSkills" placeholder="e.g. Product strategy, Stakeholder influence"></div>
+      <div class="field"><label>Mentor</label><select id="dpMentor"><option>Assign later</option>${STATE.employees.slice(0,6).map(x=>`<option>${esc(x.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>First milestone</label><input id="dpMile" placeholder="e.g. Lead a cross-functional initiative"></div>
+    </div>
+    <div class="mfoot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="saveDevPlan('${empId}')">Create plan</button></div>`);
+}
+function saveDevPlan(empId){const e=empById(empId);audit('Development plan created',`${e.name} → ${$('#dpTarget').value}`);saveState();closeModal();toast(`Development plan created for ${e.name.split(' ')[0]}`);}
+function newRoleModal(){
+  openModal(`<div class="mhead"><h3 class="serif" style="font-size:22px">Open an internal role</h3></div>
+    <div class="mbody">
+      <div class="field" id="f-title"><label>Role title</label><input id="roTitle" placeholder="e.g. Senior Product Manager"><div class="emsg">Title is required</div></div>
+      <div class="field"><label>Department</label><select id="roDept">${DEPARTMENTS.map(d=>`<option value="${d.id}">${d.name}</option>`).join('')}</select></div>
+      <div class="field"><label>Location</label><select id="roLoc">${LOCATIONS.map(l=>`<option>${l}</option>`).join('')}</select></div>
+      <div class="field"><label>Priority</label><select id="roPri"><option>High</option><option>Critical</option><option>Medium</option></select></div>
+    </div>
+    <div class="mfoot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="saveRole()">Open role</button></div>`);
+}
+function saveRole(){const t=$('#roTitle').value.trim();if(!t){$('#f-title').classList.add('err');return;}
+  const id='R-'+(306+OPPORTUNITIES.filter(o=>o.id.startsWith('R-3')).length);
+  OPPORTUNITIES.unshift({id,title:t,team:deptName($('#roDept').value),dept:$('#roDept').value,loc:$('#roLoc').value,mgr:'John Doe',pri:$('#roPri').value,status:'Open',deadline:daysAgo(-30),req:[['prodstrat',3],['stakeholder',3],['roadmap',2]],exp:'Newly opened internal role'});
+  audit('Role opened',t);saveState();closeModal();toast(`Role opened: ${t}`);if(CUR==='market')vMarket();}
+function newGoalModal(){
+  openModal(`<div class="mhead"><h3 class="serif" style="font-size:22px">Create goal</h3></div>
+    <div class="mbody">
+      <div class="field" id="f-gtitle"><label>Goal title</label><input id="gTitle" placeholder="What outcome are we driving?"><div class="emsg">Title is required</div></div>
+      <div class="field"><label>Level</label><select id="gLevel"><option>Organisation</option><option>Department</option><option selected>Individual</option></select></div>
+      <div class="field"><label>Owner</label><input id="gOwner" value="John Doe"></div>
+      <div class="field"><label>Align to</label><select id="gParent"><option value="">None</option>${STATE.goals.filter(g=>g.level!=='Individual').map(g=>`<option value="${g.id}">${esc(g.title)}</option>`).join('')}</select></div>
+    </div>
+    <div class="mfoot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="saveGoal()">Create goal</button></div>`);
+}
+function saveGoal(){const t=$('#gTitle').value.trim();if(!t){$('#f-gtitle').classList.add('err');return;}
+  STATE.goals.push({id:'G-'+(STATE.goals.length+1),level:$('#gLevel').value,title:t,owner:$('#gOwner').value||'John Doe',prog:0,status:'On track',due:daysAgo(-60),parent:$('#gParent').value||null,krs:['Define key result 1','Define key result 2']});
+  audit('Goal created',t);saveState();closeModal();toast('Goal created');if(CUR==='goals')vGoals();}
+function newLeaveModal(){
+  openModal(`<div class="mhead"><h3 class="serif" style="font-size:22px">Request leave</h3></div>
+    <div class="mbody">
+      <div class="field"><label>Type</label><select id="lvType">${LEAVE_TYPES.map(t=>`<option>${t}</option>`).join('')}</select></div>
+      <div class="field"><label>From</label><input id="lvFrom" type="date" value="2026-11-20"></div>
+      <div class="field"><label>Days</label><input id="lvDays" type="number" value="3" min="1"></div>
+      <div class="field"><label>Reason</label><input id="lvReasonTxt" placeholder="Optional"></div>
+    </div>
+    <div class="mfoot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="saveLeave()">Submit request</button></div>`);
+}
+function saveLeave(){const me=STATE.employees.find(e=>e.name==='John Doe')||STATE.employees[0];
+  STATE.leave.unshift({id:'LV-'+(2200+STATE.leave.length),emp:me.id,type:$('#lvType').value,from:$('#lvFrom').value,to:$('#lvFrom').value,days:+$('#lvDays').value||1,status:'Pending',reason:$('#lvReasonTxt').value||'Personal'});
+  audit('Leave requested',`${$('#lvType').value} ${$('#lvDays').value}d`);saveState();closeModal();toast('Leave request submitted');if(CUR==='leave')vLeave();}
+function giveFeedbackModal(){
+  openModal(`<div class="mhead"><h3 class="serif" style="font-size:22px">Give recognition</h3></div>
+    <div class="mbody">
+      <div class="field"><label>To</label><select id="fbTo">${STATE.employees.slice(0,10).map(e=>`<option>${esc(e.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Value</label><select id="fbVal"><option>Craft</option><option>Ownership</option><option>Teamwork</option><option>Customer obsession</option></select></div>
+      <div class="field" id="f-fb"><label>Message</label><textarea id="fbMsg" rows="3" placeholder="What did they do well?"></textarea><div class="emsg">Add a short message</div></div>
+    </div>
+    <div class="mfoot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn terra" onclick="saveFeedback()">Send recognition</button></div>`);
+}
+function saveFeedback(){const m=$('#fbMsg').value.trim();if(!m){$('#f-fb').classList.add('err');return;}
+  audit('Recognition sent',`To ${$('#fbTo').value}`);saveState();closeModal();toast(`Recognition sent to ${$('#fbTo').value.split(' ')[0]}`);}
+function inviteUserModal(){
+  openModal(`<div class="mhead"><h3 class="serif" style="font-size:22px">Invite user</h3></div>
+    <div class="mbody"><div class="field" id="f-iu"><label>Work email</label><input id="iuEmail" placeholder="name@acmetech.com"><div class="emsg">Enter a valid email</div></div>
+    <div class="field"><label>Role</label><select id="iuRole">${ROLES_RBAC.map(r=>`<option>${r}</option>`).join('')}</select></div></div>
+    <div class="mfoot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="saveInvite()">Send invite</button></div>`);
+}
+function saveInvite(){const em=$('#iuEmail').value.trim();if(!em.includes('@')){$('#f-iu').classList.add('err');return;}
+  audit('User invited',`${em} as ${$('#iuRole').value}`);saveState();closeModal();toast('Invitation sent');}
+function exportReport(name){audit('Report exported',name);toast(`${name} report exported`);}
+function notif(){
+  openDrawer(`<div class="dhead"><div style="flex:1"><h3 class="serif" style="font-size:21px">Notifications</h3></div><button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button></div>
+    <div class="dbody">${[['Critical skills shortage flagged in Engineering','2h','crit'],['4 internal candidates matched to open roles','5h','green'],['3 leave requests awaiting your approval','1d','butter'],['Performance review cycle H2 2026 opened','2d','sage']].map(n=>`<div class="card pad" style="margin-bottom:10px;cursor:pointer" onclick="closeDrawer();navigate('insights')"><div style="display:flex;gap:10px;align-items:flex-start"><span class="dotpill" style="width:9px;height:9px;margin-top:5px;background:var(--${n[2]==='crit'?'crit':n[2]==='green'?'green':n[2]==='butter'?'warn':'olive'})"></span><div><div style="font-weight:600;font-size:13.5px">${esc(n[0])}</div><div class="mut" style="font-size:11.5px;margin-top:3px">${n[1]} ago</div></div></div></div>`).join('')}</div>`);
+}
+
+/* ======================================================================
+   GLOBAL SEARCH / COMMAND PALETTE (⌘K)
+   ====================================================================== */
+let CMD_SEL=0,CMD_RESULTS=[];
+function openCmd(){$('#cmdScrim').classList.add('on');$('#cmdBox').innerHTML=cmdShell('');setTimeout(()=>{const i=$('#cmdInput');if(i)i.focus();},40);cmdSearch('');}
+function closeCmd(){$('#cmdScrim').classList.remove('on');}
+$('#cmdScrim')&&$('#cmdScrim').addEventListener('click',e=>{if(e.target.id==='cmdScrim')closeCmd();});
+function cmdShell(q){
+  return `<div class="cin">${icon('search',19)}<input id="cmdInput" placeholder="Search employees, skills, roles, goals, policies…" value="${esc(q)}" oninput="cmdSearch(this.value)" onkeydown="cmdKey(event)"><kbd style="background:var(--sage);border-radius:5px;padding:2px 7px;font-size:11px">ESC</kbd></div>
+    <div class="cres" id="cmdRes"></div>
+    <div class="cfoot"><span>↑↓ navigate</span><span>↵ open</span><span>esc close</span></div>`;
+}
+function cmdSearch(q){
+  q=q.trim().toLowerCase();CMD_SEL=0;const res=[];
+  if(!q){
+    res.push({grp:'Jump to',ic:'overview',label:'People Overview',meta:'Discover',act:"navigate('overview')"});
+    res.push({grp:'Jump to',ic:'market',label:'Internal Talent Marketplace',meta:'Talent',act:"navigate('market')"});
+    res.push({grp:'Jump to',ic:'assistant',label:'Ask about your workforce',meta:'Intelligence',act:"navigate('assistant')"});
+    res.push({grp:'Jump to',ic:'skills',label:'Skills Intelligence',meta:'Talent',act:"navigate('skills')"});
+  }else{
+    STATE.employees.filter(e=>e.name.toLowerCase().includes(q)||e.email.toLowerCase().includes(q)||e.id.toLowerCase().includes(q)||e.desig.toLowerCase().includes(q)).slice(0,5).forEach(e=>res.push({grp:'Employees',ic:'directory',label:e.name,meta:e.desig+' · '+deptName(e.dept),act:`closeCmd();openEmp('${e.id}')`}));
+    SKILLS.filter(s=>s.name.toLowerCase().includes(q)).slice(0,4).forEach(s=>res.push({grp:'Skills',ic:'skills',label:s.name,meta:s.cat+' · '+s.crit,act:`closeCmd();navigate('skills');setTimeout(()=>skillDetail('${s.id}'),150)`}));
+    OPPORTUNITIES.filter(o=>o.title.toLowerCase().includes(q)||o.team.toLowerCase().includes(q)).slice(0,4).forEach(o=>res.push({grp:'Open roles',ic:'market',label:o.title,meta:o.team+' · '+o.loc,act:`closeCmd();navigate('market');setTimeout(()=>selRole('${o.id}'),150)`}));
+    STATE.goals.filter(g=>g.title.toLowerCase().includes(q)).slice(0,3).forEach(g=>res.push({grp:'Goals',ic:'goals',label:g.title,meta:g.level+' · '+g.owner,act:`closeCmd();navigate('goals')`}));
+    DEPARTMENTS.filter(d=>d.name.toLowerCase().includes(q)).slice(0,3).forEach(d=>res.push({grp:'Departments',ic:'org',label:d.name,meta:'Department',act:`closeCmd();DIR={q:'',dept:'${d.id}',loc:'',status:'',sort:'name',page:1};navigate('directory')`}));
+    POLICIES.filter(p=>p.name.toLowerCase().includes(q)).slice(0,3).forEach(p=>res.push({grp:'Policies',ic:'policy',label:p.name,meta:p.cat,act:`closeCmd();navigate('policy')`}));
+    NAV.forEach(gp=>gp.items.forEach(it=>{if(it[1].toLowerCase().includes(q))res.push({grp:'Navigate',ic:it[0],label:it[1],meta:gp.grp,act:`closeCmd();navigate('${it[2]}')`});}));
+  }
+  CMD_RESULTS=res;
+  const groups={};res.forEach((r,i)=>{(groups[r.grp]=groups[r.grp]||[]).push({...r,i});});
+  const html=Object.keys(groups).length?Object.entries(groups).map(([g,arr])=>`<div class="cgrp">${esc(g)}</div>${arr.map(r=>`<a class="${r.i===CMD_SEL?'sel':''}" onclick="${r.act}"><span class="ci">${icon(r.ic,16)}</span><span style="font-weight:600;font-size:13.5px">${esc(r.label)}</span><span class="cmeta">${esc(r.meta)}</span></a>`).join('')}`).join(''):'<div class="empty" style="padding:30px">No results. Try a name, skill or role.</div>';
+  const box=$('#cmdRes');if(box)box.innerHTML=html;
+}
+function cmdKey(e){
+  if(e.key==='Escape'){closeCmd();return;}
+  if(e.key==='ArrowDown'){e.preventDefault();CMD_SEL=Math.min(CMD_RESULTS.length-1,CMD_SEL+1);cmdHi();}
+  if(e.key==='ArrowUp'){e.preventDefault();CMD_SEL=Math.max(0,CMD_SEL-1);cmdHi();}
+  if(e.key==='Enter'){const r=CMD_RESULTS[CMD_SEL];if(r){const f=new Function(r.act);f();}}
+}
+function cmdHi(){document.querySelectorAll('#cmdRes a').forEach((a,i)=>a.classList.toggle('sel',i===CMD_SEL));const sel=document.querySelector('#cmdRes a.sel');if(sel)sel.scrollIntoView({block:'nearest'});}
+
+/* ======================================================================
+   INIT
+   ====================================================================== */
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openCmd();}
+  if(e.key==='Escape'){closeModal();closeDrawer();}
+});
+document.addEventListener('click',e=>{if(!e.target.closest('.fwrap'))document.querySelectorAll('.fmenu.on').forEach(m=>m.classList.remove('on'));});
+loadState();
+document.getElementById('app').innerHTML=renderShell();
+renderView();
+
+</script>
+</body>
+</html>
