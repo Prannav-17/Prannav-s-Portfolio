@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { KB, search, cardsFor, CONFIDENT, MINIMUM, COVER_KB, COVER_LLM, projectCard, type Card } from "@/lib/knowledge";
+import { KB, search, cardsFor, CONFIDENT, MINIMUM, COVER_KB, projectCard, type Card } from "@/lib/knowledge";
 import { allow, llmBudget, cacheGet, cacheSet } from "@/lib/guard";
 import { logQuestion } from "@/lib/log";
 
@@ -15,13 +15,23 @@ Rules:
 
 async function callGroq(ctx: string, q: string): Promise<string | null> {
   const key = process.env.GROQ_API_KEY; if (!key) return null;
-  const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model: process.env.GROQ_MODEL ?? "llama-3.1-8b-instant", temperature: 0.2, max_tokens: 220,
-      messages: [{ role: "system", content: SYSTEM + "\n\nCONTEXT:\n" + ctx }, { role: "user", content: q }] }),
-  });
-  if (!r.ok) return null;
-  const j = await r.json(); return j.choices?.[0]?.message?.content?.trim() ?? null;
+  const model = process.env.GROQ_MODEL ?? "openai/gpt-oss-20b";
+  const url = `${process.env.GROQ_BASE_URL ?? "https://api.groq.com/openai/v1"}/chat/completions`;
+  const messages = [{ role: "system", content: SYSTEM + "\n\nCONTEXT:\n" + ctx }, { role: "user", content: q }];
+  const send = (extra: object) => fetch(url, { method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ model, temperature: 0.2, max_completion_tokens: 700, messages, ...extra }) });
+  try {
+    let r = await send({ reasoning_effort: "low" });
+    if (r.status === 400) { // some models reject reasoning_effort: retry once without it
+      const body = await r.text();
+      if (/reasoning/i.test(body)) r = await send({}); else { console.error("GROQ_ERROR", r.status, model, body.slice(0, 300)); return null; }
+    }
+    if (!r.ok) { console.error("GROQ_ERROR", r.status, model, (await r.text()).slice(0, 300)); return null; }
+    const j = await r.json();
+    const t = j.choices?.[0]?.message?.content?.trim();
+    if (!t) console.error("GROQ_EMPTY", model, JSON.stringify(j).slice(0, 300));
+    return t || null;
+  } catch (e) { console.error("GROQ_FETCH_FAILED", String(e)); return null; }
 }
 async function callGemini(ctx: string, q: string): Promise<string | null> {
   const key = process.env.GEMINI_API_KEY; if (!key) return null;
@@ -31,7 +41,7 @@ async function callGemini(ctx: string, q: string): Promise<string | null> {
     body: JSON.stringify({ systemInstruction: { parts: [{ text: SYSTEM + "\n\nCONTEXT:\n" + ctx }] },
       contents: [{ role: "user", parts: [{ text: q }] }], generationConfig: { temperature: 0.2, maxOutputTokens: 220 } }),
   });
-  if (!r.ok) return null;
+  if (!r.ok) { console.error("GEMINI_ERROR", r.status, m, (await r.text()).slice(0, 300)); return null; }
   const j = await r.json(); return j.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? null;
 }
 
@@ -59,28 +69,27 @@ export async function POST(req: NextRequest) {
     : search(body.project ? `${body.project} ${q}` : q);
   const top = hits[0];
   let out: Out;
-  const llmOn = !!(process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY);
+  // coverage: share of the question the entry actually covers, so one shared word can't pull in an unrelated answer
   if ((top.score >= CONFIDENT && top.coverage >= COVER_KB) || (top.score >= MINIMUM && top.coverage >= 0.85)) {
     out = { answer: top.entry.answer, cards: cardsFor([top.entry.id]), mode: "kb" };
-  } else if (top.score >= MINIMUM && top.coverage >= COVER_LLM) {
+  } else {
     let text: string | null = null;
-    if (llmOn && llmBudget()) {
-      const ctx = hits.filter((h) => h.score >= MINIMUM).map((h) => h.entry.answer).join("\n\n");
+    const haveModel = !!(process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY);
+    if (haveModel && llmBudget()) {
+      const ctx = hits.map((h) => h.entry.answer).join("\n\n");
       text = (await callGroq(ctx, q)) ?? (await callGemini(ctx, q));
     }
     if (text && !/\b(lakh|lpa|ctc|per annum)\b/i.test(text)) {
-      const isFallback = text.startsWith(KB.fallback.slice(0, 20));
+      const isFallback = text.replace(/\s+/g, " ").includes(KB.fallback.slice(0, 40));
       out = { answer: text, cards: isFallback ? [] : cardsFor(hits.slice(0, 2).map((h) => h.entry.id)), mode: isFallback ? "fallback" : "llm" };
-    } else if (top.coverage >= COVER_KB) {
-      out = { answer: top.entry.answer, cards: cardsFor([top.entry.id]), mode: "kb-weak" };
+    } else if (top.score >= MINIMUM && top.coverage >= COVER_KB) {
+      out = { answer: top.entry.answer, cards: cardsFor([top.entry.id]), mode: haveModel ? "kb-weak-llm-failed" : "kb-weak" };
     } else {
-      out = { answer: KB.fallback, cards: [], mode: "fallback" };
+      out = { answer: KB.fallback, cards: [], mode: haveModel ? "fallback-llm-failed" : "fallback" };
     }
-  } else {
-    out = { answer: KB.fallback, cards: [], mode: "fallback" };
   }
   if (body.project && projectCard(body.project) && !out.cards.length && out.mode !== "fallback") out.cards = [projectCard(body.project)];
-  cacheSet(cacheKey, out);
+  if (!out.mode.includes("failed")) cacheSet(cacheKey, out);
   await logQuestion(q, out.mode, top.entry.id);
   return NextResponse.json(out);
 }

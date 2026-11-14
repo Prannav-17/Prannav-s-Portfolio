@@ -36,7 +36,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
   const days = count(real, (r) => r.t.slice(0, 10)).sort((a, b) => (a[0] < b[0] ? 1 : -1)).slice(0, 14);
   const maxDay = Math.max(1, ...days.map((d) => d[1]));
   const topQ = count(real, (r) => norm(r.q)).slice(0, 15);
-  const gaps = count(real.filter((r) => r.route === "fallback" || r.route === "kb-weak"), (r) => norm(r.q)).slice(0, 15);
+  const gaps = count(real.filter((r) => r.route.startsWith("fallback") || r.route.startsWith("kb-weak")), (r) => norm(r.q)).slice(0, 15);
   const routes = count(log, (r) => r.route);
   const topEntries = count(real.filter((r) => r.entry), (r) => r.entry as string).slice(0, 8);
   const recent = log.slice(0, 25);
@@ -49,7 +49,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
       <div className="contact" style={{ margin: "18px 0" }}>
         <div><small>Total questions</small>{t(real.length)}</div>
         <div><small>Last 7 days</small>{t(real.filter((r) => Date.now() - Date.parse(r.t) < 7 * 864e5).length)}</div>
-        <div><small>Not answered well</small>{t(real.filter((r) => r.route === "fallback").length)}</div>
+        <div><small>Not answered well</small>{t(real.filter((r) => r.route.startsWith("fallback")).length)}</div>
       </div>
 
       <div className="cols" style={{ gap: 20 }}>
@@ -59,7 +59,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
             <span style={{ width: 86, color: "var(--mut)" }}>{d}</span><div style={{ flex: 1, background: "#eef0f6", borderRadius: 6 }}><div style={{ width: `${(n / maxDay) * 100}%`, background: "var(--acc)", height: 10, borderRadius: 6 }} /></div><b>{n}</b></div>))}
         </div>
         <div className="pill"><h3>How they were answered</h3>
-          {routes.map(([r, n]) => <div key={r} style={{ display: "flex", justifyContent: "space-between", margin: "6px 0", fontSize: 14 }}><span>{({ kb: "Pre-written answer", cache: "Cached", llm: "AI model", "kb-weak": "Closest answer (weak match)", fallback: "No answer", limited: "Rate limited" } as Record<string, string>)[r] ?? r}</span><b>{n}</b></div>)}
+          {routes.map(([r, n]) => <div key={r} style={{ display: "flex", justifyContent: "space-between", margin: "6px 0", fontSize: 14 }}><span>{({ kb: "Pre-written answer", cache: "Cached", llm: "AI model", "kb-weak": "Closest answer (weak match)", fallback: "No answer", limited: "Rate limited", "kb-weak-llm-failed": "Closest answer (AI model failed)", "fallback-llm-failed": "No answer (AI model failed)" } as Record<string, string>)[r] ?? r}</span><b>{n}</b></div>)}
         </div>
       </div>
 
