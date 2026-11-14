@@ -1,7 +1,7 @@
 export type Project = {
   slug: string; name: string; kind: "Live app" | "Prototype"; domain: string;
   tagline: string; problem: string; solution: string; points: string[];
-  note?: string; media: string; shot: string; href: string; external?: boolean; portrait?: boolean;
+  note?: string; media: string; shot: string; cover?: string; href: string; external?: boolean; portrait?: boolean;
 };
 
 export const projects: Project[] = [
@@ -28,7 +28,7 @@ export const projects: Project[] = [
       "Overview, Tickets, Unified Inbox, Customers, AI Insights, Analytics, Agent Coaching, Automations, Team and Agents, Settings",
       "An Ask Helix assistant for questions about the operation",
     ],
-    media: "/media/helix-ai.mp4", shot: "/shots/helix-ai.png", href: "/prototypes/Helix_AI_Customer_Operations.html",
+    media: "/media/helix-ai.mp4", shot: "/shots/helix-ai.png", cover: "/covers/helix-ai.webp", href: "/prototypes/Helix_AI_Customer_Operations.html",
   },
   {
     slug: "revora-ai", name: "Revora AI", kind: "Prototype", domain: "Billing and revenue operations",
@@ -39,7 +39,7 @@ export const projects: Project[] = [
       "16 modules, from Customers through Reconciliation to Settings",
       "Workflows and approvals turn each finding into an owned, trackable action",
     ],
-    media: "/media/revora-ai.mp4", shot: "/shots/revora-ai.png", href: "/prototypes/Revora_AI_Revenue_Operations.html",
+    media: "/media/revora-ai.mp4", shot: "/shots/revora-ai.png", cover: "/covers/revora-ai.webp", href: "/prototypes/Revora_AI_Revenue_Operations.html",
   },
   {
     slug: "performance-ai", name: "Performance AI", kind: "Prototype", domain: "Marketing",
@@ -51,7 +51,7 @@ export const projects: Project[] = [
       "Guardrails set what the AI can act on, what goes to a review queue, and what is only logged",
       "Shown for a fictional lender, Meridian Capital Finance, where the outcome is a loan disbursal",
     ],
-    media: "/media/performance-ai.mp4", shot: "/shots/performance-ai.png", href: "/prototypes/Performance_AI_Meridian.html",
+    media: "/media/performance-ai.mp4", shot: "/shots/performance-ai.png", cover: "/covers/performance-ai.webp", href: "/prototypes/Performance_AI_Meridian.html",
   },
   {
     slug: "comply", name: "Comply", kind: "Prototype", domain: "Compliance",
@@ -64,7 +64,7 @@ export const projects: Project[] = [
       "Six modules: Command Centre, Regulatory Register, Controls and Ownership, Exceptions and Remediation, Audit Workspace, Settings",
       "Shown for a fictional NBFC",
     ],
-    media: "/media/comply.mp4", shot: "/shots/comply.png", href: "/prototypes/Comply_Compliance_Operating_Layer.html",
+    media: "/media/comply.mp4", shot: "/shots/comply.png", cover: "/covers/comply.webp", href: "/prototypes/Comply_Compliance_Operating_Layer.html",
   },
   {
     slug: "peopleos", name: "PeopleOS", kind: "Prototype", domain: "HR and talent",
@@ -74,7 +74,7 @@ export const projects: Project[] = [
     points: [
       "20 views, including Employee 360, a Skills Intelligence heatmap, a Talent Marketplace, Succession and Workforce Planning",
     ],
-    media: "/media/peopleos.mp4", shot: "/shots/peopleos.png", href: "/prototypes/PeopleOS_Talent_Intelligence.html",
+    media: "/media/peopleos.mp4", shot: "/shots/peopleos.png", cover: "/covers/peopleos.webp", href: "/prototypes/PeopleOS_Talent_Intelligence.html",
   },
 ];
 

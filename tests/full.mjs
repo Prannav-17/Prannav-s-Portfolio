@@ -177,6 +177,18 @@ for (const [name, opts] of Object.entries(profiles)) {
   });
   const cards = await page.locator(".grid a.work").evaluateAll((a) => a.map((x) => x.getAttribute("href")));
   await step("five prototype cards", async () => { if (cards.length !== 5) throw new Error(cards.length); });
+  await step("each prototype card shows its designed cover", async () => {
+    const srcs = await page.locator(".grid .work .cover").evaluateAll((im) => im.map((i) => i.getAttribute("src")));
+    if (srcs.length !== 5 || !srcs.every((x) => x.startsWith("/covers/") && x.endsWith(".webp"))) throw new Error(srcs.join(" "));
+    for (const x of srcs) { const r = await ctx.request.get(new URL(x, BASE).href); if (r.status() !== 200 || !/webp/.test(r.headers()["content-type"])) throw new Error(`${x} ${r.status()}`); }
+  });
+  if (!reduced) await step(mobile ? "card video plays when scrolled into view" : "hovering a card swaps the cover for the playing video", async () => {
+    const card = page.locator(".grid a.work").nth(2);
+    if (mobile) { await card.evaluate((e) => e.scrollIntoView({ block: "center" })); }
+    else { await card.scrollIntoViewIfNeeded(); await page.waitForTimeout(1200); const bb = await card.boundingBox(); await page.mouse.move(bb.x + bb.width / 2, bb.y + 60, { steps: 4 }); }
+    await card.locator(".m.live").waitFor({ timeout: 10000 });
+    if (!mobile) { await page.mouse.move(5, 5); await page.waitForTimeout(600); if (await card.locator(".m.live").count()) throw new Error("cover did not come back after the pointer left"); }
+  });
   for (const h of ["/works/lets-match", ...cards]) {
     await step(`work page ${h}: buttons, chat, links, scroll`, async () => {
       let w;
