@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start", "test": "node tests/smoke.mjs", "test:full": "sh tests/run-all.sh"
+    "start": "next start", "test": "node tests/smoke.mjs", "test:full": "sh tests/run-all.sh", "test:e2e": "node tests/full.mjs"
   },
   "dependencies": {
     "next": "latest",

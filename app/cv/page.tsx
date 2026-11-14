@@ -10,7 +10,7 @@ export default function CV() {
           <a className="btn pri" href="/Prannav_K_B_CV.pdf" download>Download PDF</a>
         </div>
         <iframe className="cvview" src="/Prannav_K_B_CV.pdf#view=FitH" title="Prannav's CV" />
-        <p className="note">Can't see the preview? <a href="/Prannav_K_B_CV.pdf" target="_blank" style={{ textDecoration: "underline" }}>Open the PDF directly</a>.</p>
+        <p className="note">Can't see the preview? <a href="/Prannav_K_B_CV.pdf" target="_blank" style={{ textDecoration: "underline" }}>Open the PDF directly</a></p>
       </div></main>
     </>
   );

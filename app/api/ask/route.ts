@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { KB, search, cardsFor, CONFIDENT, MINIMUM, projectCard, type Card } from "@/lib/knowledge";
+import { KB, search, cardsFor, CONFIDENT, MINIMUM, COVER_KB, COVER_LLM, projectCard, type Card } from "@/lib/knowledge";
 import { allow, llmBudget, cacheGet, cacheSet } from "@/lib/guard";
 import { logQuestion } from "@/lib/log";
 
@@ -53,21 +53,28 @@ export async function POST(req: NextRequest) {
   const hit = cacheGet(cacheKey) as Out | undefined;
   if (hit) { await logQuestion(q, "cache"); return NextResponse.json(hit); }
 
-  const hits = search(body.project ? `${body.project} ${q}` : q);
+  // Pay questions always get the same answer, however they are phrased
+  const hits = /\b(salary|ctc|compensation|pay|lpa|lakhs?)\b/i.test(q)
+    ? search("What is his expected salary?")
+    : search(body.project ? `${body.project} ${q}` : q);
   const top = hits[0];
   let out: Out;
-  if (top.score >= CONFIDENT) {
+  const llmOn = !!(process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY);
+  if ((top.score >= CONFIDENT && top.coverage >= COVER_KB) || (top.score >= MINIMUM && top.coverage >= 0.85)) {
     out = { answer: top.entry.answer, cards: cardsFor([top.entry.id]), mode: "kb" };
-  } else if (top.score >= MINIMUM) {
+  } else if (top.score >= MINIMUM && top.coverage >= COVER_LLM) {
     let text: string | null = null;
-    if (llmBudget()) {
-      const ctx = hits.map((h) => h.entry.answer).join("\n\n");
+    if (llmOn && llmBudget()) {
+      const ctx = hits.filter((h) => h.score >= MINIMUM).map((h) => h.entry.answer).join("\n\n");
       text = (await callGroq(ctx, q)) ?? (await callGemini(ctx, q));
     }
     if (text && !/\b(lakh|lpa|ctc|per annum)\b/i.test(text)) {
-      out = { answer: text, cards: cardsFor(hits.slice(0, 2).map((h) => h.entry.id)), mode: "llm" };
-    } else {
+      const isFallback = text.startsWith(KB.fallback.slice(0, 20));
+      out = { answer: text, cards: isFallback ? [] : cardsFor(hits.slice(0, 2).map((h) => h.entry.id)), mode: isFallback ? "fallback" : "llm" };
+    } else if (top.coverage >= COVER_KB) {
       out = { answer: top.entry.answer, cards: cardsFor([top.entry.id]), mode: "kb-weak" };
+    } else {
+      out = { answer: KB.fallback, cards: [], mode: "fallback" };
     }
   } else {
     out = { answer: KB.fallback, cards: [], mode: "fallback" };

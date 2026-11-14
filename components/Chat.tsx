@@ -17,9 +17,17 @@ export default function Chat({ project, compact = false, placeholder, starters: 
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
-  const end = useRef<HTMLDivElement>(null);
   const box = useRef<HTMLDivElement>(null);
-  useEffect(() => { if (box.current) box.current.scrollTop = box.current.scrollHeight; }, [msgs, busy]);
+  // A new answer opens at its first line, not its last, so long answers read top-down (matters most on phones)
+  useEffect(() => {
+    const b = box.current; if (!b) return;
+    const last = b.querySelector<HTMLElement>(".msg:last-of-type");
+    if (!busy && last?.classList.contains("a")) {
+      b.scrollTop = last.offsetTop - 8;
+      const top = last.getBoundingClientRect().top;
+      if (top < 72 || top > window.innerHeight - 140) window.scrollBy({ top: top - 84, behavior: "smooth" });
+    } else b.scrollTop = b.scrollHeight;
+  }, [msgs, busy]);
 
   async function ask(text: string) {
     const t = text.trim(); if (!t || busy) return;
@@ -54,7 +62,6 @@ export default function Chat({ project, compact = false, placeholder, starters: 
             </div>
           ))}
           {busy && <div className="msg a"><span className="dots"><span /><span /><span /></span></div>}
-          <div ref={end} />
         </div>
       )}
       <form className="inrow" onSubmit={(e) => { e.preventDefault(); ask(q); }}>
@@ -65,7 +72,7 @@ export default function Chat({ project, compact = false, placeholder, starters: 
       {msgs.length === 0 && (
         <div className="chips">{starters.map((s) => <button key={s} className="chip" onClick={() => ask(s)}>{s}</button>)}</div>
       )}
-      {!compact && <div className="note">AI assistant. Answers come only from this site. Questions are logged anonymously.</div>}
+      {!compact && <div className="note">AI assistant · Answers come only from this site · Questions are logged anonymously</div>}
     </div>
   );
 }

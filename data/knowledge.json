@@ -22,6 +22,20 @@
    "visibility": "public"
   },
   {
+   "id": "greeting",
+   "category": "meta",
+   "questions": [
+    "Hi",
+    "Hello",
+    "Hey",
+    "Hi there",
+    "Good morning"
+   ],
+   "answer": "Hi! Ask me about Prannav's products, his experience at Flipkart, ZoomInfo and Freshworks, the roles he's looking for, or how to reach him.",
+   "source": "Site",
+   "visibility": "public"
+  },
+  {
    "id": "profile-snapshot",
    "category": "profile",
    "questions": [
@@ -30,6 +44,24 @@
     "Where does he work?"
    ],
    "answer": "Prannav is a Manager, Strategy and Planning at Flipkart (since June 2025), working on Mobiles and Electronics and on Loyalty and Membership (Flipkart Plus / Black). He is based in Bengaluru, India.",
+   "source": "Resume",
+   "visibility": "public"
+  },
+  {
+   "id": "experience-years",
+   "category": "profile",
+   "questions": [
+    "How many years of experience does he have?",
+    "How much work experience does Prannav have?",
+    "How experienced is he?",
+    "Total experience",
+    "How many years of experience?",
+    "Years of experience",
+    "Which companies has he worked at?",
+    "Where has he worked?",
+    "Work history"
+   ],
+   "answer": "Prannav has 3+ years of work experience. He spent two years in B2B SaaS as a Product Consultant at Freshworks (UK market, 2021 to 2023) and a Solutions Consultant at ZoomInfo (US market, 2023). After his MBA at IIM Kozhikode he joined Flipkart in June 2025 as Manager, Strategy and Planning.",
    "source": "Resume",
    "visibility": "public"
   },
@@ -43,6 +75,22 @@
    ],
    "answer": "MBA from IIM Kozhikode (2025) and a BBA from the University of Madras (2020, University Rank 10). He scored 98% in Class X and 92% in Class XII at Velammal Matriculation.",
    "source": "Resume",
+   "visibility": "public"
+  },
+  {
+   "id": "cv",
+   "category": "profile",
+   "questions": [
+    "Is Prannav's CV available?",
+    "Can I see his CV?",
+    "Can I download his resume?",
+    "Where is his CV?",
+    "Prannav's CV",
+    "Share his resume",
+    "Send me his CV"
+   ],
+   "answer": "Yes. You can view Prannav's CV on this site or download it as a PDF. In short: 3+ years across B2B SaaS and e-commerce (Freshworks, ZoomInfo, Flipkart), an MBA from IIM Kozhikode (2025) and a BBA from the University of Madras (2020).",
+   "source": "CV section",
    "visibility": "public"
   },
   {
@@ -63,7 +111,8 @@
     "What has Prannav done at Flipkart?",
     "Tell me about his Flipkart role",
     "What did he work on at Flipkart?",
-    "What does he do at work today?"
+    "What does he do at work today?",
+    "What did he do at Flipkart?"
    ],
    "answer": "At Flipkart (Manager, Strategy and Planning, June 2025 to present) Prannav took Flipkart Trust Shield from 0 to 1 with Product and Ops. He also shipped an automated hourly sell-out reporting tool in Google Apps Script that leadership uses directly, built the CY2026 plan for a 25 Mn+ user loyalty base, expanded serviceability from 4 to 66 cities, and set segment-wise pricing across INR 500+ Cr of event revenue.",
    "source": "Resume → Flipkart",
@@ -175,7 +224,9 @@
    "category": "experience",
    "questions": [
     "Has he held leadership roles?",
-    "What did he do as Placements Coordinator?"
+    "What did he do as Placements Coordinator?",
+    "Does he have leadership experience?",
+    "Has he led teams?"
    ],
    "answer": "Prannav was Placements Coordinator at IIM Kozhikode, running placements for 1,200+ students across 100+ recruiters including Amazon, Bain & Co, HDFC and Microsoft. Earlier he was Head of Operations of the Students Forum in his BBA, organizing 30+ events and bringing in 15+ alumni guest lectures over 3 years for 300+ students.",
    "source": "Resume → Positions of responsibility",
@@ -187,7 +238,10 @@
    "questions": [
     "What are Prannav's skills?",
     "What tools does he use?",
-    "Does he know SQL?"
+    "Does he know SQL?",
+    "Is he good at SQL?",
+    "Is he technical?",
+    "Can he code?"
    ],
    "answer": "Skills: product discovery and user research, 0 to 1 product launches, roadmap input and prioritization, product analytics and metrics, competitive benchmarking, pricing and unit economics, customer feedback loops, and cross-functional execution. Tools: Jira, Notion, SQL, advanced Excel, Power BI, Salesforce CRM, Freshworks CRM, Google Apps Script and PowerPoint.",
    "source": "Resume → Skills, Tools",
@@ -362,6 +416,20 @@
    "visibility": "public"
   },
   {
+   "id": "fit",
+   "category": "principles",
+   "questions": [
+    "Why should we hire him?",
+    "What makes him a good fit?",
+    "What are his strengths?",
+    "Why is he a good product manager?",
+    "What makes him different?"
+   ],
+   "answer": "Prannav brings three things together. He spent 2+ years in front of B2B SaaS customers at Freshworks and ZoomInfo, turning what customers asked for into product inputs. At Flipkart he took Trust Shield from 0 to 1 for a 5% conversion uplift and planned for a 25 Mn+ user loyalty base. And he builds products himself: Let's Match is live with real users, alongside five enterprise prototypes. He has an MBA from IIM Kozhikode.",
+   "source": "Resume; About page; Projects",
+   "visibility": "public"
+  },
+  {
    "id": "interests",
    "category": "interests",
    "questions": [
@@ -370,7 +438,9 @@
     "Does he play any sport?",
     "Does he play sports?",
     "Does he follow sports?",
-    "Does he follow F1?"
+    "Does he follow F1?",
+    "What does he do for fun?",
+    "What are his interests?"
    ],
    "answer": "He follows Formula 1 closely and watches races on weekends with friends. He stays active through cricket and running.",
    "source": "About page",
@@ -384,7 +454,9 @@
     "Which domains interest him?",
     "Is he open to remote work?",
     "What location does he prefer?",
-    "What kind of roles is he looking for?"
+    "What kind of roles is he looking for?",
+    "Is he open to relocation?",
+    "Which cities is he open to?"
    ],
    "answer": "Roles: Product Manager, Associate Product Manager, AI Product Manager, or Product Builder. Domains: B2B SaaS, AI-native products, enterprise technology, fintech and consumer technology. Level: early-to-mid-career product roles that combine business and technology experience with hands-on execution. Location: Bengaluru and Chennai, and open to remote and hybrid roles.",
    "source": "About page",
@@ -396,9 +468,12 @@
    "questions": [
     "When can he join?",
     "What is his notice period?",
-    "Is he available?"
+    "Is he available?",
+    "When is he available to join?",
+    "How soon can he start?",
+    "Is he open to new roles?"
    ],
-   "answer": "Prannav's notice period is 2 months.",
+   "answer": "Prannav's notice period is 2 months, and he is open to Product Manager, Associate PM, AI PM and Product Builder roles.",
    "source": "Prannav",
    "visibility": "public"
   },
@@ -408,7 +483,9 @@
    "questions": [
     "What is his expected salary?",
     "What is his current compensation?",
-    "What is his CTC?"
+    "What is his CTC?",
+    "What is his salary expectation?",
+    "What is his expected CTC?"
    ],
    "answer": "Please reach out to Prannav directly about compensation: prannavb27@iimklive.com or 99400 33571.",
    "source": "Prannav",
@@ -423,7 +500,11 @@
     "What is his phone number?",
     "What is his LinkedIn?",
     "How can I reach him?",
-    "How can I get in touch?"
+    "How can I get in touch?",
+    "How do I reach him?",
+    "What is his LinkedIn profile?",
+    "How can I contact him?",
+    "How do I get in touch?"
    ],
    "answer": "Email: prannavb27@iimklive.com. Phone: 99400 33571. LinkedIn: linkedin.com/in/prannavkb.",
    "source": "Contact block",
