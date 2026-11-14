@@ -220,6 +220,21 @@
    "visibility": "public"
   },
   {
+   "id": "metrics",
+   "category": "experience",
+   "questions": [
+    "What metrics has he improved?",
+    "What impact has he had?",
+    "What results has he delivered?",
+    "What numbers has he moved?",
+    "What measurable outcomes has he achieved?",
+    "Show me his impact in numbers"
+   ],
+   "answer": "At Flipkart: Trust Shield, which he took from 0 to 1, delivered a 5% conversion uplift; serviceability went from 4 to 66 cities, covering 40% of all India Mobiles volume; and he set segment-wise pricing across INR 500+ Cr of event revenue. At Freshworks he generated USD 0.66+ Mn in ARR and protected USD 0.5+ Mn by analysing 500+ lost deals. At ZoomInfo he closed USD 0.22 Mn in ARR. At GSK his field sales app pilot lifted orders by 30% and an in-app reminder raised lines sold per order by 40%.",
+   "source": "Resume",
+   "visibility": "public"
+  },
+  {
    "id": "leadership",
    "category": "experience",
    "questions": [
