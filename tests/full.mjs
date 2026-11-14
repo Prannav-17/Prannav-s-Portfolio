@@ -42,6 +42,10 @@ for (const [name, opts] of Object.entries(profiles)) {
   await home();
   await step("home loads with title", async () => { if (!(await page.title())) throw new Error("no title"); });
   await step("no sideways scroll on home", () => noOverflow(page, "home"));
+  await step("chat input and all starter questions are visible without scrolling", async () => {
+    const r = await page.evaluate(() => ({ vh: innerHeight, y: scrollY, input: document.querySelector(".inrow").getBoundingClientRect().bottom, chip: [...document.querySelectorAll(".chip")].pop().getBoundingClientRect().bottom }));
+    if (r.y > 0 || r.input > r.vh || r.chip > r.vh) throw new Error(`input ends at ${Math.round(r.input)}px, last chip at ${Math.round(r.chip)}px, screen is ${r.vh}px`);
+  });
   await step("intro loader clears and the hero is fully shown", async () => {
     await page.waitForTimeout(3500);
     const s = await page.evaluate(() => {

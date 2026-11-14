@@ -48,15 +48,14 @@ export default function Home() {
             <div className="spot" />
           </div>
           <div className="wrap hero-in">
-            <div className="avatar-wrap" data-h><img className="avatar" src="/prannav.jpg" alt="Prannav" /></div>
             <div className="eyebrow badge" data-h><span className="pulse" />Ask Prannav · AI assistant</div>
             <h1 data-hwords>
               <Words text="Product Manager building where" />{" "}
               <em className="hl"><Words text="business, technology and AI" /></em>{" "}
               <Words text="meet" />
             </h1>
-            <p className="sub" data-h>This site is run by an assistant. Ask it anything about what Prannav has built, how he works and where he&apos;d fit, and it will show you the work</p>
             <div data-h><Chat /></div>
+            <p className="sub hero-sub" data-h>This site is run by an assistant. Ask it anything about what Prannav has built, how he works and where he&apos;d fit, and it will show you the work</p>
           </div>
         </section>
 

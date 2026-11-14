@@ -12,11 +12,11 @@ const STARTERS = [
 
 // Example prompts typed into the empty box, so visitors see the range of what they can ask
 const HINTS = [
-  "Ask about his work at Flipkart",
-  "Ask which metrics he has moved",
-  "Ask if he has built AI products",
+  "Ask about his Flipkart work",
+  "Ask about his impact",
+  "Ask about his AI work",
   "Ask about his notice period",
-  "Ask why he moved into product",
+  "Ask why he chose product",
 ];
 
 function useTypedHint(on: boolean) {
