@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Chat from "@/components/Chat";
 import WorkCard from "@/components/WorkCard";
+import AutoVideo from "@/components/AutoVideo";
 import { Words } from "@/components/Split";
 import { projects } from "@/lib/projects";
 
@@ -79,7 +80,7 @@ export default function Home() {
               </div>
               <a className="vis" href={`/works/${feat.slug}`} target="_blank" rel="noreferrer" data-view aria-label={`How ${feat.name} works`}>
                 <i className="ring r1" /><i className="ring r2" />
-                <div className="phone" data-float><video src={feat.media} poster={feat.shot} autoPlay muted loop playsInline /></div>
+                <div className="phone" data-float><AutoVideo src={feat.media} poster={feat.shot} fallback="/media/lets-match-anim.webp" /></div>
               </a>
             </div>
             <div className="grid" data-a="stagger">

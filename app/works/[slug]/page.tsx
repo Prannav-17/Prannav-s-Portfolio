@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Chat from "@/components/Chat";
 import { projects, bySlug } from "@/lib/projects";
 import { Words } from "@/components/Split";
+import AutoVideo from "@/components/AutoVideo";
 
 export const dynamicParams = false;
 export function generateStaticParams() { return projects.map((p) => ({ slug: p.slug })); }
@@ -28,7 +29,7 @@ export default async function Work({ params }: { params: Promise<{ slug: string 
         </div>
         <div className={`frame${p.portrait ? " ph" : ""}`} data-a="up">
           {!p.portrait && <div className="bar"><i /><i /><i /></div>}
-          <video src={p.media} poster={p.shot} autoPlay muted loop playsInline controls={false} />
+          <AutoVideo src={p.media} poster={p.shot} fallback={p.slug === "lets-match" ? "/media/lets-match-anim.webp" : undefined} />
         </div>
         <div className="cta" style={{ justifyContent: "center" }}>
           <a className="btn acc" href={p.href} target="_blank" rel="noreferrer" data-magnetic>{p.kind === "Live app" ? "Open the live app ↗" : "Open the full prototype ↗"}</a>

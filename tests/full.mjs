@@ -246,6 +246,22 @@ for (const [name, opts] of Object.entries(profiles)) {
   await step("no console or page errors", async () => { if (errors.length) throw new Error(errors.slice(0, 3).join(" | ")); });
   await ctx.close();
 }
+// ---- Phones that block video autoplay (iPhone Low Power Mode, data savers)
+console.log("\n=== phone with autoplay blocked ===");
+for (const [label, blocked] of [["Let's Match demo plays on a phone", false], ["Let's Match demo still animates when autoplay is blocked", true]]) {
+  const ctx = await browser.newContext(devices["iPhone 13"]);
+  if (blocked) await ctx.addInitScript(() => { HTMLMediaElement.prototype.play = function () { return Promise.reject(new DOMException("blocked", "NotAllowedError")); }; });
+  const p = await ctx.newPage();
+  try {
+    await p.goto(BASE, { waitUntil: "networkidle" }); await p.waitForTimeout(3500);
+    await p.locator(".feat .phone").evaluate((e) => e.scrollIntoView({ block: "center" })); await p.waitForTimeout(3800);
+    const r = await p.locator(".feat .phone").evaluate((ph) => { const v = ph.querySelector("video"), i = ph.querySelector("img"); return v ? { v: !v.paused && v.currentTime > 0.5 } : { i: !!(i && i.complete && i.naturalWidth > 0) }; });
+    if (blocked ? !r.i : !r.v) throw new Error(JSON.stringify(r));
+    passN++; console.log("  ✓", label);
+  } catch (e) { fails.push(`[phone] ${label}: ${e.message}`); console.log("  ✗", label, "-", e.message); }
+  await ctx.close();
+}
+
 await browser.close();
 console.log(`\n${passN} passed, ${fails.length} failed`); fails.forEach((f) => console.log("  ✗", f));
 process.exit(fails.length ? 1 : 0);

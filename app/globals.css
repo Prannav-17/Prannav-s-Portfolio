@@ -216,7 +216,9 @@ html.motion [data-a="clip"]{clip-path:inset(100% 0% 0% 0% round 28px)}
 .r1{width:340px;height:340px;animation:spin 40s linear infinite}
 .r2{width:470px;height:470px;border-style:solid;border-color:rgba(14,165,233,.16);animation:spin 60s linear infinite reverse}
 .phone{position:relative;width:220px;border-radius:32px;border:8px solid var(--ink);overflow:hidden;background:#000;box-shadow:0 32px 64px rgba(11,37,64,.3)}
-.phone video{display:block;width:100%;aspect-ratio:3/5;object-fit:cover;object-position:top}
+.phone video,.phone img{display:block;width:100%;aspect-ratio:3/5;object-fit:cover;object-position:top}
+/* never show the browser's own play button over the autoplaying demos */
+.autovid::-webkit-media-controls,.autovid::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .work{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;transition:box-shadow .4s,border-color .4s}
@@ -295,9 +297,9 @@ html.motion .tl-line i{transform:scaleY(0)}
 .frame{background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 24px 60px rgba(11,37,64,.12);margin:28px 0}
 .frame .bar{height:36px;display:flex;align-items:center;gap:6px;padding:0 14px;background:var(--sky6);border-bottom:1px solid var(--line)}
 .frame .bar i{width:10px;height:10px;border-radius:50%;background:var(--sky4)}
-.frame video{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top}
+.frame video,.frame img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top}
 .frame.ph{max-width:300px;margin-inline:auto;border-radius:32px;border:8px solid var(--ink)}
-.frame.ph video{aspect-ratio:3/5}
+.frame.ph video,.frame.ph img{aspect-ratio:3/5}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
 .cols h3{font-size:14px;text-transform:uppercase;letter-spacing:.12em;color:var(--acc)}
 .cols ul{padding-left:18px;margin:6px 0}.cols li{margin:6px 0;color:var(--ink2)}.cols li::marker{color:var(--sky2)}
