@@ -291,6 +291,20 @@
    "visibility": "public"
   },
   {
+   "id": "people-management",
+   "category": "experience",
+   "questions": [
+    "Has he managed a team?",
+    "Has he managed people?",
+    "Does he have direct reports?",
+    "Has he led a team?",
+    "Has he managed anyone?"
+   ],
+   "answer": "Not formally. Ops and Data team members have reported to him for the work assigned to them, so he has directed their day-to-day work, but he has not been their manager on paper or owned their appraisals. He also ran placements at IIM Kozhikode as Placements Coordinator, for 1,200+ students across 100+ recruiters.",
+   "source": "Prannav",
+   "visibility": "public"
+  },
+  {
    "id": "skills",
    "category": "skills",
    "questions": [
@@ -462,6 +476,19 @@
    "visibility": "public"
   },
   {
+   "id": "prioritization",
+   "category": "principles",
+   "questions": [
+    "How does he prioritize?",
+    "How does he decide what to work on first?",
+    "What is his prioritization framework?",
+    "How does he make trade-offs?"
+   ],
+   "answer": "He follows the Pareto principle, even in day-to-day life. He asks which of the options in front of him would create the most impact, and does that first. How impact or value is measured changes from one problem to the next, but the rule stays the same.",
+   "source": "Prannav",
+   "visibility": "public"
+  },
+  {
    "id": "why-pm",
    "category": "principles",
    "questions": [
@@ -485,6 +512,19 @@
    ],
    "answer": "Prannav brings three things together. He spent 2+ years in front of B2B SaaS customers at Freshworks and ZoomInfo, turning what customers asked for into product inputs. At Flipkart he took Trust Shield from 0 to 1 for a 5% conversion uplift and planned for a 25 Mn+ user loyalty base. And he builds products himself: Let's Match is live with real users, alongside five enterprise prototypes. He has an MBA from IIM Kozhikode.",
    "source": "Resume; About page; Projects",
+   "visibility": "public"
+  },
+  {
+   "id": "growth-area",
+   "category": "principles",
+   "questions": [
+    "What are his weaknesses?",
+    "What is his biggest weakness?",
+    "What is he working on improving?",
+    "What is his area of growth?"
+   ],
+   "answer": "Technical depth is the area he is actively building. Building this site himself, including the assistant you are talking to, was homework he set himself to become technically stronger.",
+   "source": "Prannav",
    "visibility": "public"
   },
   {
@@ -518,6 +558,20 @@
    ],
    "answer": "Roles: Product Manager, Associate Product Manager, AI Product Manager, or Product Builder. Domains: B2B SaaS, AI-native products, enterprise technology, fintech and consumer technology. Level: early-to-mid-career product roles that combine business and technology experience with hands-on execution. Location: Bengaluru and Chennai, and open to remote and hybrid roles.",
    "source": "About page",
+   "visibility": "public"
+  },
+  {
+   "id": "why-change",
+   "category": "looking_for",
+   "questions": [
+    "Why is he looking for a change?",
+    "Why is he leaving Flipkart?",
+    "Why does he want to switch jobs?",
+    "Why is he looking for a new role?",
+    "Why now?"
+   ],
+   "answer": "Prannav wants to work where he can drive more impact from a product standpoint. He is naturally drawn to solving those kinds of problems, and a product role puts him closest to them.",
+   "source": "Prannav",
    "visibility": "public"
   },
   {
