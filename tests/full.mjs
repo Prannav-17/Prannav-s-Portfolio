@@ -8,6 +8,7 @@ const browser = await chromium.launch();
 const profiles = {
   desktop: { viewport: { width: 1280, height: 900 } },
   mobile: { ...devices["iPhone 13"], defaultBrowserType: undefined },
+  "reduced-motion": { viewport: { width: 1280, height: 900 }, reducedMotion: "reduce" },
 };
 
 for (const [name, opts] of Object.entries(profiles)) {
@@ -19,7 +20,7 @@ for (const [name, opts] of Object.entries(profiles)) {
     p.on("console", (m) => { if (m.type() === "error" && !/favicon|Failed to load resource.*(mp4|video)/i.test(m.text())) errors.push(`${p.url()} ${m.text()}`); });
   });
   const page = await ctx.newPage();
-  const mobile = name === "mobile";
+  const mobile = name === "mobile", reduced = name === "reduced-motion";
   const tap = (loc) => (mobile ? loc.tap() : loc.click());
   const step = async (n, fn) => {
     try { await fn(); passN++; console.log("  ✓", n); }
@@ -41,18 +42,42 @@ for (const [name, opts] of Object.entries(profiles)) {
   await home();
   await step("home loads with title", async () => { if (!(await page.title())) throw new Error("no title"); });
   await step("no sideways scroll on home", () => noOverflow(page, "home"));
+  await step("intro loader clears and the hero is fully shown", async () => {
+    await page.waitForTimeout(3500);
+    const s = await page.evaluate(() => {
+      const l = document.querySelector(".loader");
+      const vis = (e) => +getComputedStyle(e).opacity > 0.98;
+      return { loader: l ? getComputedStyle(l).display : "none", hero: [...document.querySelectorAll("[data-h]")].every(vis), words: [...document.querySelectorAll("[data-hwords] .wi")].every((w) => Math.abs(new DOMMatrix(getComputedStyle(w).transform).f) < 1) };
+    });
+    if (s.loader !== "none") throw new Error("loader still showing");
+    if (!s.hero || !s.words) throw new Error("hero content not fully shown");
+  });
   await step("scrolling reveals every section's content", async () => {
-    await scrollAll(page);
-    const hidden = await page.locator(".rv:not(.in)").count();
-    if (hidden) throw new Error(`${hidden} blocks never appeared`);
+    await scrollAll(page); await page.waitForTimeout(1800);
+    const hidden = await page.evaluate(() => {
+      const els = [...document.querySelectorAll("[data-a='up'], [data-a='stagger'] > *, [data-a='pop'] > *, .band h2")];
+      const bad = els.filter((e) => +getComputedStyle(e).opacity < 0.98).map((e) => e.className || e.tagName);
+      const words = [...document.querySelectorAll("[data-a='words'] .wi")].filter((w) => new DOMMatrix(getComputedStyle(w).transform).f > 1).length;
+      const clip = [...document.querySelectorAll("[data-a='clip']")].filter((e) => !/inset\(0(px|%)? /.test(getComputedStyle(e).clipPath) && getComputedStyle(e).clipPath !== "none").length;
+      return { bad, words, clip };
+    });
+    if (hidden.bad.length || hidden.words || hidden.clip) throw new Error(`still hidden: ${hidden.bad.length} blocks ${JSON.stringify(hidden.bad.slice(0, 4))}, ${hidden.words} words, ${hidden.clip} photos`);
+  });
+  await step("numbers count up to their real values", async () => {
+    const t = await page.locator(".stat b").allInnerTexts();
+    if (t.join("|") !== "3+|5%|4 → 66|25 Mn+") throw new Error(t.join("|"));
+  });
+  await step(reduced ? "reduced motion: nothing animates, smooth scroll is off" : "header tightens after scrolling", async () => {
+    const s = await page.evaluate(() => ({ motion: document.documentElement.classList.contains("motion"), lenis: !!window.__lenis, scrolled: document.querySelector(".hdr").classList.contains("scrolled") }));
+    if (reduced ? (s.motion || s.lenis) : !s.scrolled) throw new Error(JSON.stringify(s));
   });
   await step("four section bars, in order", async () => {
     const t = await page.locator(".band h2").allInnerTexts();
     if (t.join(",") !== "Works,About,CV,Contact") throw new Error(t.join(","));
   });
-  await step("no purple left in the page styles", async () => {
+  await step("no purple or teal left in the page styles", async () => {
     const css = await page.evaluate(() => [...document.styleSheets].flatMap((s) => { try { return [...s.cssRules].map((r) => r.cssText); } catch { return []; } }).join(" "));
-    if (/4f46e5|6366f1|rgb\(79, 70, 229\)|rgb\(99, 102, 241\)/i.test(css)) throw new Error("purple found");
+    if (/4f46e5|6366f1|0f766e|14917f|rgb\(79, 70, 229\)|rgb\(99, 102, 241\)|rgb\(15, 118, 110\)/i.test(css)) throw new Error("old colour found");
   });
 
   // ---- Navigation
@@ -63,10 +88,16 @@ for (const [name, opts] of Object.entries(profiles)) {
       const link = page.locator(".nav a").filter({ hasText: new RegExp(`^${label}$`) }).first();
       if (!(await link.isVisible())) throw new Error("link not visible");
       const id = (await link.getAttribute("href")).split("#")[1];
+      await page.evaluate(() => (window.__lenis ? window.__lenis.scrollTo(document.body.scrollHeight, { immediate: true }) : window.scrollTo(0, document.body.scrollHeight)));
+      await page.waitForTimeout(500);
       await tap(link);
       let top = NaN, prev;  // wait for the smooth scroll to come to rest
-      for (let i = 0; i < 20 && top !== prev; i++) { prev = top; await page.waitForTimeout(250); top = Math.round(await page.evaluate((i) => document.getElementById(i).getBoundingClientRect().top, id)); }
-      if (Math.abs(top - 64) > 24 && !(id === "contact" && top < 900)) throw new Error(`#${id} top at ${Math.round(top)}px`);
+      for (let i = 0; i < 24 && top !== prev; i++) { prev = top; await page.waitForTimeout(250); top = Math.round(await page.evaluate((i) => document.getElementById(i).getBoundingClientRect().top, id)); }
+      const want = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop));
+      const hdrBottom = await page.evaluate(() => document.querySelector(".hdr-pill").getBoundingClientRect().bottom);
+      if (id === "ask") { const y = await page.evaluate(() => scrollY); if (y > 2) throw new Error(`did not return to top (scrollY ${y})`); return; }
+      if (Math.abs(top - want) > 6 && !(id === "contact" && top < 900)) throw new Error(`#${id} top at ${top}px, expected ${want}px`);
+      if (top < hdrBottom - 1 && id !== "ask") throw new Error(`#${id} starts under the header`);
     });
   }
   await step("logo returns to home", async () => {
@@ -129,6 +160,14 @@ for (const [name, opts] of Object.entries(profiles)) {
 
   // ---- Works
   await home();
+  if (name === "desktop") await step("'View' badge appears over a work card", async () => {
+    await page.waitForTimeout(3500);
+    const card = page.locator(".grid a.work").first(); await card.scrollIntoViewIfNeeded(); await page.waitForTimeout(1500);
+    const bb = await card.boundingBox(); await page.mouse.move(bb.x + bb.width / 2, bb.y + bb.height / 3, { steps: 6 }); await page.waitForTimeout(700);
+    const sc = await page.evaluate(() => new DOMMatrix(getComputedStyle(document.querySelector(".vbadge")).transform).a);
+    if (sc < 0.9) throw new Error(`badge scale ${sc}`);
+    await page.mouse.move(5, 5); 
+  });
   await step("featured: 'Try the live app' points to lets-match.com", async () => {
     const h = await page.locator(".feat a.btn.acc").getAttribute("href"); if (!h.includes("lets-match.com")) throw new Error(h);
   });

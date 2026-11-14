@@ -1,13 +1,22 @@
 import Link from "next/link";
+import { Roll } from "@/components/Split";
+
+const LINKS = [["ask", "Ask Prannav"], ["works", "Works"], ["about", "About"], ["cv", "CV"]] as const;
+
 export default function Header({ home = false }: { home?: boolean }) {
   const p = home ? "" : "/";
   return (
-    <header className="hdr"><div className="wrap">
-      <Link href="/" aria-label="Prannav home"><img src="/wordmark.svg" alt="Prannav" /></Link>
-      <nav className="nav">
-        <a className="navask" href={`${p}#ask`}>Ask Prannav</a><a href={`${p}#works`}>Works</a><a href={`${p}#about`}>About</a><a href={`${p}#cv`}>CV</a>
-        <a className="btn pri" href={`${p}#contact`}>Contact</a>
-      </nav>
-    </div></header>
+    <header className="hdr">
+      <div className="hdr-pill">
+        <Link href="/" className="brand" aria-label="Prannav home"><img src="/wordmark.svg" alt="Prannav" /></Link>
+        <nav className="nav">
+          <span className="nav-ind" aria-hidden="true" />
+          {LINKS.map(([id, label]) => (
+            <a key={id} className={id === "ask" ? "navask" : undefined} href={`${p}#${id}`} data-sec={id} aria-label={label}><Roll text={label} /></a>
+          ))}
+          <a className="btn pri" href={`${p}#contact`} data-sec="contact" data-magnetic aria-label="Contact"><Roll text="Contact" /></a>
+        </nav>
+      </div>
+    </header>
   );
 }

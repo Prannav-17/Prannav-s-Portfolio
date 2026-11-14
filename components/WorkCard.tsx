@@ -5,7 +5,7 @@ import type { Project } from "@/lib/projects";
 export default function WorkCard({ p }: { p: Project }) {
   const v = useRef<HTMLVideoElement>(null);
   return (
-    <a className="work" href={`/works/${p.slug}`} target="_blank" rel="noreferrer"
+    <a className="work" href={`/works/${p.slug}`} target="_blank" rel="noreferrer" data-view data-tilt
       onMouseEnter={() => v.current?.play().catch(() => {})} onMouseLeave={() => { if (v.current) { v.current.pause(); v.current.currentTime = 0; } }}>
       <div className="m">
         <video ref={v} src={p.media} poster={p.shot} muted loop playsInline preload="none" />

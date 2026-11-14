@@ -463,6 +463,21 @@
    "visibility": "public"
   },
   {
+   "id": "domains",
+   "category": "experience",
+   "questions": [
+    "Has he worked with fintech?",
+    "Does he have fintech experience?",
+    "Has he worked in financial services or BFSI?",
+    "Has he built anything for banks or lenders?",
+    "Which industries has he worked in?",
+    "What domains does he know?"
+   ],
+   "answer": "His roles so far have been in B2B SaaS (Freshworks, ZoomInfo) and e-commerce (Flipkart), not at a fintech company. He has built for financial services, though: Performance AI is shown for a fictional lender where the outcome is a loan disbursal, Comply is a compliance operating layer for a fictional NBFC, and Revora AI covers billing and revenue operations. Fintech is one of the domains he is looking at for his next role.",
+   "source": "Resume; Projects; About page",
+   "visibility": "public"
+  },
+  {
    "id": "availability",
    "category": "looking_for",
    "questions": [
