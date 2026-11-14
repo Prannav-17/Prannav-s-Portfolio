@@ -599,9 +599,13 @@
     "Has he worked with LLMs?",
     "Has he built AI features?",
     "How does he use AI?",
-    "Is he an AI product manager?"
+    "Is he an AI product manager?",
+    "What is his AI work?",
+    "What AI work has he done?",
+    "Show me his AI projects",
+    "Has he built anything with AI?"
    ],
-   "answer": "Yes, through what he has built. His five prototypes put AI inside the workflow: Helix AI has AI Insights, Agent Coaching and an Ask Helix assistant; Performance AI uses guardrails that set what the AI can act on, what goes to a review queue and what is only logged; Revora AI has AI Revenue Insights; PeopleOS has explainable skill matches and a Copilot. He builds with Claude Code, and this site's assistant, which answers from his CV and projects, is his own build too.",
+   "answer": "This site is one of his AI builds. The assistant you're chatting with is connected to an LLM: your question is matched against a knowledge base Prannav wrote from his CV and projects, and the LLM writes the answer from those entries, so it stays grounded in facts. Beyond this site, his five prototypes put AI inside the workflow: Helix AI has AI Insights and an Ask Helix assistant, Performance AI uses guardrails that set what the AI can act on, Revora AI has AI Revenue Insights, and PeopleOS has a Copilot. He builds with Claude Code.",
    "source": "Resume; Projects",
    "visibility": "public"
   },
@@ -659,9 +663,12 @@
    "questions": [
     "Who built this assistant?",
     "How does this assistant work?",
-    "Are you an AI?"
+    "Are you an AI?",
+    "Is this site connected to AI?",
+    "Is this chatbot using an LLM?",
+    "How are these answers generated?"
    ],
-   "answer": "I'm an AI assistant that answers questions about Prannav using only the content on this site: his resume, About page and projects. If something isn't covered, I'll say so and point you to his contact details.",
+   "answer": "Prannav built this assistant himself, and it is one of his AI works. It's connected to an LLM: your question is matched against a knowledge base he wrote from his CV, About page and projects, and the LLM writes the answer using only those entries. If something isn't covered, I'll say so and point you to his contact details.",
    "source": "Site",
    "visibility": "public"
   },
