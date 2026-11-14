@@ -112,7 +112,9 @@
     "Tell me about his Flipkart role",
     "What did he work on at Flipkart?",
     "What does he do at work today?",
-    "What did he do at Flipkart?"
+    "What did he do at Flipkart?",
+    "What does he do day to day at Flipkart?",
+    "What are his responsibilities at Flipkart?"
    ],
    "answer": "At Flipkart (Manager, Strategy and Planning, June 2025 to present) Prannav took Flipkart Trust Shield from 0 to 1 with Product and Ops. He also shipped an automated hourly sell-out reporting tool in Google Apps Script that leadership uses directly, built the CY2026 plan for a 25 Mn+ user loyalty base, expanded serviceability from 4 to 66 cities, and set segment-wise pricing across INR 500+ Cr of event revenue.",
    "source": "Resume → Flipkart",
@@ -208,6 +210,45 @@
    "visibility": "public"
   },
   {
+   "id": "data-driven",
+   "category": "experience",
+   "questions": [
+    "Give an example of a data-driven decision he made",
+    "Is he data-driven?",
+    "How does he use data?",
+    "Has he worked with analytics?"
+   ],
+   "answer": "A few examples. At Freshworks he analysed 500+ lost deals by loss reason and turned the patterns into product and positioning inputs, protecting USD 0.5+ Mn in revenue, and built 10+ competitor dashboards that surfaced 5+ new entrants. At Flipkart he set segment-wise pricing across INR 500+ Cr of event revenue using demand signals, and built an hourly sell-out reporting tool that leadership uses during live sale events. His tools include SQL, Excel and Power BI.",
+   "source": "Resume; Projects",
+   "visibility": "public"
+  },
+  {
+   "id": "research",
+   "category": "experience",
+   "questions": [
+    "Has he done user research?",
+    "How does he understand customers?",
+    "Has he done product discovery?",
+    "How does he gather feedback?"
+   ],
+   "answer": "Yes. At ZoomInfo he ran discovery with US prospects and turned recurring needs into structured feedback that shaped new feature development. At Wayplorer he mapped user pain points across the CRM and RevOps market and benchmarked 5+ competing platforms. At Freshworks he analysed 500+ lost deals by loss reason. Let's Match is in testing with real users who send constant feedback.",
+   "source": "Resume; Projects",
+   "visibility": "public"
+  },
+  {
+   "id": "cross-functional",
+   "category": "experience",
+   "questions": [
+    "How does he work with engineering and design teams?",
+    "How does he handle stakeholders?",
+    "Has he worked cross-functionally?",
+    "How does he work with other teams?"
+   ],
+   "answer": "Most of his work has been across teams. At Flipkart he took Trust Shield from 0 to 1 with Product and Ops, defining the buyer journey across 5 touchpoints, and expanded serviceability from 4 to 66 cities across Ops, Category and Supply Chain. At Freshworks he was the bridge between Product Management and Presales, turning what UK customers asked for into product inputs.",
+   "source": "Resume; Projects",
+   "visibility": "public"
+  },
+  {
    "id": "achievements",
    "category": "experience",
    "questions": [
@@ -228,7 +269,9 @@
     "What results has he delivered?",
     "What numbers has he moved?",
     "What measurable outcomes has he achieved?",
-    "Show me his impact in numbers"
+    "Show me his impact in numbers",
+    "What is his biggest achievement?",
+    "What is he most proud of?"
    ],
    "answer": "At Flipkart: Trust Shield, which he took from 0 to 1, delivered a 5% conversion uplift; serviceability went from 4 to 66 cities, covering 40% of all India Mobiles volume; and he set segment-wise pricing across INR 500+ Cr of event revenue. At Freshworks he generated USD 0.66+ Mn in ARR and protected USD 0.5+ Mn by analysing 500+ lost deals. At ZoomInfo he closed USD 0.22 Mn in ARR. At GSK his field sales app pilot lifted orders by 30% and an in-app reminder raised lines sold per order by 40%.",
    "source": "Resume",
@@ -486,10 +529,26 @@
     "Has he worked in financial services or BFSI?",
     "Has he built anything for banks or lenders?",
     "Which industries has he worked in?",
-    "What domains does he know?"
+    "What domains does he know?",
+    "Has he worked in B2B or B2C?",
+    "B2B or B2C experience?"
    ],
    "answer": "His roles so far have been in B2B SaaS (Freshworks, ZoomInfo) and e-commerce (Flipkart), not at a fintech company. He has built for financial services, though: Performance AI is shown for a fictional lender where the outcome is a loan disbursal, Comply is a compliance operating layer for a fictional NBFC, and Revora AI covers billing and revenue operations. Fintech is one of the domains he is looking at for his next role.",
    "source": "Resume; Projects; About page",
+   "visibility": "public"
+  },
+  {
+   "id": "ai-experience",
+   "category": "experience",
+   "questions": [
+    "Does he have experience with AI products?",
+    "Has he worked with LLMs?",
+    "Has he built AI features?",
+    "How does he use AI?",
+    "Is he an AI product manager?"
+   ],
+   "answer": "Yes, through what he has built. His five prototypes put AI inside the workflow: Helix AI has AI Insights, Agent Coaching and an Ask Helix assistant; Performance AI uses guardrails that set what the AI can act on, what goes to a review queue and what is only logged; Revora AI has AI Revenue Insights; PeopleOS has explainable skill matches and a Copilot. He builds with Claude Code, and this site's assistant, which answers from his CV and projects, is his own build too.",
+   "source": "Resume; Projects",
    "visibility": "public"
   },
   {
