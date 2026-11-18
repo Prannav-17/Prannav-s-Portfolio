@@ -55,11 +55,6 @@ export default function Home() {
               <span className="nw"><em className="hl"><Words text="ships" /></em><Words text=":" /></span>{" "}
               <Words text="one live app and four product prototypes, built end to end" />
             </h1>
-            <ul className="proof" data-h aria-label="Results at Flipkart">
-              <li><b>5%</b><span>conversion uplift</span></li>
-              <li><b>4 → 66</b><span>cities expanded</span></li>
-              <li><b>25 Mn+</b><span>users planned for</span></li>
-            </ul>
             <div data-h><Chat /></div>
             <p className="sub hero-sub" data-h>This site is run by an assistant. Ask it anything about what Prannav has built, how he works and where he&apos;d fit, and it will show you the work</p>
           </div>

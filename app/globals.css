@@ -149,12 +149,7 @@ html.motion .avatar-wrap[data-h]{transform:scale(.4)}
 
 .hero h1{max-width:1020px;margin:16px auto 0;font-size:clamp(32px,4.3vw,60px)}
 .hero-sub{margin-top:26px;font-size:17px}
-.proof{list-style:none;padding:0;margin:18px auto 0;display:flex;justify-content:center;flex-wrap:wrap;gap:0}
-.proof li{display:flex;align-items:baseline;gap:7px;padding:0 20px;border-left:1px solid var(--sky5)}
-.proof li:first-child{border-left:0}
 .hero h1 .nw{white-space:nowrap}
-.proof b{font-size:20px;font-weight:750;letter-spacing:-.02em;color:var(--ink)}
-.proof span{font-size:14px;color:var(--mut)}
 /* ---------- Main chat: the centrepiece ---------- */
 @property --ang{syntax:"<angle>";inherits:false;initial-value:0deg}
 .chat.main{max-width:860px;margin-top:26px;padding:16px 18px;border:2px solid transparent;border-radius:30px;
@@ -228,7 +223,7 @@ html.motion [data-a="clip"]{clip-path:inset(100% 0% 0% 0% round 28px)}
 /* never show the browser's own play button over the autoplaying demos */
 .autovid::-webkit-media-controls,.autovid::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px}
 .work{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;transition:box-shadow .4s,border-color .4s}
 .work:hover{box-shadow:0 26px 52px rgba(14,165,233,.18);border-color:var(--sky4)}
 html:not(.motion) .work:hover{transform:translateY(-4px)}
@@ -339,10 +334,6 @@ html.motion .tl-line i{transform:scaleY(0)}
   .chat.main .chips{gap:6px;padding-top:10px}
   .chat.main .chip{font-size:13.5px;padding:8px 13px}
   .hero-sub{font-size:15.5px;margin-top:20px}
-  .proof{margin-top:8px;flex-wrap:nowrap}
-  .proof li{flex-direction:column;align-items:center;gap:1px;padding:0 10px;white-space:nowrap}
-  .proof b{font-size:17px}
-  .proof span{font-size:11px}
   .sub{font-size:17px}
   .grid,.two{grid-template-columns:1fr}
   .sec{padding-bottom:72px}
