@@ -80,7 +80,7 @@ export default function Chat({ project, compact = false, placeholder, starters: 
     <div className={`chat${compact ? " compact" : " main"}`} id={compact ? undefined : "chat"}>
       {!compact && (
         <div className="chat-hd">
-          <span className="chat-av"><img src="/prannav.jpg" alt="" /></span>
+          <span className="chat-av"><img src="/prannav-sm.webp" alt="" width={64} height={64} /></span>
           <div className="chat-id"><b>Prannav&apos;s assistant</b><small><span className="pulse" />Online<span className="chat-src">· answers from his CV and projects</span></small></div>
           <span className="chat-kbd" aria-hidden="true">Enter ↵</span>
         </div>

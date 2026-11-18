@@ -71,15 +71,17 @@ export default function Motion() {
 
       // ---------- Loader (first visit in a tab): count to 100, then the sky columns lift away
       const loader = document.querySelector<HTMLElement>(".loader");
-      if (loader && !root.classList.contains("seen")) {
+      // A visitor on a slow connection has already waited, so the loader is skipped for them
+      const waited = performance.now() > 1800;
+      if (loader && !root.classList.contains("seen") && !waited) {
         const count = loader.querySelector(".ld-count");
         const n = { v: 0 };
         gsap.timeline({ onComplete: () => { try { sessionStorage.setItem("pk-intro", "1"); } catch {} loader.style.display = "none"; } })
-          .fromTo(".ld-name span", { yPercent: 110 }, { yPercent: 0, duration: 0.8, ease: "power4.out" })
-          .to(n, { v: 100, duration: 1, ease: "power2.inOut", onUpdate: () => { if (count) count.textContent = `${Math.round(n.v)}%`; } }, 0)
-          .to(".ld-in", { yPercent: -40, opacity: 0, duration: 0.45, ease: "power2.in" }, ">-0.05")
-          .to(".ld-cols i", { yPercent: -100, duration: 0.85, stagger: 0.07, ease: "power4.inOut" }, "<0.05")
-          .add(() => { intro.play(); }, "-=0.6");
+          .fromTo(".ld-name span", { yPercent: 110 }, { yPercent: 0, duration: 0.55, ease: "power4.out" })
+          .to(n, { v: 100, duration: 0.6, ease: "power2.inOut", onUpdate: () => { if (count) count.textContent = `${Math.round(n.v)}%`; } }, 0)
+          .to(".ld-in", { yPercent: -40, opacity: 0, duration: 0.3, ease: "power2.in" }, ">-0.05")
+          .to(".ld-cols i", { yPercent: -100, duration: 0.65, stagger: 0.05, ease: "power4.inOut" }, "<0.05")
+          .add(() => { intro.play(); }, "-=0.5");
       } else {
         if (loader) loader.style.display = "none";
         intro.play();

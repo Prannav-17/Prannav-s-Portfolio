@@ -80,7 +80,7 @@ export default function Home() {
               </div>
               <a className="vis" href={`/works/${feat.slug}`} target="_blank" rel="noreferrer" data-view aria-label={`How ${feat.name} works`}>
                 <i className="ring r1" /><i className="ring r2" />
-                <div className="phone" data-float><AutoVideo src={feat.media} poster={feat.shot} fallback="/media/lets-match-anim.webp" /></div>
+                <div className="phone" data-float><AutoVideo src={feat.media} poster="/media/lets-match-poster.webp" fallback="/media/lets-match-anim.webp" /></div>
               </a>
             </div>
             <div className="grid" data-a="stagger">
@@ -92,7 +92,7 @@ export default function Home() {
         <section id="about" className="sec alt">
           <Band n="02" title="About" />
           <div className="wrap about">
-            <div className="photo" data-a="clip"><img src="/prannav.jpg" alt="Prannav" /></div>
+            <div className="photo" data-a="clip"><img src="/prannav.webp" alt="Prannav" width={760} height={760} loading="lazy" decoding="async" /></div>
             <div>
               <h2 data-a="words"><Words text="Turning complex problems into products people actually value" /></h2>
               <p className="lead" data-a="up">Prannav is based in Bengaluru. He spent two years in front of B2B SaaS customers at Freshworks and ZoomInfo, then moved into strategy and planning at Flipkart. He earned his MBA at <span className="iim">IIM Kozhikode</span> and builds products himself to learn what works</p>
