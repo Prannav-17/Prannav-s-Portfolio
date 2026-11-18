@@ -92,7 +92,7 @@ export default function Home() {
         <section id="about" className="sec alt">
           <Band n="02" title="About" />
           <div className="wrap about">
-            <div className="photo" data-a="clip"><img src="/prannav.webp" alt="Prannav" width={760} height={760} loading="lazy" decoding="async" /></div>
+            <div className="photo" data-a="clip"><img src="/prannav.jpg" alt="Prannav" width={800} height={800} loading="lazy" decoding="async" /></div>
             <div>
               <h2 data-a="words"><Words text="Turning complex problems into products people actually value" /></h2>
               <p className="lead" data-a="up">Prannav is based in Bengaluru. He spent two years in front of B2B SaaS customers at Freshworks and ZoomInfo, then moved into strategy and planning at Flipkart. He earned his MBA at <span className="iim">IIM Kozhikode</span> and builds products himself to learn what works</p>
