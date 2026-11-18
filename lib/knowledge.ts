@@ -51,10 +51,9 @@ export type Card = { title: string; desc: string; href: string; external?: boole
 
 const proj: Record<string, Card> = {
   "lets-match": { title: "Let's Match", desc: "Live app: decide what to watch as a group", href: "/works/lets-match", tag: "Live app" },
-  "performance-ai": { title: "Performance AI", desc: "Marketing decision product", href: "/works/performance-ai", tag: "Prototype" },
-  "helix-ai": { title: "Helix AI", desc: "Customer operations", href: "/works/helix-ai", tag: "Prototype" },
-  "revora-ai": { title: "Revora AI", desc: "Billing and revenue operations", href: "/works/revora-ai", tag: "Prototype" },
-  comply: { title: "Comply", desc: "Compliance operating layer", href: "/works/comply", tag: "Prototype" },
+  "performance-ai": { title: "Performance", desc: "Lending marketing, measured on disbursals", href: "/works/performance-ai", tag: "Prototype" },
+  "helix-ai": { title: "Helix", desc: "Customer operations", href: "/works/helix-ai", tag: "Prototype" },
+  "revora-ai": { title: "Revora", desc: "Billing and revenue operations", href: "/works/revora-ai", tag: "Prototype" },
   peopleos: { title: "PeopleOS", desc: "Skills-based talent intelligence", href: "/works/peopleos", tag: "Prototype" },
   cv: { title: "View CV", desc: "Read it online", href: "/cv", tag: "CV" },
   "cv-pdf": { title: "Download PDF", desc: "Prannav_K_B_CV.pdf", href: "/Prannav_K_B_CV.pdf", tag: "CV" },
@@ -62,10 +61,10 @@ const proj: Record<string, Card> = {
 for (const c of Object.values(proj)) c.external = true;
 
 const cardMap: Record<string, string[]> = {
-  "projects-overview": ["lets-match", "performance-ai", "helix-ai", "revora-ai", "comply", "peopleos"],
+  "projects-overview": ["lets-match", "performance-ai", "helix-ai", "revora-ai", "peopleos"],
   "project-letsmatch": ["lets-match"], "project-letsmatch-why": ["lets-match"], "project-letsmatch-status": ["lets-match"],
   "project-performance-ai": ["performance-ai"], "project-helix": ["helix-ai"], "project-revora": ["revora-ai"],
-  "project-comply": ["comply"], "project-peopleos": ["peopleos"],
+  "project-peopleos": ["peopleos"],
   "project-fictional": ["lets-match"], "project-how-built": ["lets-match"],
   cv: ["cv", "cv-pdf"], "experience-years": ["cv"],
 };

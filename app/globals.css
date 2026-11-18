@@ -149,6 +149,12 @@ html.motion .avatar-wrap[data-h]{transform:scale(.4)}
 
 .hero h1{max-width:1020px;margin:16px auto 0;font-size:clamp(32px,4.3vw,60px)}
 .hero-sub{margin-top:26px;font-size:17px}
+.proof{list-style:none;padding:0;margin:18px auto 0;display:flex;justify-content:center;flex-wrap:wrap;gap:0}
+.proof li{display:flex;align-items:baseline;gap:7px;padding:0 20px;border-left:1px solid var(--sky5)}
+.proof li:first-child{border-left:0}
+.hero h1 .nw{white-space:nowrap}
+.proof b{font-size:20px;font-weight:750;letter-spacing:-.02em;color:var(--ink)}
+.proof span{font-size:14px;color:var(--mut)}
 /* ---------- Main chat: the centrepiece ---------- */
 @property --ang{syntax:"<angle>";inherits:false;initial-value:0deg}
 .chat.main{max-width:860px;margin-top:26px;padding:16px 18px;border:2px solid transparent;border-radius:30px;
@@ -211,6 +217,8 @@ html.motion [data-a="clip"]{clip-path:inset(100% 0% 0% 0% round 28px)}
 .feat .txt{padding:46px}
 .feat .txt p{color:var(--mut)}
 .feat .txt .lead{color:var(--ink2)}
+.diff{padding:14px 18px;border-radius:16px;background:var(--sky6,#f0f9ff);border:1px solid var(--sky5);color:var(--ink2)!important;font-size:15px;line-height:1.55}
+.diff b{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
 .feat .vis{position:relative;overflow:hidden;display:grid;place-items:center;min-height:420px;padding:36px;background:radial-gradient(circle at 50% 45%,#fff 0,var(--sky5) 46%,var(--sky4) 100%)}
 .ring{position:absolute;left:50%;top:50%;border-radius:50%;border:1px dashed rgba(14,165,233,.4);translate:-50% -50%}
 .r1{width:340px;height:340px;animation:spin 40s linear infinite}
@@ -321,7 +329,7 @@ html.motion .tl-line i{transform:scaleY(0)}
   .nav{gap:0}.nav a{height:34px;padding:0 9px;font-size:14px}.nav a.navask{display:none}.nav a.btn{height:38px;margin-left:4px;padding:0 14px}
   .nav-ind{height:34px;margin-top:-17px}
   .hero{padding:78px 0 56px}
-  .hero h1{font-size:29px;margin-top:12px;line-height:1.1}
+  .hero h1{font-size:28px;margin-top:12px;line-height:1.08}
   .badge{font-size:11px;padding:6px 12px}
   .chat.main{margin-top:18px;padding:12px}
   .chat-hd{padding:0 4px 10px;margin-bottom:8px}
@@ -331,6 +339,10 @@ html.motion .tl-line i{transform:scaleY(0)}
   .chat.main .chips{gap:6px;padding-top:10px}
   .chat.main .chip{font-size:13.5px;padding:8px 13px}
   .hero-sub{font-size:15.5px;margin-top:20px}
+  .proof{margin-top:8px;flex-wrap:nowrap}
+  .proof li{flex-direction:column;align-items:center;gap:1px;padding:0 10px;white-space:nowrap}
+  .proof b{font-size:17px}
+  .proof span{font-size:11px}
   .sub{font-size:17px}
   .grid,.two{grid-template-columns:1fr}
   .sec{padding-bottom:72px}

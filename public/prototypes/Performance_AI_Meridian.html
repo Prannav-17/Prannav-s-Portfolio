@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Performance AI, Meridian Capital Finance</title>
+<title>Performance, Meridian Capital Finance</title>
 <style>
 :root{
   --violet:#7C3AED; --violet-tint:#F5F1FE; --violet-line:#DDD0FB;
@@ -347,7 +347,7 @@ footer b{color:var(--ink-2);}
   <nav class="rail">
     <div class="brandmark">
       <div class="mk">P</div>
-      <div><div class="nm">Performance AI</div><div class="sb">Meridian Capital</div></div>
+      <div><div class="nm">Performance</div><div class="sb">Meridian Capital</div></div>
     </div>
     <div class="railnav">
       <div class="lbl">Modules</div>
@@ -403,7 +403,7 @@ footer b{color:var(--ink-2);}
       <div class="paceStrip" id="paceStrip"></div>
 
       <div class="card aiCard">
-        <h2>Ask Performance AI<span class="tag ai">AI</span></h2>
+        <h2>Ask Performance<span class="tag ai">AI</span></h2>
         <div class="csub">Ask about the account, or jump straight to where a decision gets made</div>
         <div class="askrow">
           <input id="brAskInput" placeholder="e.g. what needs my attention today?">
@@ -428,7 +428,7 @@ footer b{color:var(--ink-2);}
     <section id="view-diagnose" class="hidden">
       <div class="card aiCard">
         <div class="cardhead">
-          <div><h2>Ask Performance AI<span class="tag ai">AI</span></h2>
+          <div><h2>Ask Performance<span class="tag ai">AI</span></h2>
             <div class="csub">Answered from the same reconciled figures shown below</div></div>
         </div>
         <div class="askrow">
@@ -538,7 +538,7 @@ footer b{color:var(--ink-2);}
       </div>
 
       <div class="card aiCard">
-        <h2>Ask Performance AI<span class="tag ai">AI</span></h2>
+        <h2>Ask Performance<span class="tag ai">AI</span></h2>
         <div class="csub">Suggested from current data and standard reallocation playbooks</div>
         <div class="askrow">
           <input id="fcAskInput" placeholder="e.g. what's the fastest way back under the ceiling?">
@@ -644,12 +644,12 @@ footer b{color:var(--ink-2);}
           <span class="pVerdict">64% used &middot; renews in 11 days</span>
         </div>
         <div class="stats" style="margin-top:14px;">
-          <div class="stat"><div class="v">61,200</div><div class="l">Used by Diagnose and Ask Performance AI</div></div>
+          <div class="stat"><div class="v">61,200</div><div class="l">Used by Diagnose and Ask Performance</div></div>
           <div class="stat"><div class="v">44,900</div><div class="l">Used by Forecast simulations</div></div>
           <div class="stat"><div class="v">22,300</div><div class="l">Used by Guardrails evaluation</div></div>
         </div>
         <div class="tblfoot">
-          <span class="smallnote">Credits meter usage across every AI powered feature in Performance AI.</span>
+          <span class="smallnote">Credits meter usage across every AI powered feature in Performance.</span>
           <button class="btn ghost sm">Add credits</button>
         </div>
       </div>
@@ -660,7 +660,7 @@ footer b{color:var(--ink-2);}
   <div class="teamsFloat" id="teamsCard">
     <div class="teamsHead">
       <div class="teamsLogo">T</div>
-      <div class="teamsMeta"><b>Microsoft Teams</b> · Performance AI posted to <b>#meridian-performance</b> · just now</div>
+      <div class="teamsMeta"><b>Microsoft Teams</b> · Performance posted to <b>#meridian-performance</b> · just now</div>
       <button class="teamsClose" id="teamsCloseBtn" aria-label="Dismiss notification">×</button>
     </div>
     <div class="teamsBody">
@@ -914,7 +914,7 @@ function showTeamsPending(item){
     : item.why;
   document.getElementById("teamsActions").innerHTML = `
     <button class="teamsBtn primary" id="teamsApproveBtn">Approve</button>
-    <button class="teamsBtn" id="teamsOpenBtn">Open in Performance AI</button>`;
+    <button class="teamsBtn" id="teamsOpenBtn">Open in Performance</button>`;
   document.getElementById("teamsApproveBtn").onclick = ()=> approveFromTeams(item.id);
   document.getElementById("teamsOpenBtn").onclick = ()=> go("guardrails");
   document.getElementById("teamsCard").classList.add("show");
@@ -1108,9 +1108,9 @@ function renderRebalanceCard(){
     <div class="rebalTop">
       <div>
         <div class="rebalHead">Rebalance budget<span class="tag ai">AI</span></div>
-        <div class="rebalMove">There is <b>${inrL(opt.pool)}</b> left of this month's plan. Performance AI recommends directing it by value efficiency, mostly toward <b>${mover.name}</b>, which would lift total loan value disbursed by about <b>${inrL(tNew-tOrig)}</b>.</div>
+        <div class="rebalMove">There is <b>${inrL(opt.pool)}</b> left of this month's plan. Performance recommends directing it by value efficiency, mostly toward <b>${mover.name}</b>, which would lift total loan value disbursed by about <b>${inrL(tNew-tOrig)}</b>.</div>
       </div>
-      <button class="btn ghost sm" id="rebalToggle">${expanded ? "Hide" : "Show"} Performance AI recommendation</button>
+      <button class="btn ghost sm" id="rebalToggle">${expanded ? "Hide" : "Show"} Performance recommendation</button>
     </div>
     <div id="rebalDetail" style="${expanded ? "" : "display:none;"} margin-top:14px;">
       <table class="mini">

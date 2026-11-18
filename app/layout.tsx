@@ -11,7 +11,7 @@ const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://prannav.vercel.app";
 export const metadata: Metadata = {
   metadataBase: new URL(base),
   title: "Prannav | Ask me anything",
-  description: "Prannav builds at the intersection of business, technology and AI. Ask the assistant about his work, or browse a live app and five product prototypes.",
+  description: "Product Manager who ships: one live app and four product prototypes, built end to end. Ask the assistant about his work, or browse the live app and the prototypes.",
   openGraph: { title: "Prannav | Ask me anything", description: "Ask the assistant anything about Prannav's work.", type: "website" },
   twitter: { card: "summary_large_image" },
 };

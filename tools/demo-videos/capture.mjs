@@ -51,7 +51,7 @@ async function story(slug, file, fn) {
   await ctx.close();
 }
 
-// ---------------- Helix AI
+// ---------------- Helix
 await story("helix-ai", "Helix_AI_Customer_Operations", async ({ page, box, snap, scenes, tallAgain }) => {
   const img1 = await snap();
   const att = union(await box(page.getByText("What needs your attention today?")), await box(page.getByRole("button", { name: "Investigate issue" })));
@@ -76,7 +76,7 @@ await story("helix-ai", "Helix_AI_Customer_Operations", async ({ page, box, snap
   await tallAgain();
 });
 
-// ---------------- Revora AI
+// ---------------- Revora
 await story("revora-ai", "Revora_AI_Revenue_Operations", async ({ page, box, snap, scenes }) => {
   const img1 = await snap();
   const kpis = union(await box(page.getByText("MRR", { exact: true }).locator("xpath=ancestor-or-self::*[@onclick][1]")), await box(page.getByText("Revenue Leakage", { exact: true }).locator("xpath=ancestor-or-self::*[@onclick][1]")));
@@ -98,7 +98,7 @@ await story("revora-ai", "Revora_AI_Revenue_Operations", async ({ page, box, sna
     cam: [[0, full(img3)], [0.4, full(img3)], [1.8, cam(rc, img3, 50, 900)]], cur: [[0, 700, 500], [2.4, ...mid(await box(page.getByRole("button", { name: "Approve correction" })))]] });
 });
 
-// ---------------- Performance AI
+// ---------------- Performance
 await story("performance-ai", "Performance_AI_Meridian", async ({ page, box, snap, scenes }) => {
   const nav = (t) => page.getByRole("button", { name: t, exact: true });
   const img1 = await snap();

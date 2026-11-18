@@ -180,10 +180,10 @@ for (const [name, opts] of Object.entries(profiles)) {
     await pop.waitForLoadState("networkidle"); if (!pop.url().endsWith("/works/lets-match")) throw new Error(pop.url()); await pop.close();
   });
   const cards = await page.locator(".grid a.work").evaluateAll((a) => a.map((x) => x.getAttribute("href")));
-  await step("five prototype cards", async () => { if (cards.length !== 5) throw new Error(cards.length); });
+  await step("four prototype cards", async () => { if (cards.length !== 4) throw new Error(cards.length); });
   await step("each prototype card shows its designed cover", async () => {
     const srcs = await page.locator(".grid .work .cover").evaluateAll((im) => im.map((i) => i.getAttribute("src")));
-    if (srcs.length !== 5 || !srcs.every((x) => x.startsWith("/covers/") && x.endsWith(".webp"))) throw new Error(srcs.join(" "));
+    if (srcs.length !== 4 || !srcs.every((x) => x.startsWith("/covers/") && x.endsWith(".webp"))) throw new Error(srcs.join(" "));
     for (const x of srcs) { const r = await ctx.request.get(new URL(x, BASE).href); if (r.status() !== 200 || !/webp/.test(r.headers()["content-type"])) throw new Error(`${x} ${r.status()}`); }
   });
   if (!reduced) await step(mobile ? "card video plays when scrolled into view" : "hovering a card swaps the cover for the playing video", async () => {

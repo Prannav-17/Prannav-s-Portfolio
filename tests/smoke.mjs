@@ -50,10 +50,10 @@ await step("chat: type a question and press send", async () => {
 console.log("Works");
 await page.goto(BASE, { waitUntil: "networkidle" });
 const hrefs = await page.locator("a[href^='/works/']").evaluateAll((a) => [...new Set(a.map((x) => x.getAttribute("href")))]);
-await step("six works listed", async () => { if (hrefs.length !== 6) throw new Error(`found ${hrefs.length}`); });
+await step("five works listed", async () => { if (hrefs.length !== 5) throw new Error(`found ${hrefs.length}`); });
 await step("order: Helix and Revora right after Let's Match", async () => {
   const names = await page.locator(".grid .work h3").allInnerTexts();
-  if (names[0] !== "Helix AI" || names[1] !== "Revora AI") throw new Error(names.join(", "));
+  if (names[0] !== "Helix" || names[1] !== "Revora") throw new Error(names.join(", "));
 });
 for (const h of hrefs) {
   await step(`work page ${h}`, async () => {

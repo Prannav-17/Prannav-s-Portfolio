@@ -51,10 +51,15 @@ export default function Home() {
           <div className="wrap hero-in">
             <div className="eyebrow badge" data-h><span className="pulse" />Ask Prannav · AI assistant</div>
             <h1 data-hwords>
-              <Words text="Product Manager building where" />{" "}
-              <em className="hl"><Words text="business, technology and AI" /></em>{" "}
-              <Words text="meet" />
+              <Words text="Product Manager who" />{" "}
+              <span className="nw"><em className="hl"><Words text="ships" /></em><Words text=":" /></span>{" "}
+              <Words text="one live app and four product prototypes, built end to end" />
             </h1>
+            <ul className="proof" data-h aria-label="Results at Flipkart">
+              <li><b>5%</b><span>conversion uplift</span></li>
+              <li><b>4 → 66</b><span>cities expanded</span></li>
+              <li><b>25 Mn+</b><span>users planned for</span></li>
+            </ul>
             <div data-h><Chat /></div>
             <p className="sub hero-sub" data-h>This site is run by an assistant. Ask it anything about what Prannav has built, how he works and where he&apos;d fit, and it will show you the work</p>
           </div>
@@ -65,7 +70,7 @@ export default function Home() {
           <div className="wrap">
             <div className="head">
               <h2 data-a="words"><Words text="He builds the products himself" /></h2>
-              <p data-a="up">One live app that people use today, and five enterprise product prototypes that show how he thinks a problem through, end to end</p>
+              <p data-a="up">One live app that people use today, and four enterprise product prototypes that show how he thinks a problem through, end to end</p>
             </div>
             <div className="feat" data-a="up">
               <div className="txt">
@@ -73,6 +78,7 @@ export default function Home() {
                 <h2 style={{ marginTop: 10 }}>{feat.name}</h2>
                 <p className="lead">{feat.tagline}</p>
                 <p>{feat.problem}</p>
+                {feat.different && <p className="diff"><b>Why it&apos;s different</b>{feat.different}</p>}
                 <div className="row">
                   <a className="btn acc" href={feat.href} target="_blank" rel="noreferrer" data-magnetic>Try the live app ↗</a>
                   <a className="btn" href={`/works/${feat.slug}`} target="_blank" rel="noreferrer">How it works</a>

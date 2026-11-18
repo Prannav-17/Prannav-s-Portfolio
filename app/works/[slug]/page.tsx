@@ -34,10 +34,22 @@ export default async function Work({ params }: { params: Promise<{ slug: string 
         <div className="cta" style={{ justifyContent: "center" }}>
           <a className="btn acc" href={p.href} target="_blank" rel="noreferrer" data-magnetic>{p.kind === "Live app" ? "Open the live app ↗" : "Open the full prototype ↗"}</a>
         </div>
-        <div className="cols" style={{ marginTop: 34 }} data-a="stagger">
-          <div><h3>The problem</h3><p>{p.problem}</p></div>
-          <div><h3>The idea</h3><p>{p.solution}</p></div>
-        </div>
+        {p.pain ? <>
+          <div className="cols" style={{ marginTop: 34 }} data-a="stagger">
+            <div><h3>The pain point</h3><p>{p.pain}</p></div>
+            <div><h3>Why today&apos;s tools miss it</h3><p>{p.gap}</p></div>
+          </div>
+          <div className="cols" style={{ marginTop: 26 }} data-a="stagger">
+            <div><h3>How it solves it</h3><ul>{p.how?.map((x) => <li key={x}>{x}</li>)}</ul></div>
+            <div><h3>Judgment calls</h3><ul>{p.decisions?.map((x) => <li key={x}>{x}</li>)}</ul></div>
+          </div>
+        </> : (
+          <div className="cols" style={{ marginTop: 34 }} data-a="stagger">
+            <div><h3>The problem</h3><p>{p.problem}</p></div>
+            <div><h3>The idea</h3><p>{p.solution}</p></div>
+          </div>
+        )}
+        {p.different && <p className="diff" style={{ marginTop: 26 }} data-a="up"><b>Why it&apos;s different</b>{p.different}</p>}
         <div className="cols" style={{ marginTop: 26 }} data-a="stagger">
           <div><h3>What is inside</h3><ul>{p.points.map((x) => <li key={x}>{x}</li>)}</ul></div>
           <div>{p.note && <><h3>Status</h3><p style={{ fontSize: 15.5, color: "#334155" }}>{p.note}</p></>}
