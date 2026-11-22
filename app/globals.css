@@ -213,6 +213,8 @@ html.motion [data-a="clip"]{clip-path:inset(100% 0% 0% 0% round 28px)}
 .feat .txt p{color:var(--mut)}
 .feat .txt .lead{color:var(--ink2)}
 .diff{padding:14px 18px;border-radius:16px;background:var(--sky6,#f0f9ff);border:1px solid var(--sky5);color:var(--ink2)!important;font-size:15px;line-height:1.55}
+.impact{display:flex;align-items:baseline;gap:8px;margin-top:12px;font-size:14.5px;color:var(--mut)}
+.impact b{font-size:20px;font-weight:750;letter-spacing:-.02em;color:var(--ink)}
 .diff b{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
 .feat .vis{position:relative;overflow:hidden;display:grid;place-items:center;min-height:420px;padding:36px;background:radial-gradient(circle at 50% 45%,#fff 0,var(--sky5) 46%,var(--sky4) 100%)}
 .ring{position:absolute;left:50%;top:50%;border-radius:50%;border:1px dashed rgba(14,165,233,.4);translate:-50% -50%}

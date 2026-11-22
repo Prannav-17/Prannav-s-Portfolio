@@ -50,6 +50,12 @@ export default async function Work({ params }: { params: Promise<{ slug: string 
           </div>
         )}
         {p.different && <p className="diff" style={{ marginTop: 26 }} data-a="up"><b>Why it&apos;s different</b>{p.different}</p>}
+        {p.impact && (
+          <div className="cols" style={{ marginTop: 26 }} data-a="stagger">
+            <div><h3>What testing showed</h3><p>{p.impact}</p></div>
+            <div><h3>What changed after feedback</h3><ul>{p.feedback?.map((x) => <li key={x}>{x}</li>)}</ul></div>
+          </div>
+        )}
         <div className="cols" style={{ marginTop: 26 }} data-a="stagger">
           <div><h3>What is inside</h3><ul>{p.points.map((x) => <li key={x}>{x}</li>)}</ul></div>
           <div>{p.note && <><h3>Status</h3><p style={{ fontSize: 15.5, color: "#334155" }}>{p.note}</p></>}

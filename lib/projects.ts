@@ -1,7 +1,7 @@
 export type Project = {
   slug: string; name: string; kind: "Live app" | "Prototype"; domain: string;
   tagline: string; problem: string; solution: string; points: string[];
-  note?: string; different?: string;
+  note?: string; different?: string; impact?: string; feedback?: string[];
   // Depth for prototypes: the pain, why existing tools miss it, how it solves it, and the judgment calls built in
   pain?: string; gap?: string; how?: string[]; decisions?: string[]; media: string; shot: string; cover?: string; href: string; external?: boolean; portrait?: boolean;
 };
@@ -18,8 +18,14 @@ export const projects: Project[] = [
       "The app shows the group's top 3, ranked by how many people liked each, and offers 10 more if nobody agrees",
       "Separate Friends and Couples pages. Works remotely too",
     ],
-    different: "No app or sign-up, built for Indian services and 32 languages, and the group always gets a ranked top 3 in about two minutes, even when not everyone agrees",
-    note: "Live and in testing. Many people are using it and sending constant feedback. Built on Next.js with Claude Code. Title data from TMDB, where-to-watch from JustWatch, availability from the Streaming Availability API by Movie of the Night",
+    different: "No app or sign-up, built for Indian services and 32 languages, and the group always gets a ranked top 3 in about three minutes, even when not everyone agrees",
+    impact: "In live testing with friend groups, a group decided what to watch in about 3 minutes on average, much faster than they took before using the app",
+    feedback: [
+      "Multiple languages: users asked to pick more than one language instead of just one, so the app now allows several, and the streaming platforms shown refresh to match the languages chosen",
+      "Swipe walkthrough: many testers were new to Tinder-style right/left voting and missed it in live sessions, so a short animated tutorial now shows what to do",
+      "Ratings while swiping: ratings were hidden at first so people would judge without preconceived notions, but testers were more satisfied with the final pick when they could see them, so each title now shows its rating",
+    ],
+    note: "Live and in testing with friend groups, who send regular feedback. Built on Next.js with Claude Code. Title data from TMDB, where-to-watch from JustWatch, availability from the Streaming Availability API by Movie of the Night",
     media: "/media/lets-match.mp4", shot: "/shots/lets-match.jpg", href: "https://lets-match.com/", external: true, portrait: true,
   },
   {

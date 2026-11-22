@@ -62,7 +62,7 @@ for (const c of Object.values(proj)) c.external = true;
 
 const cardMap: Record<string, string[]> = {
   "projects-overview": ["lets-match", "performance-ai", "helix-ai", "revora-ai", "peopleos"],
-  "project-letsmatch": ["lets-match"], "project-letsmatch-why": ["lets-match"], "project-letsmatch-status": ["lets-match"],
+  "project-letsmatch": ["lets-match"], "project-letsmatch-why": ["lets-match"], "project-letsmatch-status": ["lets-match"], "project-letsmatch-different": ["lets-match"], "project-letsmatch-feedback": ["lets-match"],
   "project-performance-ai": ["performance-ai"], "project-helix": ["helix-ai"], "project-revora": ["revora-ai"],
   "project-peopleos": ["peopleos"],
   "project-fictional": ["lets-match"], "project-how-built": ["lets-match"],

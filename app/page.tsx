@@ -65,7 +65,7 @@ export default function Home() {
           <div className="wrap">
             <div className="head">
               <h2 data-a="words"><Words text="He builds the products himself" /></h2>
-              <p data-a="up">One live app that people use today, and four enterprise product prototypes that show how he thinks a problem through, end to end</p>
+              <p data-a="up">One live app, tested with real friend groups, and four enterprise product prototypes that show how he thinks a problem through, end to end</p>
             </div>
             <div className="feat" data-a="up">
               <div className="txt">
@@ -74,6 +74,7 @@ export default function Home() {
                 <p className="lead">{feat.tagline}</p>
                 <p>{feat.problem}</p>
                 {feat.different && <p className="diff"><b>Why it&apos;s different</b>{feat.different}</p>}
+                {feat.impact && <p className="impact"><b>~3 min</b>average group decision in live testing</p>}
                 <div className="row">
                   <a className="btn acc" href={feat.href} target="_blank" rel="noreferrer" data-magnetic>Try the live app ↗</a>
                   <a className="btn" href={`/works/${feat.slug}`} target="_blank" rel="noreferrer">How it works</a>
@@ -103,7 +104,7 @@ export default function Home() {
               </div>
               <div data-a="up">
                 <h3>Why product management</h3>
-                <p className="muted">Close to customers at Freshworks and ZoomInfo, he learned to translate complex technology into business value. At Flipkart he saw consumer behaviour, product economics and outcomes up close. Product brings it together: understanding people, connecting business and technology, and turning ideas into outcomes</p>
+                <p className="muted">At Flipkart he decides which problems are worth solving; at Freshworks and ZoomInfo he learnt what makes customers pay for a solution. Product management is the job that does both, and he already builds the products himself</p>
                 <h3 style={{ marginTop: 22 }}>Outside work</h3>
                 <p className="muted" style={{ margin: 0 }}>He follows Formula 1 closely and watches races on weekends with friends, and stays active through cricket and running</p>
               </div>
@@ -140,7 +141,7 @@ export default function Home() {
                   <div className="kv" data-a="pop">{["Product discovery", "0 to 1 launches", "Prioritization", "Product analytics", "Competitive benchmarking", "Pricing and unit economics", "Customer feedback loops"].map((s) => <span key={s}>{s}</span>)}</div></div>
                 <div className="pill" style={{ marginBottom: 16 }}><h3>Tools</h3>
                   <div className="kv" data-a="pop">{["Jira", "Notion", "SQL", "Excel", "Power BI", "Salesforce", "Freshworks CRM", "Apps Script"].map((s) => <span key={s}>{s}</span>)}</div></div>
-                <div className="pill"><h3>Looking for</h3><p>Product Manager, Associate PM, AI PM or Product Builder roles in B2B SaaS, AI-native, enterprise tech, fintech or consumer tech. Bengaluru, Chennai, remote or hybrid</p></div>
+                <div className="pill"><h3>Looking for</h3><p>Product Manager roles, ideally on AI-powered products, in B2B SaaS, fintech or consumer tech. Bengaluru, Chennai, remote or hybrid</p></div>
               </div>
             </div>
           </div>
