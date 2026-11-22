@@ -714,6 +714,62 @@
    "answer": "I don't have reference details. Please reach out to Prannav directly: prannavb27@iimklive.com or 99400 33571.",
    "source": "Prannav",
    "visibility": "public"
+  },
+  {
+   "id": "project-helix-evidence",
+   "category": "project",
+   "questions": [
+    "Is the problem Helix solves real?",
+    "What evidence is there for Helix?",
+    "Who is Helix for?",
+    "How would Helix be measured?",
+    "Who would buy Helix?"
+   ],
+   "answer": "The pain is documented publicly. A Zendesk customer wrote on the Zendesk Community that its reporting tool is \"too granular and too difficult for the average Zendesk user to build a report\", and Zendesk's own benchmark data says more than half of consumers switch to a competitor after one bad experience, so finding a problem after CSAT drops is too late. Helix is for a support lead running 50 to 300 agents, bought by the VP of Customer Experience. The north star is time from a ticket spike to a named cause and owner, with dismissed findings tracked as a guardrail. It has SSO, role permissions, an audit log and customer-set data retention. The sources are linked on the Helix page.",
+   "source": "Projects → Helix",
+   "visibility": "public"
+  },
+  {
+   "id": "project-revora-evidence",
+   "category": "project",
+   "questions": [
+    "Is the problem Revora solves real?",
+    "What evidence is there for Revora?",
+    "Who is Revora for?",
+    "How would Revora be measured?",
+    "How big is revenue leakage?"
+   ],
+   "answer": "MGI Research (December 2025) puts revenue leakage at \"at least three to five percent of every company's revenue\", and names billing systems that cannot model step-ups or tier changes as a cause. A Zone & Co survey of 200+ finance leaders found 5% of revenue lost a year to manual processes, and Recurly estimates failed payments cause 20% to 40% of subscription churn, which is why Revora keeps collections apart from billing errors. It is used by revenue operations and bought by the CFO. The north star is revenue recovered, counted only once the cash is in. Every money-moving action goes through approval, with a second approver above set limits. Sources are linked on the Revora page.",
+   "source": "Projects → Revora",
+   "visibility": "public"
+  },
+  {
+   "id": "project-performance-evidence",
+   "category": "project",
+   "questions": [
+    "Is the problem Performance solves real?",
+    "What evidence is there for Performance?",
+    "Who is Performance for?",
+    "How would Performance be measured?",
+    "Why not trust ad platform numbers?"
+   ],
+   "answer": "Google's own advice (Think with Google, 2026) is that \"marketing teams are optimizing for clicks and submissions, while sales teams just want a real pipeline\", and a lending-data company notes that ad targeting \"optimises for clicks and leads, not funded loans\". For a lender, a loan pays out weeks after the click, so platform numbers mislead. Performance is for a lender's performance marketing lead, bought by the CMO with the head of credit as a stakeholder. The north star is cost per disbursal and per ₹1L lent. Nothing executes on its own: guardrails raise decisions for a person, and every decision is kept in an audit log. Sources are linked on the Performance page.",
+   "source": "Projects → Performance",
+   "visibility": "public"
+  },
+  {
+   "id": "project-peopleos-evidence",
+   "category": "project",
+   "questions": [
+    "Is the problem PeopleOS solves real?",
+    "What evidence is there for PeopleOS?",
+    "Who is PeopleOS for?",
+    "How would PeopleOS be measured?",
+    "Why hire internally?"
+   ],
+   "answer": "Wharton research by Matthew Bidwell found external hires get \"significantly lower performance evaluations for their first two years on the job\" while being paid about 18% to 20% more. LinkedIn reports only 15% of employees say their organisation encouraged them to move to a new role, and that employees at companies with high internal mobility stay 60% longer. PeopleOS is for HR business partners and talent managers, bought by the CHRO. The north star is the share of roles filled internally. Suggested skills need human validation, matches always show their reasons, and there are no autonomous decisions on hiring, promotion, pay or ratings. Sources are linked on the PeopleOS page.",
+   "source": "Projects → PeopleOS",
+   "visibility": "public"
   }
  ]
 }

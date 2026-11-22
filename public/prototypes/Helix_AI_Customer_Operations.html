@@ -372,7 +372,7 @@ textarea.input{height:auto;padding:9px 11px;resize:vertical;min-height:76px;line
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
         <span class="dot"></span>
       </div>
-      <div class="icon-btn" style="padding:0" onclick="toast('Profile menu','indigo')">
+      <div class="icon-btn" style="padding:0" onclick="profileMenu()">
         <div class="avatar" style="width:30px;height:30px">JD</div>
       </div>
     </div>
@@ -765,7 +765,7 @@ renders.overview=function(){
       <button class="ctrl">${svgIcon('<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',14)} Last 7 days ${svgIcon('<path d="M6 9l6 6 6-6"/>',14)}</button>
       <button class="ctrl">${svgIcon(IC.team,14)} All teams</button>
       <button class="ctrl">${svgIcon(IC.inbox,14)} All channels</button>
-      <button class="btn btn-ghost btn-sm" onclick="toast('Report exported (demo)','green')">${svgIcon('<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>',14)} Export</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportOverview()">${svgIcon('<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>',14)} Export</button>
     </div></div>`;
 
   // KPIs
@@ -920,7 +920,7 @@ renders.tickets=function(){
 
   let h=`<div class="content-inner">`;
   h+=`<div class="page-head"><div><div class="page-title">Tickets</div><div class="page-sub">${fmt(DATA.tickets.length)} tickets · ${rows.filter(t=>t.status!=='Resolved').length} open in this view</div></div>
-    <div class="page-actions"><button class="btn btn-ghost btn-sm" onclick="toast('Export started (demo)','green')">${svgIcon('<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>',14)} Export</button><button class="btn btn-pri btn-sm" onclick="toast('New ticket form (demo)','indigo')">${svgIcon('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',14)} New ticket</button></div></div>`;
+    <div class="page-actions"><button class="btn btn-ghost btn-sm" onclick="exportTickets()">${svgIcon('<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>',14)} Export</button><button class="btn btn-pri btn-sm" onclick="newTicket()">${svgIcon('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',14)} New ticket</button></div></div>`;
   // saved views
   h+=`<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">`;
   TK_VIEWS.forEach(v=>{const cnt=DATA.tickets.filter(v.pred).length;h+=`<button class="ctrl ${v.id===view?'active':''}" onclick="sset('tk_view','${v.id}');sset('tk_page',0);tkSel.clear();renders.tickets()">${v.label}<span style="opacity:.6;font-weight:700">${cnt}</span></button>`;});
@@ -1026,9 +1026,9 @@ window.openTicket=function(id){
       </div></div>`;});
   h+=`</div>
     <div style="border-top:1px solid var(--border);padding:12px 16px">
-      <div class="flex gap-8" style="margin-bottom:8px"><button class="tab active" style="padding:5px 10px;border:none;background:var(--pri-tint);border-radius:6px;color:var(--pri);font-weight:600;font-size:12.5px">Reply</button><button class="tab" style="padding:5px 10px;font-size:12.5px" onclick="toast('Internal note mode','indigo')">Internal note</button></div>
+      <div class="flex gap-8" style="margin-bottom:8px"><button class="tab active cmp-tab" style="padding:5px 10px;border:none;background:var(--pri-tint);border-radius:6px;color:var(--pri);font-weight:600;font-size:12.5px" onclick="noteMode(false)">Reply</button><button class="tab cmp-tab" style="padding:5px 10px;font-size:12.5px;border:none;border-radius:6px" onclick="noteMode(true)">Internal note</button></div>
       <textarea class="input" id="composer" placeholder="Write a reply to ${c.name.split(' ')[0]}..." style="min-height:72px"></textarea>
-      <div class="flex items-center gap-8" style="margin-top:10px"><button class="btn btn-ghost btn-sm" onclick="insertSuggested()">${svgIcon(IC.sparkle,13)} Insert AI response</button><button class="btn btn-ghost btn-sm" onclick="toast('Saved responses','indigo')">Saved responses</button><button class="btn btn-ghost btn-sm" onclick="toast('Attachment (demo)','indigo')">Attach</button><button class="btn btn-pri btn-sm" style="margin-left:auto" onclick="sendReply()">Send</button></div>
+      <div class="flex items-center gap-8" style="margin-top:10px"><button class="btn btn-ghost btn-sm" onclick="insertSuggested()">${svgIcon(IC.sparkle,13)} Insert AI response</button><button class="btn btn-ghost btn-sm" onclick="savedResponses()">Saved responses</button><button class="btn btn-ghost btn-sm" onclick="attachFile()">Attach</button><button class="btn btn-pri btn-sm" style="margin-left:auto" onclick="sendReply()">Send</button></div><div id="attachList" class="flex gap-8" style="flex-wrap:wrap;margin-top:8px"></div>
     </div></div>`;
   // RIGHT: AI panel
   h+=`<div style="display:flex;flex-direction:column;gap:14px">${ticketAIPanel(t,c)}</div>`;
@@ -1044,14 +1044,14 @@ function ticketAIPanel(t,c){
   h+=aiBox('Sentiment analysis',`<div class="flex items-center justify-between"><span class="badge ${t.sentiment==='Negative'?'red':t.sentiment==='Positive'?'green':'gray'}">${t.sentiment}</span><span class="text-3" style="font-size:11px">trend ${t.sentiment==='Negative'?'↓ worsening':'→ stable'}</span></div><div style="margin-top:10px"><div class="flex justify-between" style="font-size:12px;margin-bottom:4px"><span class="text-2">Escalation risk</span><b>${t.sentiment==='Negative'?'High':'Low'}</b></div><div class="mini-bar" style="max-width:none"><span style="width:${t.sentiment==='Negative'?80:25}%;background:${t.sentiment==='Negative'?'var(--red)':'var(--green)'}"></span></div></div>`);
   const sug=suggestedResponse(t,c);
   h+=aiBox('Suggested response',`<div style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:8px;padding:10px;font-style:italic;color:var(--text-2)">"${sug}"</div><div class="text-3" style="font-size:11px;margin-top:8px">Why: matches the customer's ${t.sentiment.toLowerCase()} tone and leads with acknowledgement before the fix.</div><button class="btn btn-soft btn-sm" style="width:100%;margin-top:10px" onclick="insertSuggested()">Use this response</button>`);
-  h+=aiBox('Knowledge recommendations',`${[t.category==='Payments'?'Resolving debited-but-failed UPI payments':t.category==='Returns'?'Refund timelines and escalation path':'Tracking a delayed shipment','Issuing a goodwill credit','Escalation criteria for '+t.category].map(k=>`<div class="flex items-center gap-8" style="padding:6px 0;border-bottom:1px solid var(--border-2)">${svgIcon('<path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>',13)}<span class="card-link" style="color:var(--text);font-weight:500" onclick="toast('Opened KB article','indigo')">${k}</span></div>`).join('')}`);
-  h+=aiBox('Resolution guidance',`<b>Recommended next action:</b> ${t.category==='Payments'?'Verify the debit against the gateway log; if unmatched, trigger auto-refund and confirm to customer.':t.category==='Returns'?'Push the refund manually and share the reference + ETA.':'Contact the delivery partner and give the customer a firm update.'}<div style="margin-top:8px"><span class="text-2">Similar resolved: </span><span class="card-link" onclick="toast('Opened similar ticket','indigo')">TK-4689</span>, <span class="card-link" onclick="toast('Opened similar ticket','indigo')">TK-4702</span></div>`);
+  h+=aiBox('Knowledge recommendations',`${[t.category==='Payments'?'Resolving debited-but-failed UPI payments':t.category==='Returns'?'Refund timelines and escalation path':'Tracking a delayed shipment','Issuing a goodwill credit','Escalation criteria for '+t.category].map(k=>`<div class="flex items-center gap-8" style="padding:6px 0;border-bottom:1px solid var(--border-2)">${svgIcon('<path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>',13)}<span class="card-link" style="color:var(--text);font-weight:500" onclick="openKB(this.textContent)">${k}</span></div>`).join('')}`);
+  h+=aiBox('Resolution guidance',`<b>Recommended next action:</b> ${t.category==='Payments'?'Verify the debit against the gateway log; if unmatched, trigger auto-refund and confirm to customer.':t.category==='Returns'?'Push the refund manually and share the reference + ETA.':'Contact the delivery partner and give the customer a firm update.'}<div style="margin-top:8px"><span class="text-2">Similar resolved: </span><span class="card-link" onclick="openSimilar('TK-4689','${t.category}')">TK-4689</span>, <span class="card-link" onclick="openSimilar('TK-4702','${t.category}')">TK-4702</span></div>`);
   h+=aiBox('Ticket risk',`${[['SLA breach probability',breach],['Customer churn risk',churn],['Repeat contact probability',repeat]].map(r=>`<div style="margin-bottom:10px"><div class="flex justify-between" style="font-size:12px;margin-bottom:3px"><span class="text-2">${r[0]}</span><b style="color:${r[1]>60?'var(--red)':r[1]>30?'var(--amber)':'var(--green)'}">${r[1]}%</b></div><div class="mini-bar" style="max-width:none"><span style="width:${r[1]}%;background:${r[1]>60?'var(--red)':r[1]>30?'var(--amber)':'var(--green)'}"></span></div></div>`).join('')}`);
   return h;
 }
 function suggestedResponse(t,c){const f=c.name.split(' ')[0];return t.category==='Payments'?`Hi ${f}, I completely understand how worrying a debited-but-failed payment is. I've located the transaction and can confirm no order was placed, so I'm issuing a full refund now — you'll see it within 3–5 business days, reference below. I'll stay on this until it's settled.`:t.category==='Returns'?`Hi ${f}, I'm sorry the refund has taken this long — that's not the experience we want. I've pushed it through manually just now and you'll receive it within 48 hours. Here's your reference, and I'll personally confirm once it lands.`:`Hi ${f}, thanks for your patience. I've taken ownership of this and here's exactly what happens next, with a clear timeline so you're not left guessing.`;}
 function insertSuggested(){const t=null;const comp=document.getElementById('composer');if(comp){const tid=document.querySelector('.crumb b')?.textContent;const tk=ticketById(tid);comp.value=suggestedResponse(tk,custById(tk.customer));comp.focus();toast('AI response inserted','indigo');}}
-function sendReply(){const comp=document.getElementById('composer');if(comp&&comp.value.trim()){comp.value='';toast('Reply sent to customer','green');}else toast('Write a reply first','amber');}
+function sendReply(){const comp=document.getElementById('composer');const att=document.querySelectorAll('#attachList .att');if(comp&&comp.value.trim()){const note=comp.dataset.note;comp.value='';const n=att.length;att.forEach(a=>a.remove());if(note){auditAdd('Internal note',document.querySelector('.crumb b')?.textContent||'');toast('Internal note added. Only your team can see it','green');return;}toast(n?`Reply sent with ${n} attachment${n>1?'s':''}`:'Reply sent to customer','green');}else toast('Write a reply first','amber');}
 function resolveTicket(id){const t=ticketById(id);if(t){t.status='Resolved';t.sla=null;}toast('Ticket marked resolved','green');navigate('tickets');}
 
 // ============================================================
@@ -1319,8 +1319,8 @@ renders.settings=function(sub){
 function settingsPanel(tab){
   if(tab==='general')return `
     <div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Organisation</h3></div><div class="card-body"><div class="grid-2">
-      ${[['Organisation name','Acme Commerce'],['Workspace name','Support'],['Primary time zone','Asia/Kolkata (GMT+5:30)'],['Default language','English (IN)'],['Industry','E-commerce / Retail'],['Business hours','Mon–Sat, 9:00–21:00']].map(f=>`<div class="field"><label>${f[0]}</label><input class="input" value="${f[1]}"></div>`).join('')}
-    </div><button class="btn btn-pri btn-sm" onclick="toast('Settings saved','green')">Save changes</button></div></div>`;
+      ${[['Organisation name','Acme Commerce'],['Workspace name','Support'],['Primary time zone','Asia/Kolkata (GMT+5:30)'],['Default language','English (IN)'],['Industry','E-commerce / Retail'],['Business hours','Mon–Sat, 9:00–21:00']].map(f=>`<div class="field"><label>${f[0]}</label><input class="input" data-org="${f[0]}" value="${sget('org_'+f[0],f[1])}"></div>`).join('')}
+    </div><button class="btn btn-pri btn-sm" onclick="document.querySelectorAll('[data-org]').forEach(i=>sset('org_'+i.dataset.org,hxEsc(i.value)));auditAdd('Organisation settings saved','');toast('Settings saved','green')">Save changes</button></div></div>`;
   if(tab==='users')return settingsUsers();
   if(tab==='integrations')return settingsIntegrations();
   if(tab==='channels')return settingsChannels();
@@ -1332,9 +1332,9 @@ function settingsPanel(tab){
 }
 function settingsUsers(){
   const rbac=rbacGet();
-  const users=[['John Doe','Administrator','Super Admin'],...DATA.agents.slice(0,5).map(a=>[a.name,a.role,a.role==='Team Lead'?'Team Lead':'Support Agent'])];
-  let h=`<div class="card" style="margin-bottom:16px"><div class="card-head"><div><h3>Users</h3><div class="sub">${users.length} members</div></div><button class="btn btn-pri btn-sm" onclick="toast('Invite sent (demo)','green')">+ Invite user</button></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Name</th><th>Title</th><th>Role</th><th></th></tr></thead><tbody>`;
-  users.forEach(u=>{h+=`<tr><td><div class="u-cell">${avatar(u[0])}<span class="cell-main" style="font-size:12.5px">${u[0]}</span></div></td><td class="text-2">${u[1]}</td><td><span class="badge ${u[2]==='Super Admin'?'indigo':u[2]==='Team Lead'?'teal':'gray'}">${u[2]}</span></td><td style="text-align:right"><button class="ctrl" onclick="toast('Edit user (demo)','indigo')">Edit</button></td></tr>`;});
+  const ro=sget('user_roles',{});const users=[['John Doe','Administrator','Super Admin'],...DATA.agents.slice(0,5).map(a=>[a.name,a.role,a.role==='Team Lead'?'Team Lead':'Support Agent']),...sget('users_extra',[]).map(u=>[u.email,'Invite pending',u.role])].map(u=>[u[0],u[1],ro[u[0]]||u[2]]);
+  let h=`<div class="card" style="margin-bottom:16px"><div class="card-head"><div><h3>Users</h3><div class="sub">${users.length} members</div></div><button class="btn btn-pri btn-sm" onclick="inviteUser()">+ Invite user</button></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Name</th><th>Title</th><th>Role</th><th></th></tr></thead><tbody>`;
+  users.forEach(u=>{h+=`<tr><td><div class="u-cell">${avatar(u[0])}<span class="cell-main" style="font-size:12.5px">${u[0]}</span></div></td><td class="text-2">${u[1]}</td><td><span class="badge ${u[2]==='Super Admin'?'indigo':u[2]==='Team Lead'?'teal':'gray'}">${u[2]}</span></td><td style="text-align:right"><button class="ctrl" onclick="editUser('${u[0]}')">Edit</button></td></tr>`;});
   h+=`</tbody></table></div></div>`;
   // RBAC matrix
   h+=`<div class="card"><div class="card-head"><div><h3>Role-based access control</h3><div class="sub">Toggle permissions per role — changes persist</div></div><button class="btn btn-ghost btn-sm" onclick="sset('rbac',null);renders.settings('users');toast('Reset to defaults','indigo')">Reset</button></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Permission</th>${RBAC_ROLES.map(r=>`<th style="text-align:center">${r}</th>`).join('')}</tr></thead><tbody>`;
@@ -1372,7 +1372,7 @@ function settingsAI(){
   h+=`<div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Insight monitoring</h3><div class="sub">Which categories Helix watches</div></div><div class="card-body">`;
   INSIGHT_CATS.slice(1).forEach(c=>{h+=toggleRow(c,'','mon_'+c,true);});
   h+=`</div></div>`;
-  h+=`<div class="card"><div class="card-head"><h3>Knowledge sources</h3></div><div class="card-body">${[['Help Centre articles','142 indexed','Synced'],['Internal SOPs','38 documents','Synced'],['Past resolved tickets','12,486 records','Indexing']].map(k=>`<div class="flex items-center justify-between" style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div><div class="cell-main" style="font-size:12.5px">${k[0]}</div><div class="cell-sub">${k[1]}</div></div><span class="badge ${k[2]==='Synced'?'green':'amber'}">${k[2]}</span></div>`).join('')}<button class="btn btn-ghost btn-sm" style="margin-top:12px" onclick="toast('Upload dialog (demo)','indigo')">Upload documents</button></div></div>`;
+  h+=`<div class="card"><div class="card-head"><h3>Knowledge sources</h3></div><div class="card-body">${[['Help Centre articles','142 indexed','Synced'],['Internal SOPs','38 documents','Synced'],['Past resolved tickets','12,486 records','Indexing'],...sget('kb_docs',[]).map(d=>[d.name,d.kb+' KB · uploaded by you','Indexing'])].map(k=>`<div class="flex items-center justify-between" style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div><div class="cell-main" style="font-size:12.5px">${k[0]}</div><div class="cell-sub">${k[1]}</div></div><span class="badge ${k[2]==='Synced'?'green':'amber'}">${k[2]}</span></div>`).join('')}<button class="btn btn-ghost btn-sm" style="margin-top:12px" onclick="uploadDocs()">Upload documents</button></div></div>`;
   return h;
 }
 function settingsNotifications(){
@@ -1391,21 +1391,21 @@ function settingsSecurity(){
     ${toggleRow('Enforce IP allowlist','Restrict access to office networks','sec_ip',false)}
   </div></div>
   <div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Data & audit</h3></div><div class="card-body">
-    <div class="field"><label>Data retention</label><select class="input" style="max-width:260px"><option>24 months</option><option>12 months</option><option>36 months</option></select></div>
-    <div class="flex items-center justify-between" style="padding:9px 0"><div><div class="cell-main" style="font-size:12.5px">Audit logs</div><div class="cell-sub">14,203 events this month</div></div><button class="ctrl" onclick="toast('Audit log opened (demo)','indigo')">View logs</button></div>
+    <div class="field"><label>Data retention</label><select class="input" style="max-width:260px" onchange="sset('retention',this.value);auditAdd('Retention changed',this.value);toast('Retention set to '+this.value,'green')">${['24 months','12 months','36 months'].map(o=>`<option ${sget('retention','24 months')===o?'selected':''}>${o}</option>`).join('')}</select></div>
+    <div class="flex items-center justify-between" style="padding:9px 0"><div><div class="cell-main" style="font-size:12.5px">Audit logs</div><div class="cell-sub">14,203 events this month</div></div><button class="ctrl" onclick="openAuditLog()">View logs</button></div>
   </div></div>
-  <div class="card"><div class="card-head"><h3>API keys</h3><button class="btn btn-ghost btn-sm" onclick="toast('New key generated (demo)','green')">+ Generate key</button></div><div class="card-body" style="padding:0"><table class="tbl"><tbody>
+  <div class="card"><div class="card-head"><h3>API keys</h3><button class="btn btn-ghost btn-sm" onclick="genKey()">+ Generate key</button></div><div class="card-body" style="padding:0"><table class="tbl"><tbody>
     <tr><td class="cell-main" style="font-size:12.5px">Production key</td><td class="text-3" style="font-family:monospace">hlx_live_••••••••4a21</td><td style="text-align:right"><span class="badge green">Active</span></td></tr>
-    <tr><td class="cell-main" style="font-size:12.5px">Sandbox key</td><td class="text-3" style="font-family:monospace">hlx_test_••••••••9f07</td><td style="text-align:right"><span class="badge gray">Active</span></td></tr>
+    <tr><td class="cell-main" style="font-size:12.5px">Sandbox key</td><td class="text-3" style="font-family:monospace">hlx_test_••••••••9f07</td><td style="text-align:right"><span class="badge gray">Active</span></td></tr>${keyRows()}
   </tbody></table></div></div>`;
 }
 function settingsBilling(){
-  return `<div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Current plan</h3></div><div class="card-body flex items-center justify-between"><div><div style="font-size:19px;font-weight:700">Enterprise</div><div class="text-2" style="font-size:13px">Billed annually · renews 01 Apr 2027</div></div><button class="btn btn-ghost btn-sm" onclick="toast('Manage plan (demo)','indigo')">Manage plan</button></div></div>
+  return `<div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Current plan</h3></div><div class="card-body flex items-center justify-between"><div><div style="font-size:19px;font-weight:700">Enterprise</div><div class="text-2" style="font-size:13px">Billed annually · renews 01 Apr 2027</div></div><button class="btn btn-ghost btn-sm" onclick="managePlan()">Manage plan</button></div></div>
   <div class="grid-3 mb-16">
-    ${[['Agent seats','25 / 30','83%','var(--pri)'],['AI consumption','68%','68%','var(--teal)'],['Monthly tickets','12.5k / 20k','63%','var(--amber)']].map(c=>`<div class="card"><div class="card-body"><div class="text-2" style="font-size:12px">${c[0]}</div><div style="font-size:20px;font-weight:700;margin:4px 0 8px">${c[1]}</div><div class="dist-track"><div class="dist-fill" style="width:${c[2]};background:${c[3]}"></div></div></div></div>`).join('')}
+    ${[['Agent seats','25 / '+sget('plan_seats',30),Math.round(2500/sget('plan_seats',30))+'%','var(--pri)'],['AI consumption','68%','68%','var(--teal)'],['Monthly tickets','12.5k / 20k','63%','var(--amber)']].map(c=>`<div class="card"><div class="card-body"><div class="text-2" style="font-size:12px">${c[0]}</div><div style="font-size:20px;font-weight:700;margin:4px 0 8px">${c[1]}</div><div class="dist-track"><div class="dist-fill" style="width:${c[2]};background:${c[3]}"></div></div></div></div>`).join('')}
   </div>
   <div class="card"><div class="card-head"><h3>Billing history</h3></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead><tbody>
-    ${[['01 Apr 2026','Enterprise — annual','₹18,00,000','Paid'],['01 Apr 2025','Enterprise — annual','₹15,60,000','Paid'],['12 Mar 2025','Additional seats (5)','₹1,20,000','Paid']].map(r=>`<tr><td class="text-2">${r[0]}</td><td class="cell-main" style="font-size:12.5px">${r[1]}</td><td>${r[2]}</td><td><span class="badge green">${r[3]}</span></td></tr>`).join('')}
+    ${[...sget('plan_hist',[]),['01 Apr 2026','Enterprise — annual','₹18,00,000','Paid'],['01 Apr 2025','Enterprise — annual','₹15,60,000','Paid'],['12 Mar 2025','Additional seats (5)','₹1,20,000','Paid']].map(r=>`<tr><td class="text-2">${r[0]}</td><td class="cell-main" style="font-size:12.5px">${r[1]}</td><td>${r[2]}</td><td><span class="badge green">${r[3]}</span></td></tr>`).join('')}
   </tbody></table></div></div>`;
 }
 function toggleRow(label,sub,key,def){const on=sget(key,def);return `<div class="flex items-center justify-between" style="padding:11px 0;border-bottom:1px solid var(--border-2)"><div><div class="cell-main" style="font-size:12.5px">${label}</div>${sub?`<div class="cell-sub">${sub}</div>`:''}</div><div class="switch ${on?'on':''}" onclick="sset('${key}',${!on});renders.settings(sget('set_tab','general'))"></div></div>`;}
@@ -1511,7 +1511,7 @@ window.openCustomer=function(id){
 renders.analytics=function(){
   document.getElementById('content').style.overflow='';
   let h=`<div class="content-inner">`;
-  h+=`<div class="page-head"><div><div class="page-title">Analytics</div><div class="page-sub">Reporting across support, experience, channels and AI effectiveness.</div></div><div class="page-actions"><button class="ctrl">Last 30 days ${svgIcon('<path d="M6 9l6 6 6-6"/>',14)}</button><button class="btn btn-ghost btn-sm" onclick="toast('Report exported','green')">Export</button></div></div>`;
+  h+=`<div class="page-head"><div><div class="page-title">Analytics</div><div class="page-sub">Reporting across support, experience, channels and AI effectiveness.</div></div><div class="page-actions"><button class="ctrl">Last 30 days ${svgIcon('<path d="M6 9l6 6 6-6"/>',14)}</button><button class="btn btn-ghost btn-sm" onclick="exportAnalytics()">Export</button></div></div>`;
   // AI narrative
   h+=`<div class="briefing" style="margin-bottom:20px"><div class="briefing-head"><div class="brief-spark">${svgIcon(IC.sparkle,19)}</div><div><h2 style="font-size:14px">Helix narrative</h2><p>The most important changes this period</p></div></div><div style="padding:14px 18px;font-size:13.5px;line-height:1.6">First response time improved <b>12%</b> and AI resolution rose <b>5.4 pts</b> — efficiency is up. But <b>CSAT slipped 2.1 pts</b>, concentrated in Returns & Refunds where backlog grew. The single biggest lever this month is fixing refund processing latency, which drives both the CSAT dip and the complaint spike.</div></div>`;
   // support performance
@@ -1545,11 +1545,11 @@ DATA.automations=[
 renders.automations=function(){
   document.getElementById('content').style.overflow='';
   let h=`<div class="content-inner">`;
-  h+=`<div class="page-head"><div><div class="page-title">Automations</div><div class="page-sub">Trigger → Condition → Action workflows that run your playbook automatically.</div></div><div class="page-actions"><button class="btn btn-pri btn-sm" onclick="toast('Workflow builder (demo)','indigo')">+ New automation</button></div></div>`;
+  h+=`<div class="page-head"><div><div class="page-title">Automations</div><div class="page-sub">Trigger → Condition → Action workflows that run your playbook automatically.</div></div><div class="page-actions"><button class="btn btn-pri btn-sm" onclick="newAutomation()">+ New automation</button></div></div>`;
   DATA.automations.forEach(a=>{const on=sget('auto_'+a.id,a.status);
     h+=`<div class="card" style="margin-bottom:14px"><div class="card-body">
       <div class="flex items-center gap-12" style="margin-bottom:14px"><div style="width:34px;height:34px;border-radius:8px;background:var(--pri-tint);color:var(--pri);display:flex;align-items:center;justify-content:center">${svgIcon(IC.automations,17)}</div>
-        <div><div style="font-weight:700;font-size:14px">${a.name}</div><div class="text-3" style="font-size:12px">${fmt(a.runs)} runs · ${a.success}% success</div></div>
+        <div><div style="font-weight:700;font-size:14px">${a.name}</div><div class="text-3" style="font-size:12px">${a.runs?fmt(a.runs)+' runs · '+a.success+'% success':'Not run yet'}</div></div>
         <div style="margin-left:auto" class="flex items-center gap-12"><span class="badge ${on?'green':'gray'}">${on?'Active':'Paused'}</span><div class="switch ${on?'on':''}" onclick="sset('auto_${a.id}',${!on});renders.automations();toast('${a.name} ${on?'paused':'activated'}','${on?'amber':'green'}')"></div></div></div>
       <div style="display:flex;align-items:stretch;gap:10px;flex-wrap:wrap">
         ${autoBlock('Trigger',a.trigger,'#635BFF')}
@@ -1570,7 +1570,7 @@ function autoArrow(){return `<div style="display:flex;align-items:center;color:v
 renders.team=function(){
   document.getElementById('content').style.overflow='';
   let h=`<div class="content-inner">`;
-  h+=`<div class="page-head"><div><div class="page-title">Team & Agents</div><div class="page-sub">${DATA.teams.length} teams · ${DATA.agents.length} agents</div></div><div class="page-actions"><button class="btn btn-ghost btn-sm" onclick="toast('Add agent (demo)','indigo')">+ Add agent</button></div></div>`;
+  h+=`<div class="page-head"><div><div class="page-title">Team & Agents</div><div class="page-sub">${DATA.teams.length} teams · ${DATA.agents.length} agents${DATA.invites.length?' · '+DATA.invites.length+' invited':''}</div></div><div class="page-actions"><button class="btn btn-ghost btn-sm" onclick="addAgent()">+ Add agent</button></div></div>`;
   // teams
   h+=`<div class="section-title">Teams</div><div class="grid-2 mb-20">`;
   DATA.teams.forEach(t=>{h+=`<div class="card"><div class="card-body"><div class="flex items-center justify-between" style="margin-bottom:12px"><div><div style="font-weight:700;font-size:14px">${t.name}</div><div class="text-3" style="font-size:12px">Lead: ${t.lead} · ${t.agents} agents</div></div><span class="badge ${t.sla>=92?'green':t.sla>=85?'amber':'red'}">${t.sla}% SLA</span></div>
@@ -1582,10 +1582,227 @@ renders.team=function(){
   DATA.agents.forEach(a=>{h+=`<tr><td><div class="u-cell">${avatar(a.name)}<span class="cell-main" style="font-size:12.5px">${a.name}</span></div></td><td class="text-2">${teamName(a.team)}</td><td>${a.role}</td><td><b>${a.csat}%</b></td>
     <td><div class="flex items-center gap-8"><div class="mini-bar" style="max-width:80px"><span style="width:${Math.round(a.assigned/80*100)}%;background:var(--pri)"></span></div><span style="font-size:11.5px" class="text-2">${a.assigned}/80</span></div></td>
     <td><span class="badge green">Active</span></td><td style="text-align:right"><button class="ctrl" onclick="openAgent('${a.id}')">View</button></td></tr>`;});
-  h+=`</tbody></table></div></div></div>`;
+  h+=inviteRows()+`</tbody></table></div></div></div>`;
   document.getElementById('content').innerHTML=h;
 };
 
+// ============================================================
+// WORKING ACTIONS: exports, create forms, drawers. Everything a person adds is kept in STATE.
+// ============================================================
+const X_IC='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+function hxEsc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function mHead(t){return `<div class="modal-head"><h3>${t}</h3><button class="x-btn" onclick="closeModal()">${svgIcon(X_IC,16)}</button></div>`;}
+function mFoot(label,fn){return `<div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-pri" onclick="${fn}">${label}</button></div>`;}
+function inr(n){return '₹'+Math.round(n).toLocaleString('en-IN');}
+function auditAdd(action,detail){const l=sget('audit',[]);l.unshift({action,detail,ts:Date.now()});sset('audit',l.slice(0,200));}
+function downloadFile(name,text,type){const b=new Blob([text],{type:type||'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
+function toCsv(rows){return '﻿'+rows.map(r=>r.map(v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',')).join('\n');}
+function timeAgo(ts){const m=Math.round((Date.now()-ts)/60000);return m<1?'Just now':m<60?m+' min ago':m<1440?Math.round(m/60)+' h ago':Math.round(m/1440)+' d ago';}
+
+// Restore what people created in earlier visits
+DATA.tickets.unshift(...sget('new_tickets',[]).filter(t=>!DATA.tickets.some(x=>x.id===t.id)));
+DATA.automations.push(...sget('new_autos',[]));
+DATA.invites=sget('new_agents',[]);
+
+// ---------- Exports ----------
+function exportTickets(){
+  const rows=[['Ticket','Subject','Customer','Category','Channel','Priority','Agent','Status','SLA minutes left','Sentiment']];
+  DATA.tickets.forEach(t=>rows.push([t.id,t.subject,custById(t.customer)?.name,t.category,t.channel,t.priority,t.agent?agentById(t.agent)?.name:'Unassigned',t.status,t.sla??'',t.sentiment]));
+  downloadFile('helix-tickets.csv',toCsv(rows));auditAdd('Export','Tickets CSV, '+DATA.tickets.length+' rows');toast(`Exported ${DATA.tickets.length} tickets to CSV`,'green');
+}
+function exportOverview(){
+  const rows=[['Metric','Value','Change','Note']];DATA.kpis.forEach(k=>rows.push([k.label,k.val,k.delta==null?'':k.delta,k.note]));
+  rows.push([]);rows.push(['Team','Lead','Agents','Workload','CSAT %','SLA %']);DATA.teams.forEach(t=>rows.push([t.name,t.lead,t.agents,t.workload,t.csat,t.sla]));
+  rows.push([]);rows.push(['Severity','Insight','Impact','Confidence %']);DATA.insights.forEach(i=>rows.push([i.sev,i.title,i.impact+' '+(i.impactLabel||''),i.conf]));
+  downloadFile('helix-command-centre.csv',toCsv(rows));auditAdd('Export','Command Centre report');toast('Command Centre report downloaded','green');
+}
+
+// ---------- New ticket ----------
+const SLA_MIN={Critical:60,High:240,Medium:480,Low:1440};
+const CAT_TEAM={Payments:'T1',Orders:'T2',Delivery:'T2',Returns:'T3',Product:'T4'};
+function newTicket(){
+  const opt=a=>a.map(x=>`<option>${x}</option>`).join('');
+  openModal(mHead('New ticket')+`<div class="modal-body">
+    <div class="field"><label>Customer</label><select class="input" id="nt_c">${DATA.customers.map(c=>`<option value="${c.id}">${c.name} · ${c.segment}</option>`).join('')}</select></div>
+    <div class="field"><label>Subject</label><input class="input" id="nt_s" placeholder="e.g. Refund not received after 7 days"></div>
+    <div class="grid-2" style="gap:12px">
+      <div class="field"><label>Category</label><select class="input" id="nt_cat">${opt(['Payments','Orders','Returns','Delivery','Product'])}</select></div>
+      <div class="field"><label>Channel</label><select class="input" id="nt_ch">${opt(['Email','WhatsApp','Live Chat','Phone','Web Form'])}</select></div>
+      <div class="field"><label>Priority</label><select class="input" id="nt_p">${['Low','Medium','High','Critical'].map(x=>`<option ${x==='Medium'?'selected':''}>${x}</option>`).join('')}</select></div>
+      <div class="field"><label>Assign to</label><select class="input" id="nt_a"><option value="">Auto-assign by capacity</option>${DATA.agents.map(a=>`<option value="${a.id}">${a.name} · ${teamName(a.team)}</option>`).join('')}</select></div>
+    </div>
+    <div class="text-3" style="font-size:12px">The SLA comes from the priority: Critical 1h, High 4h, Medium 8h, Low 24h. Auto-assign picks the least-loaded agent on the team that owns the category.</div>
+  </div>`+mFoot('Create ticket','saveTicket()'));
+  setTimeout(()=>document.getElementById('nt_s')?.focus(),50);
+}
+function saveTicket(){
+  const s=document.getElementById('nt_s').value.trim();if(!s){toast('Add a subject first','amber');return;}
+  const cat=document.getElementById('nt_cat').value,p=document.getElementById('nt_p').value;let ag=document.getElementById('nt_a').value;
+  if(!ag){const pool=DATA.agents.filter(a=>a.team===CAT_TEAM[cat]).sort((a,b)=>a.assigned-b.assigned);ag=(pool[0]||DATA.agents[0]).id;}
+  const n=Math.max(...DATA.tickets.map(t=>+t.id.split('-')[1]||0))+1;
+  const t=T('TK-'+n,hxEsc(s),document.getElementById('nt_c').value,cat,document.getElementById('nt_ch').value,p,ag,'Open',SLA_MIN[p],'Neutral','');t.updated='Just now';
+  DATA.tickets.unshift(t);sset('new_tickets',[t,...sget('new_tickets',[])]);auditAdd('Ticket created',t.id+' · '+s);
+  closeModal();renders.tickets();toast(`${t.id} created and assigned to ${agentById(ag).name}`,'green');
+}
+
+// ---------- New automation ----------
+const AU_TRIG=['Ticket has <15 min to SLA breach','Sentiment turns highly negative','Sudden ticket spike in a category','New ticket from an Enterprise customer','Ticket reopened by the customer','No agent reply for 2 hours'];
+const AU_COND=['Always','Priority is High or Critical','Customer segment is Enterprise','Category is Payments','Customer contacted >2× in 24h','Channel is WhatsApp'];
+const AU_ACT=['Notify team lead + escalate priority','Escalate to senior agent','Generate AI insight + notify manager','Assign to the team with spare capacity','Send an acknowledgement with an ETA','Create a Jira issue for engineering'];
+function newAutomation(){
+  const sel=(id,a)=>`<select class="input" id="${id}">${a.map(x=>`<option>${hxEsc(x)}</option>`).join('')}</select>`;
+  openModal(mHead('New automation')+`<div class="modal-body">
+    <div class="field"><label>Name</label><input class="input" id="na_n" placeholder="e.g. Reopened ticket recovery"></div>
+    <div class="field"><label>When (trigger)</label>${sel('na_t',AU_TRIG)}</div>
+    <div class="field"><label>If (condition)</label>${sel('na_c',AU_COND)}</div>
+    <div class="field"><label>Then (action)</label>${sel('na_a',AU_ACT)}</div>
+    <div class="text-3" style="font-size:12px">New automations start paused so a manager can review them first. What they may do on their own follows the autonomy level in Settings → AI.</div>
+  </div>`+mFoot('Create automation','saveAutomation()'));
+  setTimeout(()=>document.getElementById('na_n')?.focus(),50);
+}
+function saveAutomation(){
+  const n=document.getElementById('na_n').value.trim();if(!n){toast('Name the automation first','amber');return;}
+  const c=document.getElementById('na_c').value;
+  const a={id:'AU'+Date.now().toString(36),name:hxEsc(n),status:false,trigger:hxEsc(document.getElementById('na_t').value),cond:c==='Always'?'—':hxEsc(c),action:hxEsc(document.getElementById('na_a').value),runs:0,success:null};
+  DATA.automations.push(a);sset('new_autos',[...sget('new_autos',[]),a]);auditAdd('Automation created',n+' (paused)');
+  closeModal();renders.automations();toast(`${n} created, paused for review`,'green');
+}
+
+// ---------- Add agent (invite) ----------
+function addAgent(){
+  openModal(mHead('Add agent')+`<div class="modal-body">
+    <div class="field"><label>Full name</label><input class="input" id="ag_n" placeholder="e.g. Kavya Reddy"></div>
+    <div class="field"><label>Work email</label><input class="input" id="ag_e" placeholder="name@company.com"></div>
+    <div class="grid-2" style="gap:12px">
+      <div class="field"><label>Team</label><select class="input" id="ag_t">${DATA.teams.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}</select></div>
+      <div class="field"><label>Role</label><select class="input" id="ag_r"><option>Support Agent</option><option>Team Lead</option></select></div>
+    </div>
+    <div class="text-3" style="font-size:12px">They get an invite to sign in through SSO. Tickets are routed to them once they accept, and seats are counted then.</div>
+  </div>`+mFoot('Send invite','saveAgent()'));
+  setTimeout(()=>document.getElementById('ag_n')?.focus(),50);
+}
+function saveAgent(){
+  const n=document.getElementById('ag_n').value.trim(),e=document.getElementById('ag_e').value.trim();
+  if(!n||!/^\S+@\S+\.\S+$/.test(e)){toast('Add a name and a valid work email','amber');return;}
+  const a={id:'I'+Date.now().toString(36),name:hxEsc(n),email:hxEsc(e),team:document.getElementById('ag_t').value,role:document.getElementById('ag_r').value,ts:Date.now()};
+  DATA.invites.push(a);sset('new_agents',DATA.invites);auditAdd('Agent invited',n+' · '+e);
+  closeModal();renders.team();toast(`Invite sent to ${hxEsc(e)}`,'green');
+}
+function resendInvite(id){const a=DATA.invites.find(x=>x.id===id);if(!a)return;a.ts=Date.now();sset('new_agents',DATA.invites);auditAdd('Invite resent',a.email);renders.team();toast(`Invite resent to ${a.email}`,'green');}
+function revokeInvite(id){DATA.invites=DATA.invites.filter(x=>x.id!==id);sset('new_agents',DATA.invites);auditAdd('Invite revoked',id);renders.team();toast('Invite revoked','amber');}
+function inviteRows(){return DATA.invites.map(a=>`<tr><td><div class="u-cell">${avatar(a.name)}<div><span class="cell-main" style="font-size:12.5px">${a.name}</span><div class="cell-sub">${a.email}</div></div></div></td><td class="text-2">${teamName(a.team)}</td><td>${a.role}</td><td>—</td><td class="text-3" style="font-size:11.5px">Not routed yet</td><td><span class="badge amber">Invited ${timeAgo(a.ts).toLowerCase()}</span></td><td style="text-align:right;white-space:nowrap"><button class="ctrl" onclick="resendInvite('${a.id}')">Resend</button> <button class="ctrl" onclick="revokeInvite('${a.id}')">Revoke</button></td></tr>`).join('');}
+
+// ---------- Plan & seats ----------
+const SEAT_PRICE=60000,SEATS_USED=25,RENEWAL=new Date('2027-04-01');
+function managePlan(){
+  openModal(mHead('Manage plan')+`<div class="modal-body">
+    <div class="flex items-center justify-between" style="margin-bottom:14px"><div><div style="font-weight:700;font-size:16px">Enterprise · billed annually</div><div class="text-3" style="font-size:12px">Renews 01 Apr 2027 · ${inr(SEAT_PRICE)} per agent seat per year</div></div><span class="badge green">Active</span></div>
+    <div class="field"><label>Agent seats (${SEATS_USED} in use)</label><input class="input" id="pl_s" type="number" min="${SEATS_USED}" max="500" value="${sget('plan_seats',30)}" oninput="planCalc()"></div>
+    <div id="pl_calc" style="font-size:13px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:8px;padding:10px 12px"></div>
+    <div class="text-3" style="font-size:12px;margin-top:10px">Seats can't go below the number in use. Added seats are prorated to the renewal date; removed seats take effect at renewal.</div>
+  </div>`+mFoot('Update seats','savePlan()'));planCalc();
+}
+function planCalc(){
+  const s=Math.round(+document.getElementById('pl_s').value||0),cur=sget('plan_seats',30),el=document.getElementById('pl_calc');
+  const days=Math.max(0,Math.round((RENEWAL-Date.now())/864e5));
+  if(s<SEATS_USED){el.innerHTML=`<b style="color:var(--red)">At least ${SEATS_USED} seats are needed</b>, one for each active agent.`;return;}
+  if(s===cur){el.innerHTML=`No change. Annual cost stays ${inr(cur*SEAT_PRICE)}.`;return;}
+  if(s>cur){el.innerHTML=`Adding <b>${s-cur}</b> seat${s-cur>1?'s':''}: <b>${inr((s-cur)*SEAT_PRICE*days/365)}</b> charged now for the ${days} days to renewal, then ${inr(s*SEAT_PRICE)} a year.`;return;}
+  el.innerHTML=`Removing <b>${cur-s}</b> seat${cur-s>1?'s':''} from 01 Apr 2027. Annual cost then ${inr(s*SEAT_PRICE)}.`;
+}
+function savePlan(){
+  const s=Math.round(+document.getElementById('pl_s').value||0),cur=sget('plan_seats',30);
+  if(s<SEATS_USED){toast(`Keep at least ${SEATS_USED} seats`,'amber');return;}
+  if(s===cur){closeModal();return;}
+  if(s>cur){const days=Math.max(0,Math.round((RENEWAL-Date.now())/864e5));const h=sget('plan_hist',[]);h.unshift([new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),`Additional seats (${s-cur}), prorated`,inr((s-cur)*SEAT_PRICE*days/365),'Paid']);sset('plan_hist',h);}
+  sset('plan_seats',s);auditAdd('Plan changed',`Seats ${cur} → ${s}`);closeModal();renders.settings('billing');toast(`Seats updated to ${s}`,'green');
+}
+
+// ---------- Composer: attachments and saved responses ----------
+function attachFile(){
+  const i=document.createElement('input');i.type='file';i.multiple=true;
+  i.onchange=()=>{const box=document.getElementById('attachList');if(!box)return;[...i.files].forEach(f=>{if(f.size>20*1024*1024){toast(`${hxEsc(f.name)} is over the 20 MB limit`,'amber');return;}const c=document.createElement('span');c.className='badge gray att';c.style.cssText='gap:6px;padding:4px 8px';c.innerHTML=`📎 ${hxEsc(f.name)} <span class="text-3">${Math.max(1,Math.round(f.size/1024))} KB</span> <span style="cursor:pointer;font-weight:700" onclick="this.parentNode.remove()">×</span>`;box.appendChild(c);});};
+  i.click();
+}
+const MACROS=[
+  ['Refund processed, with timeline','Hi {first}, your refund has been processed on our side today. Banks usually take 5 to 7 working days to credit it. Your reference is {ref}. If it hasn\'t reached you by {date}, reply here and I\'ll chase it with the bank myself.'],
+  ['Payment debited, order failed','Hi {first}, I can see the payment was debited but the order didn\'t go through. The amount is being reversed automatically and should reach your account within 48 hours (reference {ref}). You don\'t need to do anything else.'],
+  ['Delivery delayed','Hi {first}, I\'m sorry your order is late. I\'ve spoken to the delivery partner and the new expected date is {date}. I\'ll keep this ticket open and update you as soon as it\'s out for delivery.'],
+  ['Escalated to a specialist','Hi {first}, thanks for your patience. I\'ve escalated this to our specialist team with everything you\'ve shared, so you won\'t need to repeat yourself. You\'ll hear from us by {date}.'],
+];
+function savedResponses(){
+  openModal(mHead('Saved responses')+`<div class="modal-body" style="padding:12px 20px">${MACROS.map((m,i)=>`<div style="padding:12px 0;border-bottom:1px solid var(--border-2)"><div class="flex items-center justify-between"><b style="font-size:13px">${m[0]}</b><button class="btn btn-soft btn-sm" onclick="useMacro(${i})">Insert</button></div><div class="text-2" style="font-size:12.5px;margin-top:4px">${hxEsc(m[1])}</div></div>`).join('')}<div class="text-3" style="font-size:12px;margin-top:10px">Placeholders such as {first} and {ref} are filled from the ticket when inserted.</div></div>`);
+}
+function useMacro(i){
+  const comp=document.getElementById('composer');if(!comp){closeModal();return;}
+  const tk=ticketById(document.querySelector('.crumb b')?.textContent);const c=tk?custById(tk.customer):null;
+  const d=new Date(Date.now()+3*864e5).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  comp.value=MACROS[i][1].replace('{first}',c?c.name.split(' ')[0]:'there').replace('{ref}','RF'+(tk?tk.id.replace(/\D/g,''):'')+'7').replace('{date}',d);
+  closeModal();comp.focus();toast('Saved response inserted','indigo');
+}
+
+// ---------- Knowledge articles and similar tickets ----------
+const KB={
+  'Resolving debited-but-failed UPI payments':['Match the customer\'s UTR number against the gateway settlement log.','If the debit has no matching order, start the auto-reversal from the payments console (T+2 working days).','If it matches an order stuck in "pending", confirm the order manually and send the invoice.','Share the reversal reference with the customer and set the ticket to Pending until the credit lands.'],
+  'Refund timelines and escalation path':['Card refunds: 5 to 7 working days. UPI and wallets: 2 to 3 working days. Bank transfer: up to 10.','Before day 7, share the reference and the expected date.','After day 7, raise a trace with the payments team, including the ARN.','After day 10, escalate to Returns & Refunds lead and offer a goodwill credit.'],
+  'Tracking a delayed shipment':['Open the shipment in the courier portal and note the last scan.','No scan for 48 hours: raise a "shipment stuck" query with the courier.','Give the customer a firm new date, never "soon".','No movement after 5 days: offer a replacement or refund.'],
+  'Issuing a goodwill credit':['Agents can issue up to ₹500; team leads up to ₹2,000; above that needs a manager.','Use it for our errors only (delays, wrong items, repeated contacts), not for policy disputes.','Record the reason code so finance can report on it.'],
+};
+function openKB(title){
+  const steps=KB[title]||['Confirm the issue type and check for an active incident on the status page.','Escalate when the customer has contacted us 3 or more times, the order is above ₹25,000 or the customer is Enterprise.','Use the "Escalated to a specialist" saved response so the customer knows what happens next.'];
+  openDrawer(title,'Help Centre · internal article',`<div class="flex items-center gap-8" style="margin-bottom:12px"><span class="badge green">Verified</span><span class="text-3" style="font-size:12px">Updated 3 weeks ago · used in ${40+title.length*3} resolved tickets this month</span></div><ol style="padding-left:18px;margin:0;display:grid;gap:10px;font-size:13px;line-height:1.5">${steps.map(s=>`<li>${s}</li>`).join('')}</ol><div class="text-3" style="font-size:12px;margin-top:16px">Owned by Support Operations. Suggest a change from the article page in the Help Centre.</div>`);
+}
+const SIMILAR={
+  Payments:['UPI payment debited, order not created','Matched the UTR to the gateway log, started auto-reversal and shared the reference.','3h 40m',96],
+  Returns:['Refund marked complete but not credited','Raised a bank trace with the ARN; credit landed in 2 days. Added a ₹200 goodwill credit.','1d 4h',91],
+  Orders:['Order cancelled without notice','Restored the order from the admin console and expedited shipping at no charge.','2h 15m',94],
+  Delivery:['No tracking update for 4 days','Raised a stuck-shipment query; courier re-routed the parcel. Delivered next day.','5h 10m',89],
+  Product:['App crashed at checkout','Linked to the known Android v12.4 issue; customer completed the order on web with the cart kept.','1h 05m',92],
+};
+function openSimilar(id,cat){
+  const s=SIMILAR[cat]||SIMILAR.Orders;
+  openDrawer(id+' · resolved','Similar past ticket, '+cat,`<div style="font-weight:700;font-size:15px;margin-bottom:10px">${s[0]}</div><div class="grid-2" style="gap:10px;margin-bottom:14px"><div class="card"><div class="card-body" style="padding:10px 12px"><div class="text-3" style="font-size:11px">Time to resolve</div><b>${s[2]}</b></div></div><div class="card"><div class="card-body" style="padding:10px 12px"><div class="text-3" style="font-size:11px">CSAT</div><b>${s[3]}%</b></div></div></div><div class="dl-label">How it was resolved</div><p style="font-size:13px;line-height:1.55;margin:6px 0 0">${s[1]}</p><div class="text-3" style="font-size:12px;margin-top:14px">Helix matched this ticket on category, customer wording and resolution path.</div>`);
+}
+
+// ---------- Settings: users, audit log, API keys, documents ----------
+function inviteUser(){
+  openModal(mHead('Invite user')+`<div class="modal-body"><div class="field"><label>Work email</label><input class="input" id="iu_e" placeholder="name@company.com"></div><div class="field"><label>Role</label><select class="input" id="iu_r">${RBAC_ROLES.map(r=>`<option ${r==='Analyst'?'selected':''}>${r}</option>`).join('')}</select></div><div class="text-3" style="font-size:12px">What each role can do is set in the access table below.</div></div>`+mFoot('Send invite','saveInvite()'));
+  setTimeout(()=>document.getElementById('iu_e')?.focus(),50);
+}
+function saveInvite(){const e=document.getElementById('iu_e').value.trim();if(!/^\S+@\S+\.\S+$/.test(e)){toast('Enter a valid work email','amber');return;}const r=document.getElementById('iu_r').value;sset('users_extra',[...sget('users_extra',[]),{email:hxEsc(e),role:r}]);auditAdd('User invited',e+' as '+r);closeModal();renders.settings('users');toast(`Invite sent to ${hxEsc(e)}`,'green');}
+function editUser(name){
+  const cur=sget('user_roles',{})[name];
+  openModal(mHead('Edit user · '+name)+`<div class="modal-body"><div class="field"><label>Role</label><select class="input" id="eu_r">${RBAC_ROLES.map(r=>`<option ${r===cur?'selected':''}>${r}</option>`).join('')}</select></div><div class="text-3" style="font-size:12px">The change applies at their next sign-in and is written to the audit log.</div></div>`+mFoot('Save','saveUserRole(\''+name+'\')'));
+}
+function saveUserRole(name){const r=document.getElementById('eu_r').value;const m=sget('user_roles',{});m[name]=r;sset('user_roles',m);auditAdd('Role changed',name+' → '+r);closeModal();renders.settings('users');toast(`${name} is now ${r}`,'green');}
+const AUDIT_SEED=[['Automation ran','SLA Protection escalated 7 tickets','System',190],['Escalation','TK-4821 escalated to Payments Engineering','Priya Nair',12],['Reassignment','Imran Khan moved to Payments overflow','Priya Nair',40],['Sign-in','SSO sign-in from Bengaluru office','John Doe',55],['Permission change','Analyst role given "View analytics"','John Doe',1440]];
+function openAuditLog(){
+  const mine=sget('audit',[]).map(a=>[a.action,a.detail,'You',Math.max(0,Math.round((Date.now()-a.ts)/60000))]);
+  const rows=[...mine,...AUDIT_SEED];
+  openDrawer('Audit log','Every action by people and by Helix, kept for the retention period',`<div class="flex justify-between items-center" style="margin-bottom:10px"><span class="text-3" style="font-size:12px">${rows.length} most recent events</span><button class="btn btn-ghost btn-sm" onclick="exportAudit()">Export CSV</button></div>${rows.map(r=>`<div style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div class="flex justify-between"><b style="font-size:12.5px">${r[0]}</b><span class="text-3" style="font-size:11.5px">${r[3]<1?'Just now':r[3]<60?r[3]+' min ago':r[3]<1440?Math.round(r[3]/60)+' h ago':Math.round(r[3]/1440)+' d ago'}</span></div><div class="text-2" style="font-size:12.5px">${r[1]}</div><div class="text-3" style="font-size:11.5px">By ${r[2]}</div></div>`).join('')}`);
+}
+function exportAudit(){const rows=[['Action','Detail','By','Minutes ago']];sget('audit',[]).forEach(a=>rows.push([a.action,a.detail,'You',Math.round((Date.now()-a.ts)/60000)]));AUDIT_SEED.forEach(r=>rows.push(r));downloadFile('helix-audit-log.csv',toCsv(rows));toast('Audit log exported','green');}
+function genKey(){
+  openModal(mHead('Generate API key')+`<div class="modal-body"><div class="field"><label>Key name</label><input class="input" id="gk_n" placeholder="e.g. BI warehouse sync"></div><div class="field"><label>Scope</label><select class="input" id="gk_s"><option>Read only</option><option>Read and write</option></select></div></div>`+mFoot('Generate','saveKey()'));
+}
+function saveKey(){
+  const n=document.getElementById('gk_n').value.trim()||'Untitled key',s=document.getElementById('gk_s').value;
+  const raw='hlx_live_'+Array.from(crypto.getRandomValues(new Uint8Array(16)),b=>b.toString(16).padStart(2,'0')).join('');
+  sset('api_keys',[...sget('api_keys',[]),{name:hxEsc(n),scope:s,tail:raw.slice(-4)}]);auditAdd('API key created',n+' ('+s+')');
+  openModal(mHead('Copy your key now')+`<div class="modal-body"><div class="text-2" style="font-size:13px;margin-bottom:10px">This is the only time the full key is shown. Store it in your secrets manager.</div><div style="font-family:monospace;font-size:12.5px;padding:10px 12px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;word-break:break-all" id="gk_raw">${raw}</div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.getElementById('gk_raw').textContent);toast('Key copied','green')">Copy</button><button class="btn btn-pri" onclick="closeModal();renders.settings('security')">Done</button></div>`);
+}
+function revokeKey(i){const k=sget('api_keys',[]);const [r]=k.splice(i,1);sset('api_keys',k);auditAdd('API key revoked',r?.name||'');renders.settings('security');toast('Key revoked','amber');}
+function keyRows(){return sget('api_keys',[]).map((k,i)=>`<tr><td class="cell-main" style="font-size:12.5px">${k.name}<div class="cell-sub">${k.scope}</div></td><td class="text-3" style="font-family:monospace">hlx_live_••••••••${k.tail}</td><td style="text-align:right;white-space:nowrap"><span class="badge green">Active</span> <button class="ctrl" onclick="revokeKey(${i})">Revoke</button></td></tr>`).join('');}
+function uploadDocs(){
+  const i=document.createElement('input');i.type='file';i.multiple=true;i.accept='.pdf,.doc,.docx,.md,.txt,.html';
+  i.onchange=()=>{const files=[...i.files];if(!files.length)return;sset('kb_docs',[...sget('kb_docs',[]),...files.map(f=>({name:hxEsc(f.name),kb:Math.max(1,Math.round(f.size/1024))}))]);auditAdd('Knowledge uploaded',files.map(f=>f.name).join(', '));renders.settings('ai');toast(`${files.length} document${files.length>1?'s':''} uploaded, indexing now`,'green');};
+  i.click();
+}
+
+
+function exportAnalytics(){const rows=[['Period','Bucket','Incoming','Resolved','Backlog']];Object.entries(DATA.trends).forEach(([p,d])=>d.labels.forEach((l,i)=>rows.push([p,l,d.incoming[i],d.resolved[i],d.backlog[i]])));rows.push([]);rows.push(['Channel','Tickets']);DATA.distChannel.forEach(c=>rows.push([c.k,c.v]));rows.push([]);rows.push(['Category','Tickets']);DATA.distCategory.forEach(c=>rows.push([c.k,c.v]));downloadFile('helix-analytics.csv',toCsv(rows));auditAdd('Export','Analytics CSV');toast('Analytics exported to CSV','green');}
+function profileMenu(){openModal(mHead('Your account')+`<div class="modal-body"><div class="flex items-center gap-12" style="margin-bottom:14px"><div class="avatar" style="width:42px;height:42px">JD</div><div><div style="font-weight:700">John Doe</div><div class="text-3" style="font-size:12px">Super Admin · john.doe@acme-retail.in · signed in with Okta SSO</div></div></div><button class="btn btn-ghost btn-sm" style="width:100%;margin-bottom:8px" onclick="closeModal();navigate('settings')">Settings</button><button class="btn btn-ghost btn-sm" style="width:100%" onclick="if(confirm('Clear everything you added in this prototype?')){localStorage.removeItem(LSKEY);location.reload()}">Reset prototype data</button></div>`);}
+function noteMode(on){const c=document.getElementById('composer');if(!c)return;c.dataset.note=on?'1':'';c.style.background=on?'#FFFBEB':'';c.placeholder=on?'Add an internal note. Only your team sees it':'Write a reply…';document.querySelectorAll('.cmp-tab').forEach((b,i)=>{const act=(i===1)===!!on;b.style.background=act?'var(--pri-tint)':'transparent';b.style.color=act?'var(--pri)':'';b.style.fontWeight=act?'600':'';});c.focus();}
 // ---------- INIT ----------
 if(sget('rail_collapsed',true))document.querySelector('.shell').classList.add('rail-collapsed');
 renderNav();

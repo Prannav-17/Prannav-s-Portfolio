@@ -39,10 +39,44 @@ export default async function Work({ params }: { params: Promise<{ slug: string 
             <div><h3>The pain point</h3><p>{p.pain}</p></div>
             <div><h3>Why today&apos;s tools miss it</h3><p>{p.gap}</p></div>
           </div>
+          {p.evidence && (
+            <section className="ev" aria-labelledby="ev-h">
+              <h3 id="ev-h">The pain, in public</h3>
+              <p className="ev-sub">What customers, analysts and researchers have written about this problem. Each quote links to its source</p>
+              <div className={`ev-grid${p.evidence.length === 4 ? " ev-4" : ""}`} data-a="stagger">
+                {p.evidence.map((e) => (
+                  <figure key={e.url + e.quote} className="ev-card">
+                    <blockquote>{/^[a-z]/.test(e.quote) ? "“…" : "“"}{e.quote}”</blockquote>
+                    <figcaption><a href={e.url} target="_blank" rel="noreferrer">{e.who} ↗</a></figcaption>
+                    <p className="ev-why">{e.why}</p>
+                  </figure>
+                ))}
+              </div>
+            </section>
+          )}
+          {p.users && (
+            <div className="who" data-a="stagger">
+              <div><small>Used by</small><p>{p.users.user}</p></div>
+              <div><small>Bought by</small><p>{p.users.buyer}</p></div>
+              <div><small>When it&apos;s used</small><p>{p.users.when}</p></div>
+            </div>
+          )}
           <div className="cols" style={{ marginTop: 26 }} data-a="stagger">
             <div><h3>How it solves it</h3><ul>{p.how?.map((x) => <li key={x}>{x}</li>)}</ul></div>
             <div><h3>Judgment calls</h3><ul>{p.decisions?.map((x) => <li key={x}>{x}</li>)}</ul></div>
           </div>
+          {p.data && (
+            <div className="cols" style={{ marginTop: 26 }} data-a="stagger">
+              <div><h3>Where the data comes from</h3><ul>{p.data.map((x) => <li key={x}>{x}</li>)}</ul></div>
+              <div><h3>Enterprise controls</h3><ul>{p.controls?.map((x) => <li key={x}>{x}</li>)}</ul></div>
+            </div>
+          )}
+          {p.metrics && (
+            <div className="cols" style={{ marginTop: 26 }} data-a="stagger">
+              <div><h3>How success is measured</h3><ul>{p.metrics.map((x) => <li key={x}>{x}</li>)}</ul></div>
+              <div><h3>What he&apos;d validate next</h3><ul>{p.validate?.map((x) => <li key={x}>{x}</li>)}</ul></div>
+            </div>
+          )}
         </> : (
           <div className="cols" style={{ marginTop: 34 }} data-a="stagger">
             <div><h3>The problem</h3><p>{p.problem}</p></div>

@@ -65,6 +65,7 @@ const cardMap: Record<string, string[]> = {
   "project-letsmatch": ["lets-match"], "project-letsmatch-why": ["lets-match"], "project-letsmatch-status": ["lets-match"], "project-letsmatch-different": ["lets-match"], "project-letsmatch-feedback": ["lets-match"],
   "project-performance-ai": ["performance-ai"], "project-helix": ["helix-ai"], "project-revora": ["revora-ai"],
   "project-peopleos": ["peopleos"],
+  "project-helix-evidence": ["helix-ai"], "project-revora-evidence": ["revora-ai"], "project-performance-evidence": ["performance-ai"], "project-peopleos-evidence": ["peopleos"],
   "project-fictional": ["lets-match"], "project-how-built": ["lets-match"],
   cv: ["cv", "cv-pdf"], "experience-years": ["cv"],
 };

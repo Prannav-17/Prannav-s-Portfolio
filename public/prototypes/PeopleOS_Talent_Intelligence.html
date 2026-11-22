@@ -678,7 +678,7 @@ function renderShell(){
     <div class="org"><span class="orgmark">A</span>Acme Technologies ${icon('chev',13)}</div>
     <div class="usearch" onclick="openCmd()">${icon('search',15)}<span>Search people, skills, roles…</span><kbd>⌘K</kbd></div>
     <button class="uic" title="Notifications" onclick="notif()">${icon('bell',18)}<span class="dot"></span></button>
-    <button class="uic" title="Help" onclick="toast('Help centre opened')">${icon('help',18)}</button>
+    <button class="uic" title="Help" onclick="helpCentre()">${icon('help',18)}</button>
     <div class="me"><span class="ava">JD</span><div style="line-height:1.15"><div style="font-weight:700;font-size:12.5px">John Doe</div><div style="font-size:10.5px;opacity:.75">HR Admin</div></div></div>
   </div>
   <nav class="nav">${nav}</nav>
@@ -920,7 +920,7 @@ function renderEmp(e){
       <button class="btn pri" onclick="toast('Message sent to ${esc(e.name.split(' ')[0])}')">${icon('feedback',15)} Message</button>
       <button class="btn" onclick="devPlanModal('${e.id}')">${icon('career',15)} Development plan</button>
       <button class="btn" onclick="toast('Added to shortlist')">${icon('plus',15)} Shortlist</button>
-      <button class="btn gho" style="margin-left:auto" onclick="toast('Full profile export queued')">${icon('export',15)}</button>
+      <button class="btn gho" style="margin-left:auto" onclick="exportProfile('${e.id}')">${icon('export',15)}</button>
     </div>`);
 }
 function empTab(e){
@@ -1396,7 +1396,7 @@ function vReviews(){
   const done=emps.filter((_,i)=>i%3===0).length;
   $('#view').innerHTML=
     pageHead('Performance','Performance Reviews','H2 2026 review cycle — self-assessment, manager and peer feedback.',
-      `<button class="btn" onclick="toast('Cycle settings opened')">${icon('settings',15)} Configure cycle</button>
+      `<button class="btn" onclick="cycleSettings()">${icon('settings',15)} Configure cycle</button>
        <button class="btn pri" onclick="toast('Reminders sent to pending reviewers')">Send reminders</button>`)
     +`<div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
        ${[['Cycle','H2 2026'],['In progress',emps.length-done],['Completed',done],['Completion',Math.round(done/emps.length*100)+'%']].map(k=>`<div class="card pad"><div class="lbl">${esc(k[0])}</div><div class="serif" style="font-size:28px;margin-top:5px">${k[1]}</div></div>`).join('')}
@@ -1447,7 +1447,7 @@ function vOnboard(){
   const active=list.filter(o=>o.stageIdx<6);
   $('#view').innerHTML=
     pageHead('People Operations','Onboarding','Track every new joiner from offer to fully onboarded.',
-      `<button class="btn pri" onclick="toast('New onboarding record created')">${icon('plus',15)} Add joiner</button>`)
+      `<button class="btn pri" onclick="addJoiner()">${icon('plus',15)} Add joiner</button>`)
     +`<div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
         ${[['In onboarding',active.length],['Blocked',list.filter(o=>o.blocker).length,'terra'],['Completing this week',3],['Avg time to productive','18 days']].map((k,i)=>`<div class="card pad"><div class="lbl">${esc(k[0])}</div><div class="serif" style="font-size:30px;margin-top:5px;${k[2]==='terra'?'color:var(--terra)':''}">${k[1]}</div></div>`).join('')}
      </div>
@@ -1508,7 +1508,7 @@ function vHR(){
   const rows=STATE.hr.filter(h=>!HR_F||h.status===HR_F);
   $('#view').innerHTML=
     pageHead('People Operations','HR Requests','A single queue for payroll, benefits, documents and support.',
-      `<button class="btn pri" onclick="toast('New HR request created')">${icon('plus',15)} New request</button>`)
+      `<button class="btn pri" onclick="newHR()">${icon('plus',15)} New request</button>`)
     +`<div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:22px">
        ${[['Open',STATE.hr.filter(h=>h.status==='Open').length,'terra'],['In progress',STATE.hr.filter(h=>h.status==='In progress').length],['Resolved',STATE.hr.filter(h=>h.status==='Resolved').length],['Breaching SLA',STATE.hr.filter(h=>h.sla==='Breaching').length,'terra']].map((k,i)=>`<div class="card pad"><div class="lbl">${esc(k[0])}</div><div class="serif" style="font-size:30px;margin-top:5px;${k[2]==='terra'?'color:var(--terra)':''}">${k[1]}</div></div>`).join('')}
      </div>
@@ -1536,11 +1536,11 @@ function hrResolve(id){const h=STATE.hr.find(x=>x.id===id);h.status='Resolved';h
 function vPolicy(){
   $('#view').innerHTML=
     pageHead('People Operations','Policies & Documents','Searchable, access-controlled company policies.',
-      `<button class="btn pri" onclick="toast('Upload dialog opened')">${icon('plus',15)} Upload document</button>`)
+      `<button class="btn pri" onclick="uploadPolicy()">${icon('plus',15)} Upload document</button>`)
     +`<div class="card pad" style="margin-bottom:18px;display:flex;align-items:center;gap:9px"><div style="flex:1;display:flex;align-items:center;gap:9px">${icon('search',16)}<input placeholder="Search policies and documents…" style="border:none;background:none;width:100%;outline:none" oninput="polFilter(this.value)"></div></div>
      <div class="grid" style="grid-template-columns:repeat(3,1fr)" id="polGrid">${POLICIES.map(polCard).join('')}</div>`;
 }
-function polCard(p){return `<div class="card pad" style="cursor:pointer" onclick="toast('Opening ${esc(p.name)}')"><div style="display:flex;align-items:flex-start;gap:11px"><div style="width:40px;height:40px;border-radius:10px;background:var(--sage);display:grid;place-items:center;color:var(--green)">${icon('policy',20)}</div><div style="flex:1"><div style="font-weight:700;font-size:14px">${esc(p.name)}</div><div class="mut" style="font-size:12px;margin-top:3px">${esc(p.cat)} · updated ${fmtDate(p.updated)}</div></div></div><div style="display:flex;gap:6px;margin-top:14px"><button class="btn sm" onclick="event.stopPropagation();toast('Preview opened')">Preview</button><button class="btn sm gho" onclick="event.stopPropagation();toast('Download started')">Download</button></div></div>`;}
+function polCard(p){return `<div class="card pad" style="cursor:pointer" onclick="policyOpen('${p.id}')"><div style="display:flex;align-items:flex-start;gap:11px"><div style="width:40px;height:40px;border-radius:10px;background:var(--sage);display:grid;place-items:center;color:var(--green)">${icon('policy',20)}</div><div style="flex:1"><div style="font-weight:700;font-size:14px">${esc(p.name)}</div><div class="mut" style="font-size:12px;margin-top:3px">${esc(p.cat)} · updated ${fmtDate(p.updated)}</div></div></div><div style="display:flex;gap:6px;margin-top:14px"><button class="btn sm" onclick="event.stopPropagation();policyOpen('${p.id}')">Preview</button><button class="btn sm gho" onclick="event.stopPropagation();policyDownload('${p.id}')">Download</button></div></div>`;}
 function polFilter(q){q=q.toLowerCase();$('#polGrid').innerHTML=POLICIES.filter(p=>p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)).map(polCard).join('')||'<div class="empty">No documents match.</div>';}
 
 /* ======================================================================
@@ -1591,7 +1591,7 @@ function vPlanning(){
       `<button class="btn" onclick="exportReport('Workforce plan')">${icon('export',15)} Export</button>`)
     +`<div class="lbl" style="margin-bottom:12px">Compare scenarios</div>
      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
-       ${SCENARIOS.map(s=>`<div class="card pad" style="cursor:pointer;${WF_SCN===s.id?'border:1.5px solid var(--green);background:#F4F7F1':''}" onclick="WF_SCN='${s.id}';vPlanning()">
+       ${SCENARIOS.map(s=>`<div class="card pad" style="cursor:pointer;${WF_SCN===s.id?'border:1.5px solid var(--green);background:#F4F7F1':''}" onclick="WF_SCN='${s.id}';WF_CUSTOM=null;vPlanning()">
          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">${WF_SCN===s.id?'<span class="pill green" style="font-size:10px">Selected</span>':`<span class="mut" style="font-size:11px">${s.id}</span>`}</div>
          <div style="font-weight:700;font-size:15px;margin-bottom:12px">${esc(s.name)}</div>
          <div class="kv"><span class="k">Headcount</span><span class="v">${s.hc.toLocaleString()}</span></div>
@@ -1606,10 +1606,10 @@ function vPlanning(){
          <div class="lbl" style="margin-bottom:10px">Editable assumptions</div>
          <div class="field"><label>Engineering capacity change (%)</label><input type="range" min="-10" max="30" value="${WF_SCN==='S-B'?15:0}" oninput="this.nextElementSibling.textContent=this.value+'%'" style="width:100%"><span class="mut" style="font-size:12px">${WF_SCN==='S-B'?15:0}%</span></div>
          <div class="field"><label>Internal mobility target (%)</label><input type="range" min="20" max="60" value="${WF_SCN==='S-C'?55:31}" oninput="this.nextElementSibling.textContent=this.value+'%'" style="width:100%"><span class="mut" style="font-size:12px">${WF_SCN==='S-C'?55:31}%</span></div>
-         <button class="btn pri" onclick="toast('Scenario recalculated')" style="margin-top:6px">Recalculate</button>
+         <button class="btn pri" onclick="recalcScenario()" style="margin-top:6px">Recalculate</button><div id="wfOut">${wfOutHtml()}</div>
        </div>
        <div class="card pad"><div class="lbl" style="margin-bottom:12px">Department capacity</div>
-         ${DEPARTMENTS.slice(0,6).map(d=>{const cur=agg().deptCount[d.id];const plan=cur+(WF_SCN==='S-B'&&d.id==='eng'?6:ri(0,3));return `<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span style="font-weight:600">${esc(d.name)}</span><span class="mut">${cur} → ${plan}</span></div><div class="meter"><span style="width:${plan/44*100}%"></span></div></div>`;}).join('')}
+         ${DEPARTMENTS.slice(0,6).map(d=>{const cur=agg().deptCount[d.id];const plan=cur+(WF_SCN==='S-B'&&d.id==='eng'?6:WF_SCN==='S-C'?0:(d.id.length%2));return `<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span style="font-weight:600">${esc(d.name)}</span><span class="mut">${cur} → ${plan}</span></div><div class="meter"><span style="width:${plan/44*100}%"></span></div></div>`;}).join('')}
        </div>
      </div>
      <div class="card pad" style="margin-top:18px;background:var(--sage);display:flex;gap:12px"><span style="color:var(--green)">${sparkSvg()}</span><p class="mut" style="font-size:13px">These are planning simulations using illustrative cost figures, intended to support workforce decisions — not actual forecasts.</p></div>`;
@@ -1689,16 +1689,16 @@ function vTeam(){
        <div style="display:flex;gap:8px;flex-wrap:wrap">${ROLES_RBAC.map(r=>`<span class="pill ${r==='Super Admin'?'green':'sage'}">${esc(r)}</span>`).join('')}</div>
        <p class="mut" style="font-size:12.5px;margin-top:12px">Navigation and actions adapt to each role. Employees cannot access confidential manager, succession or compensation information.</p></div>
      <div class="card"><div style="overflow:auto"><table class="tbl"><thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Email</th><th>Last active</th><th></th></tr></thead><tbody>
-       ${TEAM.map(t=>`<tr><td><div style="display:flex;align-items:center;gap:9px"><span class="av sm ${avColor(t.id)}">${initials(t.name)}</span><span style="font-weight:600">${esc(t.name)}</span></div></td><td><select class="chip-f" style="padding:5px 9px" onchange="changeRole('${t.id}',this.value)">${ROLES_RBAC.map(r=>`<option ${t.role===r?'selected':''}>${r}</option>`).join('')}</select></td><td class="mut">${esc(t.dept)}</td><td class="mut">${esc(t.email)}</td><td class="mut">${esc(t.last)}</td><td><button class="btn sm gho" onclick="toast('Permissions opened for ${esc(t.name)}')">Manage</button></td></tr>`).join('')}
+       ${TEAM.map(t=>`<tr><td><div style="display:flex;align-items:center;gap:9px"><span class="av sm ${avColor(t.id)}">${initials(t.name)}</span><span style="font-weight:600">${esc(t.name)}</span></div></td><td><select class="chip-f" style="padding:5px 9px" onchange="changeRole('${t.id}',this.value)">${ROLES_RBAC.map(r=>`<option ${t.role===r?'selected':''}>${r}</option>`).join('')}</select></td><td class="mut">${esc(t.dept)}</td><td class="mut">${esc(t.email)}</td><td class="mut">${esc(t.last)}</td><td><button class="btn sm gho" onclick="managePerms('${t.id}')">Manage</button></td></tr>`).join('')}
      </tbody></table></div></div>`;
 }
 function changeRole(id,role){const t=TEAM.find(x=>x.id===id);const old=t.role;t.role=role;audit('Role changed',`${t.name}: ${old} → ${role}`);toast(`${t.name.split(' ')[0]} is now ${role}`);}
 function vInteg(){
   $('#view').innerHTML=
     pageHead('Administration','Integrations','Simulated connections to your people stack.',
-      `<button class="btn pri" onclick="toast('Browse integration catalogue')">${icon('plus',15)} Add integration</button>`)
+      `<button class="btn pri" onclick="addIntegration()">${icon('plus',15)} Add integration</button>`)
     +`<div class="grid" style="grid-template-columns:repeat(2,1fr)">
-      ${INTEGRATIONS.map(ig=>`<div class="card pad" style="display:flex;align-items:center;gap:14px"><div style="width:44px;height:44px;border-radius:11px;background:var(--sage);display:grid;place-items:center;color:var(--green)">${icon('integ',22)}</div><div style="flex:1"><div style="font-weight:700">${esc(ig.name)}</div><div class="mut" style="font-size:12px">${esc(ig.cat)} · last sync ${esc(ig.sync)}</div></div><span class="pill ${ig.status==='Connected'?'ok':'ink'}">${esc(ig.status)}</span><button class="btn sm ${ig.status==='Connected'?'gho':'pri'}" onclick="toast('${ig.status==='Connected'?'Sync started':'Connection flow started'} — ${esc(ig.name)}')">${ig.status==='Connected'?'Sync':'Connect'}</button></div>`).join('')}
+      ${INTEGRATIONS.map(ig=>`<div class="card pad" style="display:flex;align-items:center;gap:14px"><div style="width:44px;height:44px;border-radius:11px;background:var(--sage);display:grid;place-items:center;color:var(--green)">${icon('integ',22)}</div><div style="flex:1"><div style="font-weight:700">${esc(ig.name)}</div><div class="mut" style="font-size:12px">${esc(ig.cat)} · last sync ${esc(ig.sync)}</div></div><span class="pill ${ig.status==='Connected'?'ok':'ink'}">${esc(ig.status)}</span><button class="btn sm ${ig.status==='Connected'?'gho':'pri'}" onclick="${ig.status==='Connected'?`syncInteg('${esc(ig.name)}')`:`connectInteg('${esc(ig.name)}')`}">${ig.status==='Connected'?'Sync':'Connect'}</button></div>`).join('')}
      </div>
      <p class="mut" style="font-size:12px;margin-top:16px">Integrations are simulated for this demonstration. No external systems are actually connected.</p>`;
 }
@@ -1708,7 +1708,7 @@ function vSettings(){
     pageHead('Administration','Settings','Configure PeopleOS for Acme Technologies.',
       `<button class="btn gho" onclick="resetDemo()">${icon('settings',15)} Reset demo data</button>`)
     +`<div class="grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:22px">
-      ${groups.map(g=>`<div class="card pad">${g.map(x=>`<div class="kv" style="cursor:pointer" onclick="${x==='Audit logs'?"auditDrawer()":"toast('"+x+" settings opened')"}"><span class="k" style="font-weight:600;color:var(--ink)">${esc(x)}</span><span class="mut">${icon('chev',14)}</span></div>`).join('')}</div>`).join('')}
+      ${groups.map(g=>`<div class="card pad">${g.map(x=>`<div class="kv" style="cursor:pointer" onclick="${x==='Audit logs'?"auditDrawer()":"settingsItem('"+x+"')"}"><span class="k" style="font-weight:600;color:var(--ink)">${esc(x)}</span><span class="mut">${icon('chev',14)}</span></div>`).join('')}</div>`).join('')}
      </div>
      <div class="card pad"><div class="sec-label"><h3>Copilot governance</h3><span class="ai-badge">${sparkSvg()} Governed</span></div>
        ${[['Suggested Skills','On — requires human validation'],['Talent match explanations','Always shown'],['Autonomous decisions','Disabled (hiring, promotion, pay, ratings)'],['Sensitive data access','Permission-controlled']].map(r=>`<div class="kv"><span class="k">${esc(r[0])}</span><span class="v">${esc(r[1])}</span></div>`).join('')}
@@ -1794,7 +1794,6 @@ function inviteUserModal(){
 }
 function saveInvite(){const em=$('#iuEmail').value.trim();if(!em.includes('@')){$('#f-iu').classList.add('err');return;}
   audit('User invited',`${em} as ${$('#iuRole').value}`);saveState();closeModal();toast('Invitation sent');}
-function exportReport(name){audit('Report exported',name);toast(`${name} report exported`);}
 function notif(){
   openDrawer(`<div class="dhead"><div style="flex:1"><h3 class="serif" style="font-size:21px">Notifications</h3></div><button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button></div>
     <div class="dbody">${[['Critical skills shortage flagged in Engineering','2h','crit'],['4 internal candidates matched to open roles','5h','green'],['3 leave requests awaiting your approval','1d','butter'],['Performance review cycle H2 2026 opened','2d','sage']].map(n=>`<div class="card pad" style="margin-bottom:10px;cursor:pointer" onclick="closeDrawer();navigate('insights')"><div style="display:flex;gap:10px;align-items:flex-start"><span class="dotpill" style="width:9px;height:9px;margin-top:5px;background:var(--${n[2]==='crit'?'crit':n[2]==='green'?'green':n[2]==='butter'?'warn':'olive'})"></span><div><div style="font-weight:600;font-size:13.5px">${esc(n[0])}</div><div class="mut" style="font-size:11.5px;margin-top:3px">${n[1]} ago</div></div></div></div>`).join('')}</div>`);
@@ -1849,6 +1848,184 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeModal();closeDrawer();}
 });
 document.addEventListener('click',e=>{if(!e.target.closest('.fwrap'))document.querySelectorAll('.fmenu.on').forEach(m=>m.classList.remove('on'));});
+/* ======================================================================
+   WORKING ACTIONS: real exports and PDFs, create forms, settings drawers
+   ====================================================================== */
+function poDownload(name,data,type){const b=data instanceof Blob?data:new Blob([data],{type:type||'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
+function poCsv(rows){return '﻿'+rows.map(r=>r.map(v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',')).join('\n');}
+// A small, valid one-page PDF built by hand (Helvetica, wrapped lines)
+function pdfDoc(title,paras){
+  const wrap=(s,n)=>{const out=[];let line='';String(s).split(' ').forEach(w=>{if((line+' '+w).trim().length>n){out.push(line.trim());line=w;}else line+=' '+w;});if(line.trim())out.push(line.trim());return out;};
+  const clean=s=>String(s).replace(/[^\x20-\x7E]/g,c=>({'—':'-','–':'-','’':"'",'‘':"'",'“':'"','”':'"','·':'-','•':'-','→':'->'}[c]||'')).replace(/([\\()])/g,'\\$1');
+  let y=790;const ops=[`BT /F2 18 Tf 56 ${y} Td (${clean(title)}) Tj ET`];y-=28;
+  paras.forEach(p=>{const head=p.startsWith('## ');const lines=wrap(head?p.slice(3):p,head?70:92);if(head)y-=6;lines.forEach(l=>{if(y<60)return;ops.push(`BT /${head?'F2 12':'F1 10.5'} Tf 56 ${y} Td (${clean(l)}) Tj ET`);y-=head?18:15;});y-=6;});
+  const stream=ops.join('\n');
+  const objs=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [3 0 R] /Count 1 >>','<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>',`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`];
+  let pdf='%PDF-1.4\n';const offs=[];objs.forEach((o,i)=>{offs.push(pdf.length);pdf+=`${i+1} 0 obj\n${o}\nendobj\n`;});
+  const x=pdf.length;pdf+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`+offs.map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<< /Size ${objs.length+1} /Root 1 0 R >>\nstartxref\n${x}\n%%EOF`;
+  return new Blob([pdf],{type:'application/pdf'});
+}
+const skName=id=>(SKILL_BY_ID[id]||{name:id}).name;
+const mClose=`<button class="xbtn" onclick="closeModal()" style="position:absolute;top:16px;right:16px">${icon('x',18)}</button>`;
+function dHead(lbl,title){return `<div class="dhead"><div style="flex:1"><div class="lbl">${lbl}</div><h3 class="serif" style="font-size:20px;margin-top:4px">${title}</h3></div><button class="xbtn" onclick="closeDrawer()">${icon('x',18)}</button></div>`;}
+
+/* ---- exports ---- */
+function exportReport(name){
+  let rows,file=name.toLowerCase().replace(/[^a-z]+/g,'-').replace(/-+$/,'');
+  if(name.startsWith('Skills')){rows=[['Employee ID','Name','Department','Skill','Proficiency (1-4)','Validated']];STATE.employees.forEach(e=>e.skills.forEach(s=>rows.push([e.id,e.name,deptName(e.dept),skName(s[0]),s[1],s[2]?'Yes':'No'])));}
+  else if(name.startsWith('Succession')){rows=[['Role','Current holder','Criticality','Department','Readiness','Successors','Development action']];STATE.succession.forEach(s=>rows.push([s.role,s.holder,s.crit,deptName(s.dept),s.readiness,s.successors.map(x=>x.name+' ('+x.ready+')').join('; '),s.dev]));}
+  else if(name.startsWith('Workforce')){rows=[['Scenario','Headcount','External hires','Est. cost','Critical gaps','Note']];SCENARIOS.forEach(s=>rows.push([s.name,s.hc,s.hire,s.cost,s.gap,s.note]));if(WF_CUSTOM)rows.push(['Custom ('+WF_CUSTOM.eng+'% eng, '+WF_CUSTOM.mob+'% internal)',WF_CUSTOM.hc,WF_CUSTOM.hire,WF_CUSTOM.cost,WF_CUSTOM.gap+' critical','Recalculated']);rows.push([]);rows.push(['Department','People in sample','Head']);DEPARTMENTS.forEach(d=>rows.push([d.name,agg().deptCount[d.id]||0,d.head]));}
+  else{rows=[['Employee ID','Name','Designation','Department','Manager','Location','Status','Tenure (months)','Career aspiration']];STATE.employees.forEach(e=>rows.push([e.id,e.name,e.desig,deptName(e.dept),e.mgr?(empById(e.mgr)||{}).name:'',e.loc,e.status,e.tenure,e.aspire]));}
+  poDownload('peopleos-'+file+'.csv',poCsv(rows));audit('Report exported',`${name} (${rows.length-1} rows)`);toast(`${name}: ${rows.length-1} rows exported`);
+}
+function exportProfile(id){
+  const e=empById(id);const m=e.mgr?empById(e.mgr):null;
+  const rows=[['Field','Value'],['Employee ID',e.id],['Name',e.name],['Designation',e.desig],['Department',deptName(e.dept)],['Manager',m?m.name:''],['Location',e.loc],['Status',e.status],['Tenure (months)',e.tenure],['Career aspiration',e.aspire],[],['Skill','Proficiency (1-4)','Validated'],...e.skills.map(s=>[skName(s[0]),s[1],s[2]?'Yes':'No'])];
+  poDownload(`profile-${e.id}.csv`,poCsv(rows));audit('Profile exported',e.name);toast(`${e.name.split(' ')[0]}'s profile exported`);
+}
+
+/* ---- help ---- */
+function helpCentre(){
+  openDrawer(dHead('Help','Help centre')+`<div class="dbody">${[['Validating suggested skills','Why suggested skills count only after a person confirms them, and how to bulk-review.'],['How talent matching works','The signals behind a match score, and why every match shows its reasons.'],['Running a review cycle','Set up self, manager and peer reviews, then calibrate before ratings are shared.'],['Who can see what','Roles and permissions, and how sensitive fields such as pay and attrition risk are protected.'],['Connecting Workday','What PeopleOS reads, how often it syncs, and what it never writes back.']].map(a=>`<div class="card pad" style="margin-bottom:10px"><div style="font-weight:700;font-size:13.5px">${a[0]}</div><div class="mut" style="font-size:12.5px;margin-top:3px">${a[1]}</div></div>`).join('')}<div class="lbl" style="margin:16px 0 8px">Keyboard shortcuts</div><div class="kv"><span class="k">Search anything</span><span class="v">⌘K / Ctrl K</span></div><div class="kv"><span class="k">Close a panel</span><span class="v">Esc</span></div><p class="mut" style="font-size:12.5px;margin-top:16px">Need a person? People Systems team, peoplesystems@acmetech.com, replies within one working day.</p></div>`);
+}
+
+/* ---- review cycle ---- */
+function cycleSettings(){
+  const c=STATE.cycle||{name:'H2 2026',open:'2026-11-03',close:'2026-12-12',self:true,peer:true,calib:true,scale:'4-point'};
+  openModal(`${mClose}<div class="mhead"><h3 class="serif" style="font-size:22px">Configure review cycle</h3></div><div class="mbody">
+    <div class="field"><label>Cycle name</label><input id="cyN" value="${esc(c.name)}"></div>
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px"><div class="field"><label>Opens</label><input id="cyO" type="date" value="${c.open}"></div><div class="field"><label>Closes</label><input id="cyC" type="date" value="${c.close}"></div></div>
+    <div class="field"><label>Rating scale</label><select id="cyS">${['4-point','5-point','No ratings (feedback only)'].map(x=>`<option ${x===c.scale?'selected':''}>${x}</option>`).join('')}</select></div>
+    ${[['cySelf','Self-assessment',c.self],['cyPeer','Peer feedback (up to 3 reviewers)',c.peer],['cyCal','Calibration before ratings are shared',c.calib]].map(r=>`<label style="display:flex;gap:9px;align-items:center;font-size:13px;margin:8px 0"><input type="checkbox" id="${r[0]}" ${r[2]?'checked':''}> ${r[1]}</label>`).join('')}
+  </div><div class="mfoot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="saveCycle()">Save cycle</button></div>`);
+}
+function saveCycle(){
+  const v=id=>document.getElementById(id);const o=v('cyO').value,c=v('cyC').value;
+  if(!v('cyN').value.trim()||!o||!c||c<=o){toast('Check the name and dates: the close date must be after the open date','warn');return;}
+  STATE.cycle={name:v('cyN').value.trim(),open:o,close:c,scale:v('cyS').value,self:v('cySelf').checked,peer:v('cyPeer').checked,calib:v('cyCal').checked};
+  audit('Review cycle configured',`${STATE.cycle.name}: ${o} to ${c}, ${STATE.cycle.scale}`);saveState();closeModal();toast('Review cycle saved');
+}
+
+/* ---- settings pages ---- */
+const SETTINGS_DETAIL={
+  'Organisation profile':[['Legal name','Acme Technologies Pvt. Ltd.'],['Headcount','2,480 across 6 locations'],['Fiscal year','April to March'],['Default language','English']],
+  'Departments':()=>DEPARTMENTS.map(d=>[d.name,(agg().deptCount[d.id]||0)+' people in this sample · head '+d.head]),
+  'Locations':[['Bengaluru','HQ'],['Hyderabad','Engineering hub'],['Pune','Operations'],['Berlin','EU sales and support'],['London','EU sales'],['Remote','India and EU']],
+  'Employment types':[['Full-time','Eligible for all programmes'],['Part-time','Pro-rated leave'],['Contractor','Excluded from reviews and mobility'],['Intern','Up to 6 months']],
+  'Skills taxonomy':()=>[['Skills tracked',SKILLS.length+' across technical, functional and leadership'],['Proficiency levels','1 Aware, 2 Working, 3 Advanced, 4 Expert'],['Suggested skills','Count only after the employee or manager validates them'],['Taxonomy owner','Talent team, reviewed every quarter']],
+  'Performance cycles':()=>{const c=STATE.cycle||{name:'H2 2026',open:'2026-11-03',close:'2026-12-12',scale:'4-point'};return [['Current cycle',c.name],['Window',fmtDate(c.open)+' to '+fmtDate(c.close)],['Rating scale',c.scale],['Cadence','Twice a year, with quarterly check-ins']];},
+  'Leave policies':[['Annual leave','24 days, up to 10 carried over'],['Sick leave','12 days'],['Parental leave','26 weeks primary, 4 weeks secondary'],['Comp-off','Expires after 60 days']],
+  'Notifications':[['Review reminders','Email and Slack, 3 days before close'],['Leave approvals','Slack, immediately'],['Attrition signals','HR business partners only, weekly digest'],['Quiet hours','20:00 to 08:00 local time']],
+  'Copilot governance':[['Suggested Skills','On, requires human validation'],['Talent match explanations','Always shown'],['Autonomous decisions','Disabled for hiring, promotion, pay and ratings'],['Model data retention','Prompts kept 30 days for audit, never used for training']],
+  'Data privacy':[['Data residency','India (Mumbai region), EU staff in Frankfurt'],['Sensitive fields','Pay, health and attrition risk visible only to permitted roles'],['Employee data requests','Export or correction within 30 days'],['Laws covered','India DPDP Act 2023, EU GDPR']],
+  'Security':[['Single sign-on','Okta (SAML 2.0), enforced'],['Two-factor sign-in','Required for HR Admin and Super Admin'],['Session timeout','30 minutes idle'],['Access reviews','Quarterly, signed off by the CHRO']],
+};
+function settingsItem(x){
+  const d=SETTINGS_DETAIL[x];const rows=typeof d==='function'?d():(d||[]);
+  openDrawer(dHead('Settings',esc(x))+`<div class="dbody"><div class="card pad">${rows.map(r=>`<div class="kv"><span class="k">${esc(r[0])}</span><span class="v" style="text-align:right;max-width:60%">${esc(r[1])}</span></div>`).join('')}</div><p class="mut" style="font-size:12.5px;margin-top:14px">Changes here need the HR Admin or Super Admin role and are written to the audit log.</p></div>`);
+}
+
+/* ---- permissions ---- */
+const PERMS_BY_ROLE={
+  'Super Admin':['Everything, including settings, integrations and roles'],
+  'HR Admin':['All employee records, including pay','Run review cycles and calibration','Approve leave and HR requests','Export reports'],
+  'HR Business Partner':['Records for assigned departments','Attrition signals for those departments','Succession and mobility for those departments'],
+  'Talent Manager':['Skills, mobility and succession across the company','Validate suggested skills','No access to pay'],
+  'Department Manager':['Their own team: profiles, goals, reviews and leave','Nominate successors','No access to attrition risk scores'],
+  'Employee':['Their own profile, goals, reviews and leave','Internal job board and applications'],
+};
+function managePerms(id){
+  const t=TEAM.find(x=>x.id===id);const p=PERMS_BY_ROLE[t.role]||[];
+  openDrawer(dHead('Access · '+esc(t.role),esc(t.name))+`<div class="dbody"><div class="lbl" style="margin-bottom:8px">Can access</div><div class="card pad">${p.map(x=>`<div class="kv"><span class="k">${icon('check',14)} ${esc(x)}</span></div>`).join('')}</div><div class="field" style="margin-top:14px"><label>Change role</label><select onchange="changeRole('${t.id}',this.value);managePerms('${t.id}');vTeam()">${ROLES_RBAC.map(r=>`<option ${r===t.role?'selected':''}>${r}</option>`).join('')}</select></div><p class="mut" style="font-size:12.5px">Signed in ${esc(t.last)} via Okta SSO. Role changes apply at the next sign-in.</p></div>`);
+}
+
+/* ---- policies ---- */
+const POLICY_BODY={
+  'Employee Handbook':['## Who this covers','All full-time and part-time employees of Acme Technologies in India and the EU.','## Working hours','Core hours are 11:00 to 16:00 local time. Teams agree the rest.','## Raising a concern','Talk to your manager or HR business partner, or use the confidential ethics line.'],
+  'Leave Policy':['## Annual leave','24 days a year. Up to 10 days carry over to the next year.','## Sick leave','12 days a year. A doctor\'s note is needed after 3 consecutive days.','## Parental leave','26 weeks for the primary caregiver and 4 weeks for the secondary caregiver, fully paid.'],
+  'Expense Policy':['## What is covered','Travel, client meals and approved software, with receipts.','## Limits','Meals up to INR 2,500 per person. Hotels up to INR 9,000 a night in metro cities.','## Claims','Submit within 30 days. Reimbursed in the next payroll run.'],
+  'Benefits Documentation':['## Health insurance','INR 10 lakh family floater, including parents.','## Learning budget','INR 60,000 a year for courses and certifications.','## Wellbeing','Free counselling sessions through our wellbeing partner.'],
+  'Code of Conduct':['## Respect','We do not tolerate harassment or discrimination of any kind.','## Conflicts of interest','Declare any outside work or investment that could conflict with Acme.','## Speaking up','Retaliation against anyone who raises a concern in good faith is itself a breach.'],
+  'Remote Work Policy':['## Eligibility','Roles marked hybrid or remote. Remote work from another country needs HR approval.','## Equipment','A laptop and a one-time INR 25,000 home office allowance.','## Security','Use the company VPN and never work on client data over public Wi-Fi.'],
+  'Data Privacy & Security':['## Employee data','We collect only what is needed to employ and pay you, under India\'s DPDP Act and the EU GDPR.','## Access','Sensitive fields such as pay and health are visible only to permitted roles.','## Your rights','Ask HR for a copy or correction of your data. We respond within 30 days.'],
+};
+POLICIES.push(...((()=>{try{return JSON.parse(localStorage.getItem('peopleos_uploads')||'[]')}catch(e){return[]}})()));
+function policyBody(p){return POLICY_BODY[p.name]||['## Summary',`${p.name} was uploaded and is waiting for HR review before it is published to employees.`];}
+function policyOpen(id){
+  const p=POLICIES.find(x=>x.id===id);
+  openDrawer(dHead(esc(p.cat)+' · updated '+fmtDate(p.updated),esc(p.name))+`<div class="dbody">${p.pending?'<span class="pill butter" style="margin-bottom:12px;display:inline-block">Pending HR review</span>':''}${policyBody(p).map(x=>x.startsWith('## ')?`<div class="lbl" style="margin:14px 0 4px">${esc(x.slice(3))}</div>`:`<p style="font-size:13.5px;line-height:1.55;margin:0">${esc(x)}</p>`).join('')}</div><div class="dfoot"><button class="btn pri" onclick="policyDownload('${p.id}')">${icon('export',14)} Download PDF</button><button class="btn" onclick="closeDrawer()">Close</button></div>`);
+}
+function policyDownload(id){const p=POLICIES.find(x=>x.id===id);poDownload(p.name.replace(/[^A-Za-z0-9]+/g,'-')+'.pdf',pdfDoc(p.name,[`Acme Technologies - ${p.cat} - updated ${fmtDate(p.updated)}`,...policyBody(p)]));audit('Policy downloaded',p.name);toast(`${p.name} downloaded`);}
+function uploadPolicy(){
+  const i=document.createElement('input');i.type='file';i.multiple=true;i.accept='.pdf,.doc,.docx,.md,.txt';
+  i.onchange=()=>{const files=[...i.files];if(!files.length)return;const up=(()=>{try{return JSON.parse(localStorage.getItem('peopleos_uploads')||'[]')}catch(e){return[]}})();
+    files.forEach((f,k)=>{const p={id:'P-U'+Date.now().toString(36)+k,name:f.name.replace(/\.[^.]+$/,''),cat:'Uploaded',updated:new Date().toISOString(),pending:true};POLICIES.push(p);up.push(p);audit('Document uploaded',f.name);});
+    try{localStorage.setItem('peopleos_uploads',JSON.stringify(up))}catch(e){}vPolicy();toast(`${files.length} document${files.length>1?'s':''} uploaded, pending HR review`);};
+  i.click();
+}
+
+/* ---- integrations ---- */
+const INTEG_CATALOG=[['BambooHR','HRIS'],['SAP SuccessFactors','HRIS'],['Darwinbox','HRIS'],['Lever','ATS'],['Coursera for Business','Learning'],['LinkedIn Learning','Learning'],['Microsoft Teams','Collaboration'],['Lattice','Performance']];
+(()=>{try{JSON.parse(localStorage.getItem('peopleos_integ')||'[]').forEach(n=>{const ex=INTEGRATIONS.find(x=>x.name===n.name);if(ex)Object.assign(ex,n);else INTEGRATIONS.push(n);});}catch(e){}})();
+function saveInteg(ig){try{const l=JSON.parse(localStorage.getItem('peopleos_integ')||'[]').filter(x=>x.name!==ig.name);l.push(ig);localStorage.setItem('peopleos_integ',JSON.stringify(l));}catch(e){}}
+function addIntegration(){
+  const avail=INTEG_CATALOG.filter(c=>!INTEGRATIONS.some(x=>x.name===c[0]));
+  openModal(`${mClose}<div class="mhead"><h3 class="serif" style="font-size:22px">Add integration</h3><p class="mut" style="font-size:13px;margin-top:4px">PeopleOS reads from these tools. It never writes back to them.</p></div><div class="mbody">${avail.map(c=>`<div class="kv"><span class="k"><b style="color:var(--ink)">${c[0]}</b> <span class="mut">· ${c[1]}</span></span><button class="btn sm pri" onclick="connectInteg('${c[0]}','${c[1]}')">Connect</button></div>`).join('')||'<p class="mut">Everything in the catalogue is connected.</p>'}</div>`);
+}
+function connectInteg(name,cat){
+  let ig=INTEGRATIONS.find(x=>x.name===name);if(!ig){ig={name,cat:cat||'Other'};INTEGRATIONS.push(ig);}
+  Object.assign(ig,{status:'Connected',sync:'just now'});saveInteg(ig);audit('Integration connected',name);closeModal();vInteg();toast(`${name} connected. First sync running`);
+}
+function syncInteg(name){const ig=INTEGRATIONS.find(x=>x.name===name);ig.sync='just now';saveInteg(ig);audit('Integration synced',name);vInteg();toast(`${name} synced`);}
+
+/* ---- HR requests ---- */
+function newHR(){
+  openModal(`${mClose}<div class="mhead"><h3 class="serif" style="font-size:22px">New HR request</h3></div><div class="mbody">
+    <div class="field"><label>Employee</label><select id="hrE">${STATE.employees.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(e=>`<option value="${e.id}">${esc(e.name)} · ${esc(e.desig)}</option>`).join('')}</select></div>
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px"><div class="field"><label>Category</label><select id="hrC">${HR_CATS.map(c=>`<option>${c}</option>`).join('')}</select></div><div class="field"><label>Priority</label><select id="hrP"><option>Low</option><option selected>Medium</option><option>High</option></select></div></div>
+    <div class="field"><label>Summary</label><input id="hrS" placeholder="e.g. Employment verification letter for a home loan"></div>
+    <div class="field"><label>Owner</label><select id="hrO"><option>People Ops</option><option>Elena Rossi</option><option>Talent Team</option></select></div>
+  </div><div class="mfoot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="saveHR()">Create request</button></div>`);
+}
+function saveHR(){
+  const s=document.getElementById('hrS').value.trim();if(!s){toast('Add a short summary','warn');return;}
+  const n=Math.max(...STATE.hr.map(h=>+h.id.split('-')[1]))+1;
+  const h={id:'HR-'+n,emp:document.getElementById('hrE').value,cat:document.getElementById('hrC').value,pri:document.getElementById('hrP').value,status:'Open',owner:document.getElementById('hrO').value,created:new Date().toISOString(),sla:'Within SLA',summary:s};
+  STATE.hr.unshift(h);audit('HR request created',`${h.id} · ${s}`);saveState();closeModal();HR_F='';vHR();toast(`${h.id} created`);
+}
+
+/* ---- onboarding ---- */
+function addJoiner(){
+  const inOnb=new Set(STATE.onboarding.map(o=>o.emp));
+  const hires=STATE.employees.filter(e=>!inOnb.has(e.id)&&e.status==='Active').sort((a,b)=>a.tenure-b.tenure).slice(0,8);
+  openModal(`${mClose}<div class="mhead"><h3 class="serif" style="font-size:22px">Add joiner</h3><p class="mut" style="font-size:13px;margin-top:4px">Joiners come from Workday once the offer is accepted. Pick one to start their onboarding plan.</p></div><div class="mbody">
+    <div class="field"><label>New hire</label><select id="jE">${hires.map(e=>`<option value="${e.id}">${esc(e.name)} · ${esc(e.desig)}, ${esc(deptName(e.dept))}</option>`).join('')}</select></div>
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px"><div class="field"><label>Start date</label><input id="jD" type="date" value="${new Date(Date.now()+14*864e5).toISOString().slice(0,10)}"></div><div class="field"><label>Owner</label><select id="jO"><option>Elena Rossi</option><option>Hiring Manager</option><option>IT Team</option></select></div></div>
+    <p class="mut" style="font-size:12.5px">The plan follows the standard stages: ${ONB_STAGES.join(', ')}.</p>
+  </div><div class="mfoot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="saveJoiner()">Start onboarding</button></div>`);
+}
+function saveJoiner(){
+  const id=document.getElementById('jE').value;if(!id){closeModal();return;}const e=empById(id);
+  const n=Math.max(...STATE.onboarding.map(o=>+o.id.split('-')[1]))+1;
+  STATE.onboarding.unshift({id:'ONB-'+n,emp:id,stage:ONB_STAGES[0],stageIdx:0,owner:document.getElementById('jO').value,start:new Date(document.getElementById('jD').value).toISOString(),blocker:null});
+  audit('Onboarding started',e.name);saveState();closeModal();vOnboard();toast(`Onboarding started for ${e.name}`);
+}
+
+/* ---- workforce scenario: the same model that produces the three scenarios above ---- */
+let WF_CUSTOM=null;
+function wfModel(eng,mob){
+  // Fitted so that the three seeded scenarios come out exactly: hires fall with internal fills, rise with added capacity
+  const hc=2480+Math.round(380*eng/100);const hire=Math.max(0,Math.round(122.17-1.1667*mob+0.807*(hc-2480)));
+  const cost=176.5+hire*0.25+(hc-2480)*0.08;const gap=Math.max(0,Math.round(13-(mob-31)*0.25+eng*0.4));
+  return {eng,mob,hc,hire,cost:'$'+Math.round(cost)+'M',gap};
+}
+function recalcScenario(){
+  const r=document.querySelectorAll('#view input[type=range]');const eng=+r[0].value,mob=+r[1].value;WF_CUSTOM=wfModel(eng,mob);
+  audit('Scenario recalculated',`Engineering ${eng}%, internal mobility ${mob}%`);
+  const box=document.getElementById('wfOut');if(box)box.innerHTML=wfOutHtml();toast('Scenario recalculated');
+}
+function wfOutHtml(){if(!WF_CUSTOM)return '';const c=WF_CUSTOM;return `<div class="card pad" style="margin-top:14px;background:#F4F7F1"><div class="lbl" style="margin-bottom:8px">Result · ${c.eng}% engineering, ${c.mob}% internal fills</div><div class="kv"><span class="k">Headcount</span><span class="v">${c.hc.toLocaleString()}</span></div><div class="kv"><span class="k">External hires</span><span class="v">${c.hire}</span></div><div class="kv"><span class="k">Est. cost</span><span class="v">${c.cost}</span></div><div class="kv"><span class="k">Critical gaps</span><span class="v" style="color:var(--terra)">${c.gap} critical</span></div><p class="mut" style="font-size:12px;margin-top:8px">Same model as the three scenarios above, so results are comparable.</p></div>`;}
+
 loadState();
 document.getElementById('app').innerHTML=renderShell();
 renderView();
