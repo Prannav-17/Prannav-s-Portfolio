@@ -7,8 +7,13 @@ import { projects } from "@/lib/projects";
 
 const EMAIL = "prannavb27@iimklive.com", PHONE = "99400 33571";
 
-const exp = [
-  { when: "Jun 2025 to present", role: "Manager, Strategy and Planning · Flipkart", text: "Took Flipkart Trust Shield from 0 to 1 (5% conversion uplift). Shipped an hourly sell-out reporting tool used by leadership. Built the CY2026 plan for a 25 Mn+ user loyalty base. Expanded serviceability from 4 to 66 cities" },
+const exp: { when: string; role: string; text: string; points?: string[] }[] = [
+  { when: "Jun 2025 to present", role: "Manager, Strategy and Planning · Flipkart", text: "", points: [
+    "Trust Shield, 0 to 1: the pilot showed buyers barely knew it existed, so he set up touchpoints across the buyer journey and defined the success metrics. An A/B test measured a 5% lift in click-through from product page to cart",
+    "Serviceability, 4 to 66 cities in six months: after a 4-city pilot set the business and ops SOPs, he picked the 66 cities by sell-out demand weight and service-centre availability, then worked through SLA breaches and technical-skill gaps in the new cities",
+    "CY2026 plan for the 25 Mn+ member loyalty base: GMV and revenue targets, the cost of each benefit, and monetization of the base, phased month by month to Flipkart's seasonality",
+    "Festive season sell-out tracker in Apps Script: a daily, auto-updating year-on-year view leadership used to act during sales, with laptop units and GMV cut by segment, brand, processor and GPU so any gap traces to its root cause",
+  ] },
   { when: "Jan to Jun 2023", role: "Solutions Consultant, US Market · ZoomInfo", text: "Closed USD 0.22 Mn in ARR. Root-caused 200+ tickets to surface the product gaps behind repeat issues" },
   { when: "Jan 2021 to Jan 2023", role: "Product Consultant, UK Market · Freshworks", text: "Analysed 500+ lost deals (USD 0.5+ Mn protected), built 10+ competitor dashboards, generated USD 0.66+ Mn in ARR. Top Performer three quarters running" },
   { when: "2024 to 2025", role: "Internships · GlaxoSmithKline, Wayplorer", text: "Piloted a field sales app that lifted orders by 30%. Benchmarked 5+ CRM and RevOps platforms for positioning" },
@@ -16,9 +21,9 @@ const exp = [
 
 const stats = [
   { to: 3, suffix: "+", label: "Years across B2B SaaS and e-commerce" },
-  { to: 5, suffix: "%", label: "Conversion uplift from Trust Shield, taken 0 to 1" },
-  { from: 4, to: 66, prefix: "4 → ", label: "Cities of serviceability, expanded at Flipkart" },
-  { to: 25, suffix: " Mn+", label: "Users in the loyalty base he planned for" },
+  { to: 5, suffix: "%", label: "Lift in product-to-cart click-through for Trust Shield, A/B tested" },
+  { from: 4, to: 66, prefix: "4 → ", label: "Cities of serviceability, picked by demand and service-centre reach" },
+  { to: 25, suffix: " Mn+", label: "Loyalty members covered by the CY2026 plan he built" },
 ];
 
 const Band = ({ n, title }: { n: string; title: string }) => (
@@ -134,7 +139,7 @@ export default function Home() {
             <div className="cvg">
               <div className="tl" data-tl>
                 <span className="tl-line" aria-hidden="true"><i /></span>
-                {exp.map((e) => (<div className="it" key={e.role} data-a="up"><div className="when">{e.when}</div><b>{e.role}</b><p>{e.text}</p></div>))}
+                {exp.map((e) => (<div className="it" key={e.role} data-a="up"><div className="when">{e.when}</div><b>{e.role}</b>{e.points ? <ul>{e.points.map((x) => <li key={x}>{x}</li>)}</ul> : <p>{e.text}</p>}</div>))}
               </div>
               <div data-a="stagger">
                 <div className="pill" style={{ marginBottom: 16 }}><h3>Skills</h3>

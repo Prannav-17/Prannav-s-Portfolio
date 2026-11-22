@@ -116,7 +116,7 @@
     "What does he do day to day at Flipkart?",
     "What are his responsibilities at Flipkart?"
    ],
-   "answer": "At Flipkart (Manager, Strategy and Planning, June 2025 to present) Prannav took Flipkart Trust Shield from 0 to 1 with Product and Ops. He also shipped an automated hourly sell-out reporting tool in Google Apps Script that leadership uses directly, built the CY2026 plan for a 25 Mn+ user loyalty base, expanded serviceability from 4 to 66 cities, and set segment-wise pricing across INR 500+ Cr of event revenue.",
+   "answer": "At Flipkart (Manager, Strategy and Planning, June 2025 to present) Prannav took Trust Shield from 0 to 1 (an A/B test measured a 5% lift in product-to-cart click-through), expanded serviceability from 4 to 66 cities in six months, built the CY2026 plan for the 25 Mn+ member loyalty base, built a festive season sell-out tracker in Apps Script that leadership used during sales, and set segment-wise pricing across INR 500+ Cr of event revenue.",
    "source": "Resume → Flipkart",
    "visibility": "public"
   },
@@ -128,7 +128,7 @@
     "Tell me about Trust Shield",
     "What was the impact of Trust Shield?"
    ],
-   "answer": "Flipkart Trust Shield is a buyer trust product that Prannav took from 0 to 1 with Product and Ops. He defined the buyer journey across 5 touchpoints, and the product delivered a 5% conversion uplift.",
+   "answer": "Flipkart Trust Shield is a buyer trust product that Prannav took from 0 to 1 with Product and Ops. The pilot showed that buyer awareness was low, so he set up touchpoints across the buyer journey (5 in all) and defined the success metrics for the new flow. An A/B test measured a 5% lift in click-through from the product page to the cart.",
    "source": "Resume → Flipkart",
    "visibility": "public"
   },
@@ -137,9 +137,11 @@
    "category": "experience",
    "questions": [
     "What reporting tool did he build?",
-    "Has he built any internal tools?"
+    "Has he built any internal tools?",
+    "What is the festive season sell-out tracker?",
+    "What dashboard did he build at Flipkart?"
    ],
-   "answer": "Prannav built an automated hourly sell-out reporting tool in Google Apps Script. Leadership uses it directly, and it replaced manual reporting during live sale events.",
+   "answer": "For festive sales, Prannav built a sell-out tracker in Apps Script: a dashboard that updated automatically and compared year-on-year numbers daily, which leadership used to make decisions instantly. It cut laptop sell-out by units and GMV across segments, brands, processors and GPUs, so any gap could be drilled down to its root cause and fixed straight away.",
    "source": "Resume → Flipkart",
    "visibility": "public"
   },
@@ -150,7 +152,7 @@
     "What is his loyalty experience?",
     "Has he worked on pricing or unit economics?"
    ],
-   "answer": "At Flipkart he built the CY2026 plan for a 25 Mn+ user loyalty base (Flipkart Plus / Black), modelling acquisition, retention and monetization against unit economics. He also set segment-wise pricing across INR 500+ Cr of event revenue, using demand signals to decide where to invest.",
+   "answer": "Prannav built the CY2026 plan for Flipkart's 25 Mn+ member loyalty base (Flipkart Plus / Black). It combined GMV and revenue targets with the cost of each benefit offered to members, plus plans to monetize the base and the revenue that brings in, all phased month by month to Flipkart's seasonality and revenue plan. He also set segment-wise pricing across INR 500+ Cr of event revenue.",
    "source": "Resume → Flipkart",
    "visibility": "public"
   },
@@ -161,7 +163,7 @@
     "What is the 4 to 66 cities work?",
     "Has he worked on supply chain or operations?"
    ],
-   "answer": "Prannav expanded serviceability from 4 to 66 cities across Ops, Category and Supply Chain, covering 40% of all India Mobiles volume.",
+   "answer": "Serviceability started as a 4-city pilot that set the business and operations SOPs. Over six months Prannav helped expand it to 66 cities, which he chose by weighting sell-out demand across India and ranking cities by service-centre availability. The rollout hit SLA breaches and gaps in technical expertise in new cities, which were solved along the way. The 66 cities cover 40% of all India Mobiles volume.",
    "source": "Resume → Flipkart",
    "visibility": "public"
   },
@@ -218,7 +220,7 @@
     "How does he use data?",
     "Has he worked with analytics?"
    ],
-   "answer": "A few examples. At Freshworks he analysed 500+ lost deals by loss reason and turned the patterns into product and positioning inputs, protecting USD 0.5+ Mn in revenue, and built 10+ competitor dashboards that surfaced 5+ new entrants. At Flipkart he set segment-wise pricing across INR 500+ Cr of event revenue using demand signals, and built an hourly sell-out reporting tool that leadership uses during live sale events. His tools include SQL, Excel and Power BI.",
+   "answer": "A few examples. At Freshworks he analysed 500+ lost deals by loss reason and turned the patterns into product and positioning inputs, protecting USD 0.5+ Mn in revenue, and built 10+ competitor dashboards that surfaced 5+ new entrants. At Flipkart he set segment-wise pricing across INR 500+ Cr of event revenue using demand signals, and built a festive season sell-out tracker in Apps Script that leadership used to act during sales. His tools include SQL, Excel and Power BI.",
    "source": "Resume; Projects",
    "visibility": "public"
   },
@@ -271,9 +273,12 @@
     "What measurable outcomes has he achieved?",
     "Show me his impact in numbers",
     "What is his biggest achievement?",
-    "What is he most proud of?"
+    "What is he most proud of?",
+    "What are his key metrics?",
+    "What numbers can he show?",
+    "What are his biggest results?"
    ],
-   "answer": "At Flipkart: Trust Shield, which he took from 0 to 1, delivered a 5% conversion uplift; serviceability went from 4 to 66 cities, covering 40% of all India Mobiles volume; and he set segment-wise pricing across INR 500+ Cr of event revenue. At Freshworks he generated USD 0.66+ Mn in ARR and protected USD 0.5+ Mn by analysing 500+ lost deals. At ZoomInfo he closed USD 0.22 Mn in ARR. At GSK his field sales app pilot lifted orders by 30% and an in-app reminder raised lines sold per order by 40%.",
+   "answer": "At Flipkart: Trust Shield, which he took from 0 to 1, showed a 5% lift in product-to-cart click-through in an A/B test; serviceability went from 4 to 66 cities in six months, covering 40% of all India Mobiles volume; and he set segment-wise pricing across INR 500+ Cr of event revenue. At Freshworks he generated USD 0.66+ Mn in ARR and protected USD 0.5+ Mn by analysing 500+ lost deals. At ZoomInfo he closed USD 0.22 Mn in ARR. At GSK his field sales app pilot lifted orders by 30% and an in-app reminder raised lines sold per order by 40%.",
    "source": "Resume",
    "visibility": "public"
   },
@@ -537,7 +542,7 @@
     "Why is he a good product manager?",
     "What makes him different?"
    ],
-   "answer": "Prannav brings three things together. He spent 2+ years in front of B2B SaaS customers at Freshworks and ZoomInfo, turning what customers asked for into product inputs. At Flipkart he took Trust Shield from 0 to 1 for a 5% conversion uplift and planned for a 25 Mn+ user loyalty base. And he builds products himself: Let's Match is live with real users, alongside five enterprise prototypes. He has an MBA from IIM Kozhikode.",
+   "answer": "Prannav brings three things together. He spent 2+ years in front of B2B SaaS customers at Freshworks and ZoomInfo, turning what customers asked for into product inputs. At Flipkart he took Trust Shield from 0 to 1 (a 5% A/B-tested lift in product-to-cart click-through) and built the CY2026 plan for a 25 Mn+ member loyalty base. And he builds products himself: Let's Match is live with real users, alongside four enterprise prototypes. He has an MBA from IIM Kozhikode.",
    "source": "Resume; About page; Projects",
    "visibility": "public"
   },
