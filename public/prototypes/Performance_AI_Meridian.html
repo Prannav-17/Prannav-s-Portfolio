@@ -339,6 +339,33 @@ footer b{color:var(--ink-2);}
   .kpirow{gap:8px;}
   .kpi{min-width:140px;}
 }
+
+/* ============ MOBILE (phones) ============ */
+html{-webkit-text-size-adjust:100%;}
+@media (max-width:760px){
+  .rail{position:sticky; top:0; z-index:50; padding:8px 10px;}
+  .rail .brandmark{padding-right:10px;}
+  .rail .brandmark .sb{display:none;}
+  .railnav{padding-left:8px;}
+  .railnav .lbl{display:none;}
+  .railnav button{white-space:nowrap; width:auto; padding:8px 11px;}
+  .main{padding:16px 14px 40px;}
+  .paceStrip .pVerdict{flex:1 1 100%; white-space:normal; min-width:0;}
+  .fgroup{min-width:0; max-width:100%;}
+  .fgroup select{min-width:0; max-width:calc(100vw - 150px);}
+  .card{padding:16px;}
+  table.mini{display:block; overflow-x:auto; white-space:nowrap;}
+  .grid2,.grid3{grid-template-columns:minmax(0,1fr) !important;}
+  .grid2>*,.grid3>*{min-width:0;}
+  .simtop select{max-width:100%; min-width:0;}
+  .simtop{flex-wrap:wrap;}
+  table.log{display:block; overflow-x:auto; white-space:nowrap;}
+  .funnel{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px;}
+  .fnTile:after{display:none;}
+  .fnTile{height:112px;}
+  .fnFace .v{font-size:15px;}
+  input,select,textarea{font-size:16px !important;}
+}
 </style>
 </head>
 <body>
@@ -827,7 +854,7 @@ function holtForecast(hist, h, alpha, beta){
 }
 
 const inr = n => "\u20b9" + Math.round(n).toLocaleString("en-IN");
-const inrL = n => "\u20b9" + (n/100000).toFixed(1) + "L";
+const inrL = n => Math.abs(n) >= 1e7 ? "\u20b9" + (n/1e7).toFixed(2) + " Cr" : "\u20b9" + (n/100000).toFixed(1) + "L";  // Indian notation: lakh below 1 crore, crore above
 const num = n => Math.round(n).toLocaleString("en-IN");
 
 function filtered(){

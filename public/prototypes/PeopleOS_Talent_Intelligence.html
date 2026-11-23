@@ -210,6 +210,53 @@ table.tbl{width:100%;border-collapse:collapse}
   .nav{overflow-x:auto}.wrap{padding:22px 16px 70px}.page-head h1{font-size:26px}
   .util .usearch{display:none}
 }
+
+/* ============ MOBILE (phones) ============ */
+html{-webkit-text-size-adjust:100%}
+.m-only{display:none !important}
+.m-menu{position:fixed;inset:0;z-index:130;display:none}
+.m-menu.on{display:block}
+.m-menu .m-bg{position:absolute;inset:0;background:rgba(37,42,38,.42)}
+.m-menu .m-panel{position:absolute;top:0;left:0;bottom:0;width:min(300px,86vw);background:var(--surface);overflow:auto;padding:14px 12px 30px;box-shadow:var(--shadow-lg)}
+.m-menu .m-grp{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);padding:14px 10px 6px}
+.m-menu a{display:flex;align-items:center;gap:11px;padding:10px;border-radius:9px;font-weight:500;font-size:14.5px;color:var(--ink)}
+.m-menu a.on{background:var(--green);color:#fff}
+@media (max-width:760px){
+  .m-only{display:grid !important}
+  .nav{display:none}
+  .util{gap:6px;padding:0 10px;height:52px}
+  .util .org{font-size:13.5px;padding:5px 4px;min-width:0;white-space:nowrap;overflow:hidden}
+  .util .me>div{display:none}
+  .util .uic[title="Notifications"]{margin-left:auto}
+  .wrap{padding:18px 14px 70px}
+  .page-head{flex-direction:column;align-items:stretch;gap:14px;margin-bottom:20px}
+  .page-head h1{font-size:24px}
+  .grid[style*="grid-template-columns"],.grid{grid-template-columns:minmax(0,1fr) !important}
+  .grid[style*="repeat(4,1fr)"],.grid[style*="repeat(5,1fr)"]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:10px}
+  [style*="grid-template-columns:repeat(7,1fr)"]{gap:4px !important}
+  .grid>*{min-width:0}
+  .pad{padding:16px}
+  .cluster .stat-row{flex-wrap:wrap;gap:4px 12px}
+  .cluster .stat-v{font-size:22px}
+  .tbl{min-width:620px}
+  .kv{flex-wrap:wrap}
+  .sec-label{flex-wrap:wrap;gap:8px}
+  .card [style*="display:flex"]{flex-wrap:wrap}
+  .card [style*="display:flex;gap:4px"]{flex-wrap:nowrap}
+  [style*="flex:1;text-align:center"]{min-width:0}
+  [style*="flex:1;text-align:center"]>div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  [style*="width:120px"]{width:96px !important}
+  .drawer{width:100vw;max-width:100vw}
+  .drawer:not(.on){box-shadow:none}
+  .drawer .dhead,.drawer .dbody,.drawer .dfoot{padding-left:16px;padding-right:16px}
+  .modal-scrim{padding:10px;align-items:flex-end}
+  .modal{width:100%;max-width:100%;max-height:88vh}
+  .toasts{width:calc(100vw - 24px)}
+  input,select,textarea{font-size:16px !important}
+}
+
+/* A closed side panel sits off-screen; hide its shadow so it doesn't tint the right edge */
+.drawer:not(.on){box-shadow:none;}
 </style>
 </head>
 <body>
@@ -349,6 +396,7 @@ function buildEmployees(){
   aarav.mgr=heads['prod']; aarav.tenure=38;
   aarav.skills=[['prodanalytics',3,true],['stakeholder',3,true],['prodstrat',2,false],['roadmap',2,false],['sql',3,true],['dataviz',3,true],['gtm',2,false]];
   aarav.name=aarav.first+' '+aarav.last;
+  aarav.email='aarav.menon@acmetech.com';
   return emps;
 }
 function makeEmp(id, first, last, dept, desig, mgr, status, tenure){
@@ -675,6 +723,7 @@ function renderShell(){
   }).join('');
   return `
   <div class="util">
+    <button class="uic m-only" title="Menu" onclick="openMMenu()">${icon('menu',20)}</button>
     <div class="org"><span class="orgmark">A</span>Acme Technologies ${icon('chev',13)}</div>
     <div class="usearch" onclick="openCmd()">${icon('search',15)}<span>Search people, skills, roles…</span><kbd>⌘K</kbd></div>
     <button class="uic" title="Notifications" onclick="notif()">${icon('bell',18)}<span class="dot"></span></button>
@@ -989,7 +1038,7 @@ function vOrg(){
     const n=STATE.employees.filter(e=>e.dept===d.id).length;
     return `<div class="card pad" style="cursor:pointer" onclick="DIR={q:'',dept:'${d.id}',loc:'',status:'',sort:'name',page:1};navigate('directory')">
       <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px">${head?avatar(head,'md'):''}<div><div style="font-weight:700">${esc(d.name)}</div><div class="mut" style="font-size:12px">${head?esc(head.name):esc(d.head)} · Lead</div></div></div>
-      <div style="display:flex;gap:18px"><div><div class="serif" style="font-size:24px">${n}</div><div class="lbl">Headcount</div></div><div><div class="serif" style="font-size:24px">${agg().cov[d.id]}%</div><div class="lbl">Crit. coverage</div></div></div></div>`;}).join('');
+      <div style="display:flex;gap:18px"><div><div class="serif" style="font-size:24px">${DEPT_METRICS[d.id].total}</div><div class="lbl">Headcount</div></div><div><div class="serif" style="font-size:24px">${DEPT_METRICS[d.id].critcov}%</div><div class="lbl">Crit. coverage</div></div><div><div class="serif" style="font-size:24px">${DEPT_METRICS[d.id].open}</div><div class="lbl">Open roles</div></div></div><div class="mut" style="font-size:11.5px;margin-top:8px">${n} profiled in this sample · view people →</div></div>`;}).join('');
   $('#view').innerHTML=pageHead('Discover','Organisation',
     'How Acme Technologies is structured — 8 departments across 5 locations.',
     `<button class="btn" onclick="exportReport('Org structure')">${icon('export',15)} Export</button>`)
@@ -1604,12 +1653,12 @@ function vPlanning(){
        <div class="card pad"><div class="sec-label"><h3>Scenario detail — ${esc(SCENARIOS.find(s=>s.id===WF_SCN).name)}</h3></div>
          <p class="mut" style="font-size:13px;margin-bottom:16px">${esc(SCENARIOS.find(s=>s.id===WF_SCN).note)}</p>
          <div class="lbl" style="margin-bottom:10px">Editable assumptions</div>
-         <div class="field"><label>Engineering capacity change (%)</label><input type="range" min="-10" max="30" value="${WF_SCN==='S-B'?15:0}" oninput="this.nextElementSibling.textContent=this.value+'%'" style="width:100%"><span class="mut" style="font-size:12px">${WF_SCN==='S-B'?15:0}%</span></div>
-         <div class="field"><label>Internal mobility target (%)</label><input type="range" min="20" max="60" value="${WF_SCN==='S-C'?55:31}" oninput="this.nextElementSibling.textContent=this.value+'%'" style="width:100%"><span class="mut" style="font-size:12px">${WF_SCN==='S-C'?55:31}%</span></div>
+         <div class="field"><label>Platform engineering capacity change (%) · 380 of Engineering's 740</label><input type="range" min="-10" max="30" value="${WF_CUSTOM?WF_CUSTOM.eng:(WF_SCN==='S-B'?15:0)}" oninput="this.nextElementSibling.textContent=this.value+'%'" style="width:100%"><span class="mut" style="font-size:12px">${WF_CUSTOM?WF_CUSTOM.eng:(WF_SCN==='S-B'?15:0)}%</span></div>
+         <div class="field"><label>Internal mobility target (%)</label><input type="range" min="20" max="60" value="${WF_CUSTOM?WF_CUSTOM.mob:(WF_SCN==='S-C'?55:31)}" oninput="this.nextElementSibling.textContent=this.value+'%'" style="width:100%"><span class="mut" style="font-size:12px">${WF_CUSTOM?WF_CUSTOM.mob:(WF_SCN==='S-C'?55:31)}%</span></div>
          <button class="btn pri" onclick="recalcScenario()" style="margin-top:6px">Recalculate</button><div id="wfOut">${wfOutHtml()}</div>
        </div>
        <div class="card pad"><div class="lbl" style="margin-bottom:12px">Department capacity</div>
-         ${DEPARTMENTS.slice(0,6).map(d=>{const cur=agg().deptCount[d.id];const plan=cur+(WF_SCN==='S-B'&&d.id==='eng'?6:WF_SCN==='S-C'?0:(d.id.length%2));return `<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span style="font-weight:600">${esc(d.name)}</span><span class="mut">${cur} → ${plan}</span></div><div class="meter"><span style="width:${plan/44*100}%"></span></div></div>`;}).join('')}
+         ${DEPARTMENTS.map(d=>{const cur=DEPT_METRICS[d.id].total;const add=d.id==='eng'?(WF_CUSTOM?WF_CUSTOM.hc-2480:(WF_SCN==='S-B'?57:0)):0;const plan=cur+add;return `<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span style="font-weight:600">${esc(d.name)}</span><span class="mut">${cur} → ${plan}${add?` (+${add})`:''}</span></div><div class="meter"><span style="width:${Math.min(100,plan/800*100)}%"></span></div></div>`;}).join('')}
        </div>
      </div>
      <div class="card pad" style="margin-top:18px;background:var(--sage);display:flex;gap:12px"><span style="color:var(--green)">${sparkSvg()}</span><p class="mut" style="font-size:13px">These are planning simulations using illustrative cost figures, intended to support workforce decisions — not actual forecasts.</p></div>`;
@@ -2022,11 +2071,18 @@ function wfModel(eng,mob){
 function recalcScenario(){
   const r=document.querySelectorAll('#view input[type=range]');const eng=+r[0].value,mob=+r[1].value;WF_CUSTOM=wfModel(eng,mob);
   audit('Scenario recalculated',`Engineering ${eng}%, internal mobility ${mob}%`);
-  const box=document.getElementById('wfOut');if(box)box.innerHTML=wfOutHtml();toast('Scenario recalculated');
+  vPlanning();toast('Scenario recalculated');
 }
 function wfOutHtml(){if(!WF_CUSTOM)return '';const c=WF_CUSTOM;return `<div class="card pad" style="margin-top:14px;background:#F4F7F1"><div class="lbl" style="margin-bottom:8px">Result · ${c.eng}% engineering, ${c.mob}% internal fills</div><div class="kv"><span class="k">Headcount</span><span class="v">${c.hc.toLocaleString()}</span></div><div class="kv"><span class="k">External hires</span><span class="v">${c.hire}</span></div><div class="kv"><span class="k">Est. cost</span><span class="v">${c.cost}</span></div><div class="kv"><span class="k">Critical gaps</span><span class="v" style="color:var(--terra)">${c.gap} critical</span></div><p class="mut" style="font-size:12px;margin-top:8px">Same model as the three scenarios above, so results are comparable.</p></div>`;}
 
+
+/* Phones: one menu with every section, since the hover dropdowns don't work on touch */
+IC.menu=IC.menu||'<path d="M4 6h16M4 12h16M4 18h16"/>';
+function openMMenu(){let m=document.getElementById('mMenu');if(!m){m=document.createElement('div');m.id='mMenu';m.className='m-menu';document.body.appendChild(m);}
+  m.innerHTML=`<div class="m-bg" onclick="closeMMenu()"></div><div class="m-panel">${NAV.map(g=>`<div class="m-grp">${esc(g.grp)}</div>${g.items.map(it=>`<a class="${it[2]===CUR?'on':''}" onclick="closeMMenu();navigate('${it[2]}')"><span class="si">${icon(it[0],17)}</span>${esc(it[1])}</a>`).join('')}`).join('')}</div>`;m.classList.add('on');}
+function closeMMenu(){const m=document.getElementById('mMenu');if(m)m.classList.remove('on');}
 loadState();
+(()=>{const a=STATE.employees.find(e=>e.name==='Aarav Menon');if(a&&a.email!=='aarav.menon@acmetech.com'){a.email='aarav.menon@acmetech.com';saveState();}})();
 document.getElementById('app').innerHTML=renderShell();
 renderView();
 
